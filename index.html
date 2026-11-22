@@ -29,7 +29,7 @@ details{margin-top:6px;font-size:13px}summary{cursor:pointer;color:var(--pri)}de
 table{border-collapse:collapse;font-size:12px;color:#111}
 th,td{border:1px solid #bbb;padding:2px 4px;text-align:center;min-width:26px;white-space:nowrap}
 th{background:#e9edf2}td.nm{text-align:left;font-weight:600;position:sticky;left:0;min-width:150px;z-index:1}
-td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{background:#9be0a8}.OFF{background:#fff}
+td.rl{font-size:11px;font-weight:600;min-width:30px}td.cnr{background:#ffd9a8;font-weight:800}td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{background:#9be0a8}.OFF{background:#fff}
 .tot{background:#eef;font-weight:700}.we{background:#f6d6d6}.bad{background:#f5a5a5;font-weight:700}.ocr{background:#fde9c9;font-weight:700}
 #ptitle{display:none}
 @media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
@@ -138,7 +138,7 @@ ex:['نص الاستاف داي ورا بعض ثم نايت ورا بعض وال
 b_gen:'⚙️ إنشاء الروستر',b_print:'🖨 PDF / طباعة',b_copy:'📋 نسخ للـ Excel',
 h_tap:'اضغط على أي خانة في الروستر لتغييرها (D ← N ← فاضي). للـ PDF اختر "Save as PDF" من نافذة الطباعة.',
 alert_gen:'أنشئ الروستر الأول',alert_copied:'تم النسخ — الصقه في Excel',alert_file:'تعذر قراءة الملف',
-c_staff:'الاسم',c_total:'الإجمالي',c_day:'Day',c_night:'Night',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'المطلوب',
+c_staff:'الاسم',c_role:'الوظيفة',r_cn_mark:'أول {0} أسماء = CN (Charge Nurse)',r_cn_min:'كل شيفت لازم فيه على الأقل {0} CN',r_cn_none:'مفيش شرط CN في الشيفتات',r_cn_minD:'كل شيفت داي لازم فيه على الأقل {0} CN',r_cn_minN:'كل شيفت نايت لازم فيه على الأقل {0} CN',r_wkoff:'كل ممرض ياخد على الأقل {0} ويك اند (جمعة+سبت) راحة',r_minoffm:'على الأقل {0} أيام راحة في الشهر (الجدول بيدي {1})',w_minoffm:'طلب {0} أيام راحة بس الجدول بيدي {1} فقط',r_nodn:'مفيش داي بعد نايت علطول (متطبق تلقائيًا)',w_cn:'مفيش CN كفاية في {0} — الأيام: {1}',c_total:'الإجمالي',c_day:'Day',c_night:'Night',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'المطلوب',
 w_short_d:'يوم {0}: نقص {1} في الداي',w_short_n:'يوم {0}: نقص {1} في النايت',oc_short_d:'يوم {0}: نقص أون كول {1} في الداي',oc_short_n:'يوم {0}: نقص أون كول {1} في النايت',
 w_work:'{0}: {1} شفتات متتالية (بسبب الأجازات/الرغبات)',w_off:'{0}: {1} أيام راحة متتالية (بسبب الأجازات/الرغبات)',
 w_bad:'رغبة غير مفهومة: {0}',w_amb:'اسم غير واضح ({0}) اكتب الاسم كامل أو الـ ID',w_nodays:'{0}: ما فهمتش الأيام',
@@ -176,7 +176,7 @@ ex:['Half the staff days in a row then nights in a row; the other half the rever
 b_gen:'⚙️ Generate roster',b_print:'🖨 PDF / Print',b_copy:'📋 Copy for Excel',
 h_tap:'Tap any cell in the roster to change it (D → N → empty). For PDF choose "Save as PDF" in the print dialog.',
 alert_gen:'Generate the roster first',alert_copied:'Copied — paste into Excel',alert_file:'Could not read the file',
-c_staff:'Staff',c_total:'Total',c_day:'D',c_night:'N',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'req',
+c_staff:'Staff',c_role:'Role',r_cn_mark:'First {0} names = CN (Charge Nurse)',r_cn_min:'Every shift needs at least {0} CN',r_cn_none:'No CN requirement per shift',r_cn_minD:'Every day shift needs at least {0} CN',r_cn_minN:'Every night shift needs at least {0} CN',r_wkoff:'Everyone gets at least {0} weekend(s) off (Fri+Sat)',r_minoffm:'At least {0} days off per month (roster gives {1})',w_minoffm:'Asked for {0} days off but the roster gives only {1}',r_nodn:'No day shift right after a night (applied automatically)',w_cn:'Not enough CN on {0} shifts — days: {1}',c_total:'Total',c_day:'D',c_night:'N',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'req',
 w_short_d:'Day {0}: short by {1} on Day shift',w_short_n:'Day {0}: short by {1} on Night shift',oc_short_d:'Day {0}: OC short by {1} on Day shift',oc_short_n:'Day {0}: OC short by {1} on Night shift',
 w_work:'{0}: {1} consecutive shifts (due to leave/requests)',w_off:'{0}: {1} consecutive rest days (due to leave/requests)',
 w_bad:'Request not understood: {0}',w_amb:'Ambiguous name ({0}) write the full name or ID',w_nodays:'{0}: could not understand the days',
@@ -222,7 +222,7 @@ if(MSG.ovr.length)h+='<br><span class="inf">'+t('i_ovr',MSG.ovr.join(' • '))+'
 $('warn').innerHTML=h;
 const ws=MSG.wsum;
 $('wsum').innerHTML=ws&&ws.items.length?'<b>'+t('ws_title')+'</b>'+ws.items.map(x=>nurses[x.i].name+': '+x.parts.map(p=>p.soft?p.txt+' '+t('ws_soft'):p.txt).join(' ، ')).join('<br>')+(ws.guess.length?'<br>'+t('ws_guess',ws.guess.join('، ')):''):''}
-let BLK=[],BSP=[],nurses=[],R=[],OC=[],days=0,Y=0,M=0,P=[],HF=[],FW=[],PREF=[],dRA=[],nRA=[],docA=[],nocA=[],ovr=[];
+let CNI=[],MINCN=0,MCD=0,MCN=0,ROLES=[],BLK=[],BSP=[],nurses=[],R=[],OC=[],days=0,Y=0,M=0,P=[],HF=[],FW=[],PREF=[],dRA=[],nRA=[],docA=[],nocA=[],ovr=[];
 const L={cnt:[],al:[]};
 const DEF={cnt:[{k:'n',t:'n'},{k:'a',t:'#',p:'shifts_n'}],al:[{k:'n',t:'n'},{k:'a',t:'#',p:'from_day'},{k:'b',t:'#',p:'to_day'}]};
 function parseN(){return $('names').value.split('\n').map(l=>l.trim()).filter(Boolean).map((l,i)=>{const p=l.split(',').map(s=>s.trim());return{name:p[0],id:p[1]||'',title:p[2]||'',i}})}
@@ -251,7 +251,12 @@ const top=R2.filter(r=>r.cnt==R2[0].cnt&&r.sum==R2[0].sum);let e=top[0].e,c=top.
 if(c.length>1&&ok(ws[e+1])){const w=ws[e+1];const sc=c.map(n=>Math.max(0,...n.name.toLowerCase().split(/\s+/).map(x=>{const a=skel(w),b=skel(x);return a&&a==b?2:(a.length>=3&&lev(a,b)<=1?1:0)})));const m=Math.max(...sc);if(m>0){const t2=c.filter((_,j)=>sc[j]==m);if(t2.length==1){c=t2;e++}}}
 return{c,e}}
 /* find nurse mentions in a token list: tokens are {w:'word'} | {n:12,raw:'12'} | {} */
+const AR_SK={'ب':'b','ت':'t','ث':'t','ج':'j','ح':'h','خ':'k','د':'d','ذ':'d','ر':'r','ز':'s','س':'s','ش':'s','ص':'s','ض':'d','ط':'t','ظ':'s','غ':'j','ف':'f','ق':'k','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','ة':''};
+function arSkel(w){let o='';const x=w.replace(/[ً-ٰٟـ]/g,'').replace(/ال(?=.{3})/,'');for(let i=0;i<x.length;i++){const c=x[i];if(AR_SK[c]!==undefined)o+=AR_SK[c]}return o.replace(/h$/,'').replace(/(.)\1+/g,'$1')}
+function enSkel(w){return w.toLowerCase().replace(/th/g,'t').replace(/sh|ch/g,'s').replace(/kh/g,'k').replace(/gh/g,'j').replace(/ph/g,'f').replace(/[cq]/g,'k').replace(/g/g,'j').replace(/[zx]/g,'s').replace(/v/g,'f').replace(/[^a-z]/g,'').replace(/[aeiouyw]/g,'').replace(/h$/,'').replace(/(.)\1+/g,'$1')}
+function arNameFor(w){if(!/^[؀-ۿ]{3,}$/.test(w))return null;const sk=arSkel(w);if(sk.length<2)return null;let best=null;nurses.forEach(n=>{n.name.toLowerCase().split(/\s+/).forEach((p,k)=>{if(p.length>=3&&enSkel(p)===sk&&(!best||k==0&&best.k>0))best={p,k}})});return best?best.p:null}
 function mentionsOf(toks){
+toks.forEach(k=>{if(k.w&&/[؀-ۿ]/.test(k.w)&&!(typeof kwOf=='function'&&kwOf(k.w))){const nx=arNameFor(k.w);if(nx)k.w=nx}});
 const ids=nurses.map(n=>n.id).filter(Boolean);
 const cand=w=>{if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach(x=>{s=Math.max(s,sim(w,x)*10+(sim(w,x)&&x==n.name.toLowerCase().split(/\s+/)[0]?1:0))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null};
 const ws=toks.map(k=>k.w);const ment=[];
@@ -325,13 +330,13 @@ function clearBase(){BASEMAP=null;$('rstat').textContent=t('load_none');saveStat
 /* ---------- persistence ---------- */
 const SKEY='nsl_state_v2',FIELDS=['names','month','base','dreq','nreq','doc','noc','wishtxt','rec'];
 function saveState(){try{const f={};FIELDS.forEach(k=>f[k]=$(k).value);
-localStorage.setItem(SKEY,JSON.stringify({f,sid:$('showid').checked,L,R,OC,Y,M,days,dRA,nRA,docA,nocA,BASEMAP,MSG,rst:$('rstat').textContent}))}catch(e){}}
+localStorage.setItem(SKEY,JSON.stringify({ROLES,CNI,MINCN,MCD,MCN,f,sid:$('showid').checked,L,R,OC,Y,M,days,dRA,nRA,docA,nocA,BASEMAP,MSG,rst:$('rstat').textContent}))}catch(e){}}
 function loadState(){try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(!s)return false;
 FIELDS.forEach(k=>{if(s.f[k]!=null&&$(k))$(k).value=s.f[k]});$('showid').checked=!!s.sid;
 if(s.L){L.cnt=s.L.cnt||[];L.al=s.L.al||[]}
 nurses=parseN();['cnt','al'].forEach(draw);
 BASEMAP=s.BASEMAP||null;if(s.rst)$('rstat').textContent=s.rst;
-if(s.R&&s.R.length==nurses.length){R=s.R;OC=s.OC;Y=s.Y;M=s.M;days=s.days;dRA=s.dRA;nRA=s.nRA;docA=s.docA;nocA=s.nocA;if(s.MSG)MSG=s.MSG;return true}}catch(e){}return false}
+if(s.R&&s.R.length==nurses.length){ROLES=s.ROLES||[];CNI=s.CNI||[];MINCN=s.MINCN||0;MCD=s.MCD||0;MCN=s.MCN||0;R=s.R;OC=s.OC;Y=s.Y;M=s.M;days=s.days;dRA=s.dRA;nRA=s.nRA;docA=s.docA;nocA=s.nocA;if(s.MSG)MSG=s.MSG;return true}}catch(e){}return false}
 let _sv=null;const later=()=>{clearTimeout(_sv);_sv=setTimeout(saveState,400)};
 document.addEventListener('input',later);document.addEventListener('change',later);
 function delAll(){if(!confirm(t('confirm_del')))return;R=[];OC=[];BASEMAP=null;L.cnt=[];L.al=[];['cnt','al'].forEach(draw);$('wishtxt').value='';$('rec').value='';$('rstat').textContent='';
@@ -349,6 +354,7 @@ function lex(raw,ctx){
 let s=' '+canon(raw)+' ';
 /* title groups */
 ctx.titles.forEach((tl,k)=>{s=s.replace(new RegExp('(^|[^a-z0-9-])'+tl.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+'(?=$|[^a-z0-9-])','g'),(m,p)=>p+' GRP'+k+' ')});
+s=s.replace(/ا?سبوع (?:ال)?(?:اول|1)(?![؀-ۿ])|(?:the )?first week|week 1\b/g,' RG1_7 ').replace(/ا?سبوع (?:ال)?(?:تاني|ثاني|2)(?![؀-ۿ])|(?:the )?second week|week 2\b/g,' RG8_14 ').replace(/ا?سبوع (?:ال)?(?:تالت|ثالث|3)(?![؀-ۿ])|(?:the )?third week|week 3\b/g,' RG15_21 ').replace(/ا?سبوع (?:ال)?(?:رابع|4)(?![؀-ۿ])|(?:the )?fourth week|week 4\b/g,' RG22_28 ').replace(/ا?سبوع (?:ال)?(?:اخير|اخر)(?![؀-ۿ])|(?:the )?last week|final week/g,' RG'+(days-6)+'_'+days+' ');
 s=s.replace(/(\d+)\s*(?:%|percent|بالمايه|فالمايه|في المايه|بالميه)/g,(m,n)=>' FR'+n+' ');
 s=s.replace(/شفتين|شيفتين/g,' 2 WRK ').replace(/ليلتين/g,' 2 NGT ').replace(/يومين|يومان/g,' 2 UNIT ');
 s=PH(s,'ثلاثه? ارباع|تلات(?:ه)? ارباع|three[- ]quarters?|3 ?/ ?4','FR75',1);
@@ -358,10 +364,11 @@ s=PH(s,'نصف(?:ها|ه)?|نص(?:ها|هم|ه)?|half|1 ?/ ?2','FR50',1);
 s=PH(s,'ربع(?:ها|ه)?|quarter|1 ?/ ?4','FR25',1);
 /* negative + "more than" => limit */
 s=s.replace(/\bnor((?: [a-z']+){0,2}) more than/g,' LIM $1 ');
-s=s.replace(/\b(?:nobody|no one|no nurses?)(?: [a-z']+){0,3} more than/g,' ALL LIM ');
-s=s.replace(/\b(?:no|not|never|cannot|can't|can not|shouldn't|mustn't|should not|must not|doesn't|don't)(?: [a-z']+){0,3} more than/g,' LIM ');
-s=s.replace(/(?:مفيش|مافيش|مش|ما|لا|ممنوع|مينفعش|ماينفعش|مايصحش|ميصحش|ولا)(?: [؀-ۿ]+){0,3} (?:اكتر|اكثر) من/g,' LIM ');
-s=PH(s,'(?:لا|ما|م) ?(?:يزيد|تزيد|يزود|تزود|يتعدي|تتعدي|يتجاوز|تتجاوز|يتخطي|يعدي)(?:ش)?|مايزيدش|ميزيدش|مايزودش|ميزودش|ميتعداش|مايتعداش|ميتجاوزش|مايتجاوزش|حد اقصي|اقصي حد|بحد اقصي|كحد اقصي|علي الاكتر|علي الاكثر|بالكتير|max(?:imum)?(?: of)?|no more than|not more than|at most|up to|cannot exceed|can not exceed|can\'t exceed|not exceed|never exceed|shouldn\'?t exceed|should not exceed|must not exceed|mustn\'?t exceed|limit(?:ed)?(?: to)?','LIM',1);
+s=s.replace(/(?:nobody|no one|no nurses?)((?: [a-z']+){0,3}) more than/g,(m,mid)=>/(rest|off|leave|vacation)/.test(mid)?' ALL LIM OFFD ':' ALL LIM ');
+s=s.replace(/(?:no|nor|not|never|cannot|can't|can not|shouldn't|mustn't|should not|must not|doesn't|don't)((?: [a-z']+){0,3}) more than/g,(m,mid)=>/(rest|off|leave|vacation)/.test(mid)?' LIM OFFD ':' LIM ');
+s=s.replace(/(?:مفيش|مافيش|مش|ما|لا|ممنوع|مينفعش|ماينفعش|مايصحش|ميصحش|ولا|ميشتغلش|ميشتغلوش|مايشتغلش|مايشتغلوش|ميخدش|ميخدوش|مياخدش|مياخدوش|مايخدش|مايخدوش)((?: [؀-ۿ]+){0,3}) (?:اكتر|اكثر) من/g,(m,mid)=>(/(اجاز|راح|اوف|يستريح|ياخد|ياخذ)/.test(mid)?' LIM OFFD ':' LIM '));
+s=s.replace(/(^|[^\u0600-\u06ff])(?:ما|م)ي?(?:شتغل|عمل|داوم)(?:و)?ش(?=$|[^\u0600-\u06ff])/g,'$1 NEG WRK ');
+s=PH(s,'(?:لا|ما|م) ?(?:يزيد|تزيد|يزود|تزود|يتعدي|تتعدي|يتجاوز|تتجاوز|يتخطي|يعدي)(?:ش)?|مايزيدش|ميزيدش|مايزودش|ميزودش|ميتعداش|مايتعداش|ميتجاوزش|مايتجاوزش|اقصي عدد|اقصي|حد اقصي|اقصي حد|بحد اقصي|كحد اقصي|علي الاكتر|علي الاكثر|بالكتير|max(?:imum)?(?: of)?|no more than|not more than|at most|up to|cannot exceed|can not exceed|can\'t exceed|not exceed|never exceed|shouldn\'?t exceed|should not exceed|must not exceed|mustn\'?t exceed|limit(?:ed)?(?: to)?','LIM',1);
 s=PH(s,'(?:لا|ما|م) ?(?:يقل|تقل)(?:ش)?|ميقلش|مايقلش|علي الاقل|حد ادني|ادني حد|اقل حاجه|at least|minimum(?: of)?|min(?: of)?|no less than|not less than|no fewer than|not fewer than','MIN',1);
 s=PH(s,'nobody|no one|no nurses?|none of (?:them|the nurses|the staff)','ALL NEG',0);
 s=PH(s,'للكل|لكل الناس|كل ?(?:ال)?(?:استاف|تمريض|ممرض[\\u0600-\\u06ff]*|زملاء|فريق|ناس|حد|واحد)|جميع(?: ?ال[\\u0600-\\u06ff]+)?|كلهم|كافه|الكل|كلنا|everyone|everybody|all (?:the )?(?:staff|nurses?|team|members|of them|of us)|each (?:and every )?(?:nurse|staff member|staff|one)|every (?:single )?(?:nurse|staff member|staff|one)|any (?:nurse|staff member|staff|one)|whole (?:team|staff)|اي (?:ممرض[\\u0600-\\u06ff]*|حد|واحد|استاف)','ALL',1);
@@ -381,12 +388,13 @@ s=PH(s,'need(?:s|ed)?|require(?:s|d|ment|ments)?|must have|should have|has to ha
 s=PH(s,'extra|additional|plus|زياده|اضافي[\\u0600-\\u06ff]*|زود[\\u0600-\\u06ff]*|زيد[\\u0600-\\u06ff]*|add|more','PLS',1);
 s=PH(s,'fewer|minus|reduce|decrease|اقل|ناقص[\\u0600-\\u06ff]*|انقص[\\u0600-\\u06ff]*|قلل[\\u0600-\\u06ff]*|نقص[\\u0600-\\u06ff]*|less','MNS',1);
 s=PH(s,'no|not|without|never|neither|nor|none|exempt(?:ed)?|excluded?|avoid|dont|don\'t|doesn\'t|cannot|can\'t|مفيش|مافيش|ماقيش|ما فيش|مش|بدون|بلاش|ممنوع|يمنع|منع|دون|من غير|لا|ما','NEG',1);
-s=PH(s,'days? off|day off|off days?|rest days?|off|rest|resting|leave|vacation|holidays?|اجازات|اجازه|راحات|راحه|اوف|عطله|يستريح','OFFD',1);
+s=PH(s,'days? off|day off|off days?|rest days?|off|rests?|resting|leave|vacation|holidays?|اجازات|اجازه|راحات|راحه|اوف|عطله|يستريح','OFFD',1);
 s=PH(s,'night shifts?|nights?|overnight|nite|نايتات|نايت|ليالي|ليل'+AR+'|سهر'+AR+'|نيت','NGT',1);
 s=PH(s,'day shifts?|morning shifts?|mornings?|داي|نهار'+AR+'|صبح'+AR+'|صباح'+AR,'DAYS',1);
-s=PH(s,'working|works?|worked|duty|shifts?|شغل'+AR+'|اشتغل'+AR+'|يشتغل'+AR+'|بيشتغل'+AR+'|تشتغل'+AR+'|عمل|يعمل'+AR+'|دوام|داوم'+AR+'|يداوم'+AR+'|شفت'+AR+'|شيفت'+AR+'|وردي'+AR+'|مناوب'+AR,'WRK',1);
+s=PH(s,'ه[يتن]شتغل'+AR+'|ه[يتن]داوم'+AR+'|working|works?|worked|duty|shifts?|شغل'+AR+'|اشتغل'+AR+'|يشتغل'+AR+'|بيشتغل'+AR+'|تشتغل'+AR+'|عمل|يعمل'+AR+'|دوام|داوم'+AR+'|يداوم'+AR+'|شفت'+AR+'|شيفت'+AR+'|وردي'+AR+'|مناوب'+AR,'WRK',1);
 s=PH(s,'nurses?|staff|ممرض'+AR+'|استاف|تمريض|persons?|people|members?','NRS',1);
-WDN.forEach((w,k)=>{s=PH(s,w[0]+'s?|'+w[1],'WD'+k,1)});
+s=s.replace(/(^|[^؀-ۿ])كل (احد|اثنين|اتنين|ثلاثاء|ثلاثا|تلات|اربعاء|اربعا|خميس|جمعه|سبت)(?![؀-ۿ])/g,'$1كل ال$2');
+WDN.forEach((w,k)=>{s=PH(s,'(?:'+w[0]+')s?|'+w[1],'WD'+k,1)});
 s=s.replace(/(\d{1,2})\s*(?:-|–|الي|لحد|till|until|through|to|ل)\s*(\d{1,2})/g,' RG$1_$2 ');
 const rawt=s.match(/RG\d+_\d+|[A-Z]+\d*|\d+|[a-z']+|[؀-ۿ]+|[,&]/g)||[];
 const tk=rawt.map(w=>{if(/^[a-z؀-ۿ]+$/.test(w)){if(NUMW[w]!==undefined)return String(NUMW[w]);if(w[0]=='و'&&NUMW[w.slice(1)]!==undefined)return String(NUMW[w.slice(1)])}return w});
@@ -395,6 +403,7 @@ for(let i=0;i<tk.length;i++){const w=tk[i];if(w=='day'||w=='days'||w=='يوم'||
 let j=i+1;while(tk[j]=='on'||tk[j]=='the'||tk[j]=='رقم')j++;
 const nx=tk[j],pv=tk[i-1];const isD=x=>x&&(/^\d+$/.test(x)||/^RG/.test(x));
 if(isD(nx))tk[i]='DCUE';else if(isD(pv))tk[i]='UNIT';else if(w=='day'||w=='days')tk[i]='DAYS';else tk[i]='UNIT'}}
+if(tk.includes('MUST')||tk.includes('NEED')){for(let i=0;i<tk.length-1;i++){if((tk[i]=='WRK'||tk[i]=='MUST')&&/^\d+$/.test(tk[i+1])&&+tk[i+1]<=31&&!/^(WRK|UNIT|NGT|DAYS)$/.test(tk[i+2]||'')&&tk[i-1]!=='UNIT'){tk.splice(i+1,0,'DCUE')}}}
 return tk.filter(x=>x!=='the'&&x!=='of')}
 /* build clause list for one sentence */
 const PRED=/^(NGT|DAYS|OFFD|WRK|ONLY|FR\d+|OCC|WD\d|WKND|FULL)$/;
@@ -404,8 +413,8 @@ const push=()=>{if(c.tk.length||c.subj.length)cl.push(c);c={tk:[],subj:[],exc:[]
 for(const x of tk){
 if(x=='EXC'){c.inExc=true;continue}
 if(/^(NM\d+|GRP\d+|ALL)$/.test(x)){if(c.inExc){c.exc.push(x);continue}if(c.pred&&c.hasS)push();c.subj.push(x);c.hasS=true;continue}
-if(x=='LIM'&&(c.pred||c.tk.includes('LIM')))push();
-if(x=='MIN'&&(c.pred||c.tk.includes('MIN')||c.tk.includes('LIM')))push();
+if(x=='LIM'&&c.tk.includes('LIM'))push();
+if(x=='MIN'&&(c.tk.includes('MIN')||c.tk.includes('LIM')))push();
 if(PRED.test(x))c.pred=true;
 c.tk.push(x)}
 push();return cl}
@@ -415,7 +424,7 @@ const FILL=new Set([',','&','و','and']);
 function dateIdx(tk,strict){const set=new Set();
 const isD=x=>isNum(x)||/^RG/.test(x);
 const follows=(j)=>{const x=tk[j+1],y=tk[j+2];return /^(NGT|DAYS|WRK|UNIT)$/.test(x||'')};
-const takeList=(from)=>{let j=from;while(j<tk.length){if(FILL.has(tk[j])){j++;continue}if(isD(tk[j])&&!(isNum(tk[j])&&follows(j))){set.add(j);j++;continue}break}};
+const takeList=(from)=>{let j=from;while(tk[j]=='on'||tk[j]=='is'||tk[j]=='the'||tk[j]=='at')j++;while(j<tk.length){if(FILL.has(tk[j])){j++;continue}if(isD(tk[j])&&!(isNum(tk[j])&&follows(j))){set.add(j);j++;continue}break}};
 tk.forEach((x,i)=>{if(x=='DCUE')takeList(i+1);else if(/^RG/.test(x))set.add(i);else if(!strict&&/^(OFFD|NGT|DAYS)$/.test(x))takeList(i+1)});
 return set}
 function typedDates(tk,dset){
@@ -433,7 +442,7 @@ out.push({type:ty,days:[...new Set(it.days)].sort((x,y)=>x-y),rng:it.rng})}
 return out}
 function scopeOf(c,ctx){
 const idx=new Set();let all=false,amb=null;
-const exp=x=>{if(x=='ALL'){all=true;return[]}if(x.startsWith('GRP')){const tl=ctx.titles[+x.slice(3)];return nurses.filter(n=>n.title.toLowerCase()==tl).map(n=>n.i)}const m=ctx.ments[+x.slice(2)];if(m.c.length>1){amb=m;return[]}return[m.c[0].i]};
+const exp=x=>{if(x=='ALL'){all=true;return[]}if(x.startsWith('GRP')){const tl=ctx.titles[+x.slice(3)];return nurses.filter(n=>n.title.toLowerCase()==tl||(n.tg||[]).includes(tl)).map(n=>n.i)}const m=ctx.ments[+x.slice(2)];if(m.c.length>1){amb=m;return[]}return[m.c[0].i]};
 c.subj.forEach(x=>exp(x).forEach(i=>idx.add(i)));
 if(!c.subj.length||(all&&!idx.size))nurses.forEach(n=>idx.add(n.i)),all=true;
 const exc=[];c.exc.forEach(x=>exp(x).forEach(i=>exc.push(i)));
@@ -455,17 +464,68 @@ const byT={};nurses.forEach((n,i)=>{(byT[n.title.toLowerCase()||'_']=byT[n.title
 Object.values(byT).forEach(l=>l.forEach((i,k)=>{const g=(k%4==0||k%4==3)?0:1;BLK[i]=g==0?ord(o1):ord(o2);if(P[i])P[i].fracN=0.5}));
 MSG.rsum.push({who:t('all'),k:'r_blk_'+ord(o1).toLowerCase()+'_'+ord(o2).toLowerCase(),a:[]});
 return keep.join('\n')}
+
+const NW_={'واحد':1,'واحده':1,'اتنين':2,'اثنين':2,'ثنين':2,'ثلاث':3,'تلات':3,'ثلاثه':3,'تلاته':3,'اربع':4,'اربعه':4,'خمس':5,'خمسه':5,'ست':6,'سته':6,'سبع':7,'سبعه':7,'ثمان':8,'تمان':8,'ثمانيه':8,'تمانيه':8,'تسع':9,'تسعه':9,'عشر':10,'عشره':10,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
+const nm_=x=>String(x).toLowerCase().replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه');
+const num_=w=>w==null?null:(/^\d+$/.test(w)?+w:(NW_[w]||null));
+const FIRSTN=/(?:اول|اوايل|اوائل|first|top)\s*(?:ال)?\s*(\d+|[a-zء-ي]+)\s*(?:اسماء|اسامي|اسم|ممرضين|ممرضات|ممرض|nurses|names|staff|استاف|people)?/;
+const LASTN=/(?:اخر|اواخر|last|bottom)\s*(?:ال)?\s*(\d+|[a-zء-ي]+)\s*(?:اسماء|اسامي|اسم|ممرضين|ممرضات|ممرض|nurses|names|staff|استاف|people)/;
+function detectCN(text){MINCN=null;MCD=MCN=0;
+const sents=String(text).split(/[\n.;!?]+/).map(x=>x.trim()).filter(Boolean),keep=[];
+sents.forEach(s=>{const n=nm_(s);let used=false;
+if(!/(^|[^a-z])(cn|charge)([^a-z]|$)/.test(n)){keep.push(s);return}
+const f=n.match(FIRSTN);
+if(f&&num_(f[1])){const k=num_(f[1]);for(let i=0;i<Math.min(k,nurses.length);i++)nurses[i].title='CN';MSG.rsum.push({who:t('all'),k:'r_cn_mark',a:[k]});used=true}
+const limit=/(اكتر من|اكثر من|more than|max|اقصي|حد اقصي|ميشتغل|مايشتغل|ما يشتغل|لا يشتغل)/.test(n);
+const shiftW=/(شيفت|شفت|shift|نايت|night|داي|day\b|ليل|صباح|نهار)/.test(n);
+const cue=/(فيه|موجود|present|each|every|كل|per |على الاقل|at ?least|لازم|must|need|should|يكون|يبقي|available|cover)/.test(n.replace(f?f[0]:'',''));
+if(shiftW&&cue&&!limit){
+const hn=/(نايت|night|ليل)/.test(n),hd=/(داي|\bday\b|صباح|نهار)/.test(n.replace(/(each|every) day(?! shift)/g,' '));
+const both=hn===hd||(!hn&&!hd);
+if(/(مش لازم|مفيش cn|no need|not required|doesn.t need|لا يلزم)/.test(n)){MCD=MCN=0;MINCN=0;MSG.rsum.push({who:t('all'),k:'r_cn_none',a:[]})}
+else{let v=1,m=n.replace(f?f[0]:'','').match(/(\d+|[a-zء-ي]+)\s*(?:من\s*)?(?:ال)?\s*(?:cn|charge)/);if(m&&num_(m[1]))v=num_(m[1]);else{m=n.replace(f?f[0]:'','').match(/(?:cn|charge)\s*(?:nurses?)?\s*(\d+)/);if(m)v=+m[1];else{m=n.match(/(?:على الاقل|at ?least|minimum|min)\s*(\d+|[a-zء-ي]+)/);if(m&&num_(m[1]))v=num_(m[1])}}
+if(both||!hn)MCD=Math.max(MCD,v);if(both||hn)MCN=Math.max(MCN,v);MINCN=Math.max(MCD,MCN);
+MSG.rsum.push({who:t('all'),k:both?'r_cn_min':(hn?'r_cn_minN':'r_cn_minD'),a:[v]})}used=true}
+if(!used)keep.push(s)});
+return keep.join('\n')}
+function detectExtra(text,req){
+const sents=String(text).split(/[\n.;!?]+/).map(x=>x.trim()).filter(Boolean),keep=[];
+nurses.forEach(n=>{n.tg=[]});
+sents.forEach(s=>{let n=nm_(s),used=false;
+/* first / last N names -> tagged group */
+const fm=n.match(FIRSTN),lm=n.match(LASTN);
+if(fm&&num_(fm[1])&&!/(cn|charge)/.test(n)){const k=num_(fm[1]),tg='zfirst'+k;nurses.forEach((x,i)=>{if(i<k)x.tg.push(tg)});s=s.replace(new RegExp(fm[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')),' '+tg+' ');n=nm_(s)}
+else if(lm&&num_(lm[1])){const k=num_(lm[1]),tg='zlast'+k;nurses.forEach((x,i)=>{if(i>=nurses.length-k)x.tg.push(tg)});s=s.replace(new RegExp(lm[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')),' '+tg+' ');n=nm_(s)}
+/* weekends off at least N */
+if(/(ويك ?اند|ويكند|weekend)/.test(n)&&/(على الاقل|at ?least|minimum|الاقل)/.test(n)&&/(اجاز|راح|off|rest|ياخد|يخد|take|get)/.test(n)&&!/(شغل|work)\w*\s+(?:كل|every)/.test(n)){
+let m=n.match(/(\d+)\s*(?:ويك|weekend)/)||n.match(/(واحد|اتنين|اثنين|ثنين|تلات|ثلاث|one|two|three)\s*(?:ويك|weekend)/)||n.match(/(?:ويك ?اند|ويكند|weekend)s?\s*(واحد|اتنين|اثنين|1|2|3)/);
+let W=m?num_(m[1]):1;if(!W||/ويك ?اند واحد|ويكند واحد/.test(n))W=W||1;
+const wk=[];for(let d=1;d<=days;d++)if(new Date(Y,M-1,d).getDay()==5)wk.push(d);
+if(wk.length){const nW=wk.length;W=Math.min(W,nW);const step=Math.max(1,Math.floor(nW/W));
+nurses.forEach((x,i)=>{let got=0;for(let q=0;q<nW&&got<W;q++){const w=wk[((i%nW)+(got*step)+q)%nW];const dd=[w,w+1<=days?w+1:null].filter(Boolean);
+if(dd.every(d=>!req[i][d-1])){dd.forEach(d=>setOrder(req,i,d,'OFF'));got++}}});
+MSG.rsum.push({who:t('all'),k:'r_wkoff',a:[W]});used=true}}
+/* min off days per month */
+else if(/(على الاقل|at ?least|minimum|الاقل)/.test(n)&&/(اجاز|راح|off|rest)/.test(n)&&/(شهر|month)/.test(n)&&/(\d+|واحد|اتنين|تلات|اربع|خمس|ست|سبع|ثمان|تسع|عشر)/.test(n)&&!/(متتال|ورا بعض|consecutive|in a row)/.test(n)){
+const m=n.match(/(\d+)/)||n.match(/(واحد|اتنين|تلات|اربع|خمس|ست|سبع|ثمان|تسع|عشر)\w*/);const v=num_(m&&m[1]);const off=days-(+($('base').value)||19);
+if(v){MSG.rsum.push({who:t('all'),k:'r_minoffm',a:[v,off]});if(off<v)MSG.bad.push(['w_minoffm',v,off]);used=true}}
+/* no day right after night */
+else if(/(داي|day)/.test(n)&&/(بعد|after|right after|علطول|directly)/.test(n)&&/(نايت|night)/.test(n)&&/(مينفعش|ميشتغل|مفيش|محدش|no|not|never|nobody|ممنوع|avoid|shouldn|لا )/.test(n)&&!/(راحه|اجازه|off|rest)/.test(n.replace(/after night|بعد نايت/,''))){MSG.rsum.push({who:t('all'),k:'r_nodn',a:[]});used=true}
+if(!used)keep.push(s)});
+return keep.join('\n')}
 function parseRec(text,req){
 MSG.rsum=[];MSG.unk=[];
 text=detectBlocks(text);
-const titles=[...new Set(nurses.map(n=>n.title.toLowerCase()).filter(Boolean))];
+text=detectCN(text);
+text=detectExtra(text,req);
+const titles=[...new Set(nurses.flatMap(n=>[n.title.toLowerCase(),...(n.tg||[])]).filter(Boolean))];
 const sents=String(text).split(/[\n.;!?]+/).map(x=>x.trim()).filter(Boolean);
 const clausesAll=[];
 sents.forEach(sent=>{
 const ctx={titles,ments:[]};
 let tk=lex(sent,ctx);
 /* mentions */
-const toks=tk.map(x=>/^[a-z']+$/.test(x)?{w:x}:/^\d+$/.test(x)&&+x>=100?{n:+x,raw:x}:{});
+const toks=tk.map(x=>/^[a-z']+$/.test(x)?{w:x}:/^[؀-ۿ]{3,}$/.test(x)&&arNameFor(x)?{w:arNameFor(x)}:/^\d+$/.test(x)&&+x>=100?{n:+x,raw:x}:{});
 const ment=mentionsOf(toks);const out=[];let k=0,mi=0;
 for(let i=0;i<tk.length;i++){const m=ment.find(z=>z.s==i);if(m){ctx.ments.push(m);out.push('NM'+(ctx.ments.length-1));i=m.e}else out.push(tk[i])}
 tk=out;
@@ -476,7 +536,7 @@ if(!cls.length||bad)MSG.unk.push(sent)});
 function setOrder(req,i,d,ty){if(req[i][d-1]==='AL')return;if(ty==='MUST'){FW[i][d-1]=true;return}req[i][d-1]=ty;HF[i][d-1]=true}
 function evalClause(c,ctx,req){
 let tk=c.tk;
-if((tk.includes('OCC')||tk.includes('NEED')||(!c.subj.length&&tk.includes('NGT')))&&tk.includes('DCUE')&&!tk.includes('DAYS')&&!tk.some(x=>/^(WD\d|WKND)$/.test(x))){const k0=tk.indexOf('DCUE');tk=tk.slice();tk[k0]='DAYS'}
+if((tk.includes('OCC')||(tk.includes('NEED')&&!c.subj.length)||(!c.subj.length&&tk.includes('NGT')))&&tk.includes('DCUE')&&!tk.includes('DAYS')&&!tk.some(x=>/^(WD\d|WKND)$/.test(x))){const k0=tk.indexOf('DCUE');tk=tk.slice();tk[k0]='DAYS'}
 const has=x=>tk.includes(x);
 const sc=scopeOf(c,ctx);
 if(sc.amb){MSG.bad.push(['w_amb',sc.amb.c.slice(0,4).map(x=>x.name+' '+x.id).join(' / ')]);return 1}
@@ -506,7 +566,7 @@ if(done)return 1}
 /* 2) rest after nights */
 if(has('OFFD')&&has('AFT')&&has('NGT')){const ni=firstNum(-1,1);const v=ni>=0?+tk[ni]:1;put('ran',v);say('r_ran',v);return 1}
 /* 3) on call */
-if(has('OCC')){const ds=[...new Set(tk.flatMap((x,i)=>/^(WD\d|WKND|RG.*)$/.test(x)?daysOf2(x):[]))];const dd=ds.length?ds:null;
+if(has('OCC')){tk.forEach((x,i)=>{if(x=='DCUE')tk[i]='DAYS'});const ds=[...new Set(tk.flatMap((x,i)=>/^(WD\d|WKND|RG.*)$/.test(x)?daysOf2(x):[]))];const dd=ds.length?ds:null;
 let hit=false;const nums=[];tk.forEach((x,i)=>{if(isNum(x))nums.push(i)});
 const setOC=(sh,v)=>{for(let d=1;d<=days;d++)if(!dd||dd.includes(d)){(sh=='N'?nocA:docA)[d-1]=v}say(sh=='N'?'r_noc':'r_doc',v,dd?fmt(dd):t('all_days'));hit=true};
 const used=new Set();tk.forEach((x,i)=>{if(x=='NGT'||x=='DAYS'){let ni=-1;for(let j=i-1;j>=Math.max(0,i-2);j--)if(isNum(tk[j])&&!used.has(j)){ni=j;break}if(ni<0)for(let j=i+1;j<=Math.min(tk.length-1,i+3);j++)if(isNum(tk[j])&&!used.has(j)){ni=j;break}if(ni>=0){used.add(ni);setOC(x=='NGT'?'N':'D',+tk[ni])}}});
@@ -516,7 +576,7 @@ if(hit)return 1}
 if(!c.subj.length&&shiftTk&&!has('OFFD')&&!has('ONLY')&&!has('NEG')&&tk.some(isNum)){
 const dset=dateIdx(tk,true);const dd=[...new Set(tk.flatMap((x,i)=>dset.has(i)||/^(WD\d|WKND)$/.test(x)?daysOfTok(x):[]))];
 const isDate=new Set(dset);let hit=false;
-tk.forEach((x,i)=>{if(x=='NGT'||x=='DAYS'){let ni=-1;for(let j=i-1;j>=Math.max(0,i-2);j--)if(isNum(tk[j])&&!isDate.has(j)){ni=j;break}if(ni<0)for(let j=i+1;j<=Math.min(tk.length-1,i+3);j++)if(isNum(tk[j])&&!isDate.has(j)){ni=j;break}
+tk.forEach((x,i)=>{if(x=='NGT'||x=='DAYS'){let ni=-1;for(let j=i-1;j>=Math.max(0,i-3);j--)if(isNum(tk[j])&&!isDate.has(j)){ni=j;break}if(ni<0)for(let j=i+1;j<=Math.min(tk.length-1,i+3);j++)if(isNum(tk[j])&&!isDate.has(j)){ni=j;break}
 if(ni>=0){const v=+tk[ni];for(let d=1;d<=days;d++)if(!dd.length||dd.includes(d)){(x=='NGT'?nRA:dRA)[d-1]=v}say(x=='NGT'?'r_nreq':'r_dreq',v,dd.length?fmt(dd):t('all_days'));hit=true}}});
 if(hit)return 1}
 /* 5) specific days / weekdays orders */
@@ -527,7 +587,7 @@ const groups=typedDates(tk,dset);
 const neg=has('NEG'),off=has('OFFD'),ngt=has('NGT'),dys=has('DAYS'),must=has('MUST')||has('WRK');
 groups.forEach(g=>{if(!g.days.length)return;
 let ty=g.type;
-if(!ty){if(off&&!neg)ty='OFF';else if(off&&neg)ty='MUST';else if(neg&&(ngt||dys))ty=ngt?'SOFT_D':'SOFT_N';else if(neg&&must)ty='OFF';else if(must)ty='MUST';else ty='OFF'}
+if(!ty){if(off&&!neg)ty='OFF';else if(off&&neg)ty='MUST';else if(neg&&(ngt||dys))ty=ngt?'SOFT_D':'SOFT_N';else if(neg&&must)ty='OFF';else if(must)ty='MUST';else if(neg)ty='OFF';else if(has('NEED')&&c.subj.length)ty='MUST';else ty='OFF'}
 else if(neg&&ty=='OFF')ty='MUST';
 const ds=fmt(g.days);
 L.forEach(i=>{g.days.forEach(d=>{
@@ -556,7 +616,7 @@ if(has('FAIR')){say('r_fair');return 1}
 return null}
 function daysOf2(x){return daysOfTok(x)}
 /* ================= Roster engine ================= */
-let BCELL=null;const bp=(i,d)=>BLK[i]?(d<BSP[i]?BLK[i][0]:BLK[i][1]):'';
+const role=i=>(ROLES[i]!==undefined?ROLES[i]:(nurses[i]?nurses[i].title:''))||'';let BCELL=null;const bp=(i,d)=>BLK[i]?(d<BSP[i]?BLK[i][0]:BLK[i][1]):'';
 function newP(base){return{tot:base,totadj:0,totcap:null,totmul:null,ncnt:null,dcnt:null,ncap:null,only:null,fracN:null,mxc:5,mxo:99,mxn:99,ran:0,minb:0,minoff:0,mow:0,mpw:99}}
 function resolveReq(req){const out=[];nurses.forEach((n,i)=>{const p=P[i],cut=[];let o=0,w=0;
 for(let d=0;d<days;d++){const x=req[i][d];
@@ -566,8 +626,8 @@ else{o=0;w=0}}
 if(cut.length)out.push(n.name+': '+fmt(cut))});return out}
 function repairR(req,tot){
 const N=nurses.length,W=s=>s=='D'||s=='N',fx=(i,d)=>req[i][d]!==''||FW[i][d];
-const cd=Array(days).fill(0),cn=Array(days).fill(0);
-for(let i=0;i<N;i++)for(let d=0;d<days;d++){if(R[i][d]=='D')cd[d]++;else if(R[i][d]=='N')cn[d]++}
+const cd=Array(days).fill(0),cn=Array(days).fill(0),kd=Array(days).fill(0),kn=Array(days).fill(0);const CNL=[];CNI.forEach((x,i)=>{if(x)CNL.push(i)});
+for(let i=0;i<N;i++)for(let d=0;d<days;d++){if(R[i][d]=='D'){cd[d]++;if(CNI[i])kd[d]++}else if(R[i][d]=='N'){cn[d]++;if(CNI[i])kn[d]++}}
 const ok=(i,d,t)=>{const p=P[i];if(p.only&&t!==p.only)return false;if(PREF[i][d]&&PREF[i][d]!==t)return false;return true};
 const useWin=i=>P[i].mpw<99||P[i].mow>0;
 const nc=i=>{const p=P[i],r=R[i];let c=0,w=0,o=0,nr=0,lastN=-99,runS=0;
@@ -579,15 +639,15 @@ if(s=='N'){nr=(d&&r[d-1]=='N')?nr+1:1;if(nr>p.mxn)c+=700;lastN=d}else{nr=0;if(d&
 else{if(o==0){if(w>0&&p.minb&&w<p.minb&&runS>0)c+=250;runS=d}o++;w=0;nr=0;if(o>p.mxo)c+=700;if(FW[i][d])c+=500}}
 if(useWin(i)&&days>=7){let wc=0;for(let d=0;d<days;d++){if(W(r[d]))wc++;if(d>=7&&W(r[d-7]))wc--;if(d>=6){if(wc>p.mpw)c+=400*(wc-p.mpw);if(7-wc<p.mow)c+=400*(p.mow-(7-wc))}}}
 return c};
-const cov=d=>1000*(Math.max(0,dRA[d]-cd[d])+Math.max(0,nRA[d]-cn[d]))+(BCELL?1:15)*(Math.max(0,cd[d]-dRA[d])+Math.max(0,cn[d]-nRA[d]));
-const put=(i,d,t)=>{const o=R[i][d];if(o=='D')cd[d]--;else if(o=='N')cn[d]--;R[i][d]=t;if(t=='D')cd[d]++;else if(t=='N')cn[d]++};
+const cov=d=>1000*(Math.max(0,dRA[d]-cd[d])+Math.max(0,nRA[d]-cn[d]))+(MINCN>0?900*((dRA[d]>0?Math.max(0,MCD-kd[d]):0)+(nRA[d]>0?Math.max(0,MCN-kn[d]):0)):0)+(BCELL?1:15)*(Math.max(0,cd[d]-dRA[d])+Math.max(0,cn[d]-nRA[d]));
+const put=(i,d,t)=>{const o=R[i][d];if(o=='D'){cd[d]--;if(CNI[i])kd[d]--}else if(o=='N'){cn[d]--;if(CNI[i])kn[d]--}R[i][d]=t;if(t=='D'){cd[d]++;if(CNI[i])kd[d]++}else if(t=='N'){cn[d]++;if(CNI[i])kn[d]++}};
 const rnd=k=>Math.floor(Math.random()*k);
 const bc=(i,d)=>BCELL?(BCELL[i][d]||''):null;const chg=(i,d)=>{if(!BCELL)return 0;const c=W(R[i][d])?R[i][d]:'';return c!==bc(i,d)?3:0};
 const search=ms=>{const t0=Date.now();
 for(let it=0;it<150000&&Date.now()-t0<ms;it++){
 let i,a=-1,b=-1,t;
-const sh=[];if(it%2==0){for(let d=0;d<days;d++){if(cd[d]<dRA[d])sh.push([d,'D']);if(cn[d]<nRA[d])sh.push([d,'N'])}}
-if(sh.length){const[x,ty]=sh[rnd(sh.length)];b=x;t=ty;i=rnd(N);if(R[i][b]!==''||fx(i,b)||!ok(i,b,t))continue;
+const sh=[];if(it%2==0){for(let d=0;d<days;d++){if(cd[d]<dRA[d])sh.push([d,'D']);if(cn[d]<nRA[d])sh.push([d,'N']);if(MINCN>0&&CNL.length){if(dRA[d]>0&&kd[d]<MCD)sh.push([d,'D',1]);if(nRA[d]>0&&kn[d]<MCN)sh.push([d,'N',1])}}}
+if(sh.length){const[x,ty,cf]=sh[rnd(sh.length)];b=x;t=ty;i=(cf&&CNL.length)?CNL[rnd(CNL.length)]:rnd(N);if(R[i][b]!==''||fx(i,b)||!ok(i,b,t))continue;
 const ws=[];for(let d=0;d<days;d++)if(W(R[i][d])&&!fx(i,d))ws.push(d);if(!ws.length)continue;a=ws[rnd(ws.length)]}
 else{i=rnd(N);const m=rnd(5);if(m>=3){const j=rnd(N);a=rnd(days);b=rnd(days);if(i==j||a==b||!W(R[i][a])||fx(i,a)||R[i][b]!==''||fx(i,b)||R[j][a]!==''||fx(j,a)||!W(R[j][b])||fx(j,b))continue;const t1=R[j][b],t2=R[i][a];if(!ok(i,b,t1)||!ok(j,a,t2))continue;const oi=[R[i][a],R[i][b]],oj=[R[j][a],R[j][b]];const cg=()=>chg(i,a)+chg(i,b)+chg(j,a)+chg(j,b);const bf=nc(i)+nc(j)+cov(a)+cov(b)+cg();put(i,a,'');put(i,b,t1);put(j,b,'');put(j,a,t2);const af=nc(i)+nc(j)+cov(a)+cov(b)+cg();if(af>bf){put(i,a,oi[0]);put(i,b,oi[1]);put(j,a,oj[0]);put(j,b,oj[1])}continue}
 if(m==2){a=rnd(days);if(!W(R[i][a])||fx(i,a))continue;t=R[i][a]=='D'?'N':'D';if(!ok(i,a,t))continue;b=-1}
@@ -620,6 +680,7 @@ if(baseOn)nurses.forEach((n,i)=>{const r=BASEMAP[n.name.toLowerCase()];for(let d
 L.al.forEach(r=>rng(r).forEach(d=>{if(req[+r.n])req[+r.n][d]='AL'}));
 parseWish2(req);
 parseRec($('rec').value,req);
+CNI=nurses.map(n=>/(^|[^a-z])(cn|charge)([^a-z]|$)/i.test(n.title));ROLES=nurses.map(n=>n.title);if(MINCN==null){MCD=MCN=CNI.filter(Boolean).length>=2?1:0}MINCN=Math.max(MCD,MCN);
 ovr=resolveReq(req);
 const demN=nR/(dR+nR||1);
 const tot=[],nt=[],dt=[];
@@ -652,7 +713,7 @@ if(pass<2&&left<=0)return;if(pass<1&&tn<=0)return;if(st[i]>=p.mxc)return;
 let sc=Math.max(tn,0)*10+left/(days-d)*100+Math.random()*3+(of[i]>=p.mxo?400:0)+(FW[i][d]?900:0);
 if((PREF[i][d]||bp(i,d))==s)sc+=120;if(st[i]>=lim[i])sc-=250;else{if(s=='N'&&prev[i]=='N'&&ns[i]<3)sc+=500;if(s=='D'&&prev[i]=='D')sc+=40}
 c.push([sc,i])});
-c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}}
+c.sort((x,y)=>y[0]-x[0]);if(MINCN>0){const mm=s=='D'?MCD:MCN;let k=nurses.filter((_,q)=>a[q]==s&&CNI[q]).length;for(const[,i]of c){if(need<=0||k>=mm)break;if(CNI[i]&&a[i]===''){a[i]=s;need--;k++}}}for(const[,i]of c){if(need<=0)break;if(a[i]!=='')continue;a[i]=s;need--}}}
 nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1;lastN[i]=d}else{st[i]=0;ns[i]=0}of[i]=(s=='D'||s=='N')?0:of[i]+1;prev[i]=s})}
 }
 repairR(req,tot);
@@ -662,6 +723,7 @@ if(cd<dRA[d])warn.push(['w_short_d',d+1,dRA[d]-cd]);if(cn<nRA[d])warn.push(['w_s
 const od=OC.filter((r,i)=>r[d]&&R[i][d]=='D').length,on=OC.filter((r,i)=>r[d]&&R[i][d]=='N').length;
 if(od<docA[d]&&cd>=1)warn.push(['oc_short_d',d+1,docA[d]-od]);if(on<nocA[d]&&cn>=1)warn.push(['oc_short_n',d+1,nocA[d]-on])}
 nurses.forEach((n,i)=>{const p=P[i];let w=0,o=0,mw=0,mo=0;R[i].forEach(s=>{if(s=='D'||s=='N'){w++;o=0}else{o++;w=0}mw=Math.max(mw,w);mo=Math.max(mo,o)});if(mw>p.mxc)warn.push(['w_work',n.name,mw]);if(mo>p.mxo)warn.push(['w_off',n.name,mo])});
+if(MINCN>0){['D','N'].forEach(sh=>{const ds=[];for(let d=0;d<days;d++){if((sh=='D'?dRA[d]:nRA[d])>0&&nurses.filter((_,q)=>R[q][d]==sh&&CNI[q]).length<(sh=='D'?MCD:MCN))ds.push(d+1)}if(ds.length)warn.push(['w_cn',sh,fmt(ds)])})}
 nurses.forEach((n,i)=>{const c=R[i].filter(s=>s=='D'||s=='N').length;if(Math.abs(c-tot[i])>1)warn.push(['w_tot',n.name,c,tot[i]])});
 if(baseOn)MSG.bad.push(['base_used']);
 MSG.warn=warn;MSG.ovr=ovr;MSG.ran=true;
@@ -671,23 +733,23 @@ const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function cnts(i){let D=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D')D++;else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i]&&OC[i][d]&&(s=='D'||s=='N'))O++});return{D,N,AL,O,T:D+N}}
 function dayStats(d){return{D:R.filter(r=>r[d]=='D').length,N:R.filter(r=>r[d]=='N').length,OD:OC.filter((r,i)=>r[d]&&R[i][d]=='D').length,ON:OC.filter((r,i)=>r[d]&&R[i][d]=='N').length}}
 function render(){if(!R.length||!nurses.length)return;const sid=$('showid').checked;$('ptitle').textContent='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0')+'   |   D = Day · N = Night · OC = On-call · AL = Annual leave';
-let h='<tr><th rowspan=2>'+t('c_staff')+'</th>';if(sid)h+='<th rowspan=2>ID</th>';
+let h='<tr><th rowspan=2>'+t('c_staff')+'</th><th rowspan=2>'+t('c_role')+'</th>';if(sid)h+='<th rowspan=2>ID</th>';
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=`<th class="${w==5?'we':''}">${d+1}</th>`}
 h+=`<th class="tot" rowspan=2>${t('c_total')}</th><th class="tot" rowspan=2>${t('c_day')}</th><th class="tot" rowspan=2>${t('c_night')}</th><th class="tot" rowspan=2>OC</th><th class="tot" rowspan=2>AL</th></tr><tr>`;
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=`<th class="${w==5?'we':''}">${DOW[w]}</th>`}h+='</tr>';
-nurses.forEach((n,i)=>{const c=cnts(i);h+=`<tr><td class="nm" style="background:hsl(${(i*137.5)%360},70%,80%)">${i+1}. ${n.name}</td>`;if(sid)h+=`<td>${n.id}</td>`;
+nurses.forEach((n,i)=>{const c=cnts(i);h+=`<tr><td class="nm" style="background:hsl(${(i*137.5)%360},70%,80%)">${i+1}. ${n.name}</td><td class="rl${CNI[i]?' cnr':''}">${role(i)}</td>`;if(sid)h+=`<td>${n.id}</td>`;
 R[i].forEach((s,d)=>{h+=`<td class="c ${s||'OFF'}" onclick="tg(${i},${d})">${s}${OC[i]&&OC[i][d]&&(s=='D'||s=='N')?'·OC':''}</td>`});
 h+=`<td class="tot">${c.T}</td><td class="tot">${c.D}</td><td class="tot">${c.N}</td><td class="tot">${c.O}</td><td class="tot">${c.AL}</td></tr>`});
 const rows=[['D',t('r_day'),dRA,'D'],['N',t('r_night'),nRA,'N'],['OD',t('r_dayoc'),docA,'OD'],['ON',t('r_nightoc'),nocA,'ON']];
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
-rows.forEach(([k,lab,arr])=>{const isOc=k=='OD'||k=='ON';h+=`<tr><td class="nm" style="background:${isOc?'#fde9c9':'#eee'}">${lab} · ${t('req')} ${arr[0]}</td>${sid?'<td></td>':''}`;
+rows.forEach(([k,lab,arr])=>{const isOc=k=='OD'||k=='ON';h+=`<tr><td class="nm" style="background:${isOc?'#fde9c9':'#eee'}">${lab} · ${t('req')} ${arr[0]}</td><td></td>${sid?'<td></td>':''}`;
 for(let d=0;d<days;d++){const n=stats[d][k];h+=`<td class="${n<arr[d]?'bad':isOc?'ocr':'tot'}">${n}</td>`}h+='<td colspan=5></td></tr>'});
 $('tb').innerHTML=h}
 function tg(i,d){const s=R[i][d];if(s=='AL')return;R[i][d]=s==''?'D':s=='D'?'N':'';render();saveState()}
-function aoa(){const sid=$('showid').checked;const t0=[[t('c_staff'),...(sid?['ID']:[]),...Array.from({length:days},(_,d)=>d+1),t('c_total'),'D','N','OC','AL']];
-nurses.forEach((n,i)=>{const c=cnts(i);t0.push([n.name,...(sid?[n.id]:[]),...R[i].map((s,d)=>s+(OC[i]&&OC[i][d]&&(s=='D'||s=='N')?'·OC':'')),c.T,c.D,c.N,c.O,c.AL])});
+function aoa(){const sid=$('showid').checked;const t0=[[t('c_staff'),t('c_role'),...(sid?['ID']:[]),...Array.from({length:days},(_,d)=>d+1),t('c_total'),'D','N','OC','AL']];
+nurses.forEach((n,i)=>{const c=cnts(i);t0.push([n.name,role(i),...(sid?[n.id]:[]),...R[i].map((s,d)=>s+(OC[i]&&OC[i][d]&&(s=='D'||s=='N')?'·OC':'')),c.T,c.D,c.N,c.O,c.AL])});
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
-[['D',t('r_day')],['N',t('r_night')],['OD',t('r_dayoc')],['ON',t('r_nightoc')]].forEach(([k,lab])=>t0.push([lab,...(sid?['']:[]),...stats.map(s=>s[k])]));
+[['D',t('r_day')],['N',t('r_night')],['OD',t('r_dayoc')],['ON',t('r_nightoc')]].forEach(([k,lab])=>t0.push([lab,'',...(sid?['']:[]),...stats.map(s=>s[k])]));
 return t0}
 
 function pdf(){if(!R.length)return alert(t('alert_gen'));
@@ -695,7 +757,7 @@ if(!window.jspdf||nurses.some(n=>/[^\x00-\xff]/.test(n.name)))return window.prin
 try{const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a3'});
 const W=420,H=297,m=8,sid=$('showid').checked,N=nurses.length;
 const rgb=h=>[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
-const nameW=sid?62:50,idW=sid?14:0,totW=11;const x0=m,dx0=m+nameW,dw=(W-2*m-nameW-5*totW)/days,tx0=dx0+dw*days;
+const nameW=sid?62:50,roleW=10,totW=11;const x0=m,dx0=m+nameW+roleW,dw=(W-2*m-nameW-roleW-5*totW)/days,tx0=dx0+dw*days;
 const top=m+16,hh=5.5,rowH=Math.max(3.4,Math.min(7,(H-m-top-2*hh-4)/(N+4)));
 doc.setLineWidth(0.15);doc.setDrawColor(120,120,120);
 const cell=(x,y,w,h,txt,o={})=>{doc.setFillColor(...rgb(o.f||'FFFFFF'));doc.rect(x,y,w,h,'FD');if(txt===''||txt==null)return;
@@ -704,55 +766,55 @@ doc.setTextColor(...rgb(o.c||'000000'));
 if(o.left)doc.text(String(txt),x+1.2,y+h/2,{baseline:'middle'});else doc.text(String(txt),x+w/2,y+h/2,{align:'center',baseline:'middle'})};
 doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(15,63,111);doc.text('Staff Nurse Schedule  -  '+Y+'/'+String(M).padStart(2,'0'),W/2,m+7,{align:'center'});
 doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);doc.text('D = Day   N = Night   OC = On-call   AL = Annual leave',W/2,m+12,{align:'center'});
-cell(x0,top,nameW,hh*2,'Staff',{f:'E9EDF2',b:1});
+cell(x0,top,nameW,hh*2,'Staff',{f:'E9EDF2',b:1});cell(x0+nameW,top,roleW,hh*2,'Role',{f:'E9EDF2',b:1});
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay(),f=w==5?'F6C6C6':'E9EDF2';cell(dx0+d*dw,top,dw,hh,String(d+1),{f,b:1});cell(dx0+d*dw,top+hh,dw,hh,DOW[w],{f,fs:6.5})}
 ['Total','Day','Night','OC','AL'].forEach((l,k)=>cell(tx0+k*totW,top,totW,hh*2,l,{f:'D9DDF5',b:1}));
 const y0=top+2*hh;
-nurses.forEach((n,i)=>{const y=y0+i*rowH,c=cnts(i);cell(x0,y,nameW,rowH,(i+1)+'. '+n.name+(sid&&n.id?'  ('+n.id+')':''),{f:hex((i*137.5)%360,70,80),b:1,left:1});
+nurses.forEach((n,i)=>{const y=y0+i*rowH,c=cnts(i);cell(x0,y,nameW,rowH,(i+1)+'. '+n.name+(sid&&n.id?'  ('+n.id+')':''),{f:hex((i*137.5)%360,70,80),b:1,left:1});cell(x0+nameW,y,roleW,rowH,role(i),{f:CNI[i]?'FFD9A8':'FFFFFF',b:CNI[i]?1:0});
 R[i].forEach((s,d)=>{const oc=OC[i]&&OC[i][d]&&(s=='D'||s=='N'),txt=(s=='D'||s=='N'||s=='AL'?s:'')+(oc?'-OC':'');
 const o=s=='D'?{f:'FFF3B0',b:1}:s=='N'?{f:'26397A',c:'FFFFFF',b:1}:s=='AL'?{f:'9BE0A8',b:1}:{f:'FFFFFF'};if(oc)o.c=s=='N'?'FFD27F':'C0392B';cell(dx0+d*dw,y,dw,rowH,txt,o)});
 [c.T,c.D,c.N,c.O,c.AL].forEach((v,k)=>cell(tx0+k*totW,y,totW,rowH,String(v),{f:'EEEEFF',b:1}))});
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
-[['D','Day',dRA],['N','Night',nRA],['OD','Day OC',docA],['ON','Night OC',nocA]].forEach(([k,lab,arr],q)=>{const y=y0+(N+q)*rowH,oc=k=='OD'||k=='ON';cell(x0,y,nameW,rowH,lab+'  (req '+arr[0]+')',{f:oc?'FDE9C9':'DDDDDD',b:1,left:1});
+[['D','Day',dRA],['N','Night',nRA],['OD','Day OC',docA],['ON','Night OC',nocA]].forEach(([k,lab,arr],q)=>{const y=y0+(N+q)*rowH,oc=k=='OD'||k=='ON';cell(x0,y,nameW,rowH,lab+'  (req '+arr[0]+')',{f:oc?'FDE9C9':'DDDDDD',b:1,left:1});cell(x0+nameW,y,roleW,rowH,'',{f:oc?'FDE9C9':'DDDDDD'});
 for(let d=0;d<days;d++){const v=stats[d][k];cell(dx0+d*dw,y,dw,rowH,String(v),{f:v<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF',b:1})}});
 doc.save('Roster_'+Y+'-'+String(M).padStart(2,'0')+'.pdf')}catch(e){window.print()}}
 
 function xlHtml(){try{const sid=$('showid').checked,B='border:1px solid #888;text-align:center;font:bold 11px Calibri,Arial;';
 const c=(v,bg,col,x)=>`<td style="${B}background:#${bg};color:#${col||'000'};${x||''}">${v}</td>`;
-let h='<tr><td colspan="'+(1+(sid?1:0)+days+5)+'" style="font:bold 16px Calibri;text-align:center">Staff Nurse Schedule - '+Y+'/'+String(M).padStart(2,'0')+'</td></tr><tr>'+c(t('c_staff'),'E9EDF2')+(sid?c('ID','E9EDF2'):'');
+let h='<tr><td colspan="'+(2+(sid?1:0)+days+5)+'" style="font:bold 16px Calibri;text-align:center">Staff Nurse Schedule - '+Y+'/'+String(M).padStart(2,'0')+'</td></tr><tr>'+c(t('c_staff'),'E9EDF2')+c(t('c_role'),'E9EDF2')+(sid?c('ID','E9EDF2'):'');
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=c(d+1+'<br>'+DOW[w],w==5?'F6C6C6':'E9EDF2')}
 h+=['Total','D','N','OC','AL'].map(l=>c(l,'D9DDF5')).join('')+'</tr>';
-nurses.forEach((n,i)=>{const k=cnts(i);h+='<tr>'+c((i+1)+'. '+n.name,hex((i*137.5)%360,70,80),'000','text-align:left;')+(sid?c(n.id,'FFFFFF'):'');
+nurses.forEach((n,i)=>{const k=cnts(i);h+='<tr>'+c((i+1)+'. '+n.name,hex((i*137.5)%360,70,80),'000','text-align:left;')+c(role(i),CNI[i]?'FFD9A8':'FFFFFF')+(sid?c(n.id,'FFFFFF'):'');
 R[i].forEach((s,d)=>{const oc=OC[i]&&OC[i][d]&&(s=='D'||s=='N'),v=(s=='D'||s=='N'||s=='AL'?s:'')+(oc?'·OC':'');h+=c(v,s=='D'?'FFF3B0':s=='N'?'26397A':s=='AL'?'9BE0A8':'FFFFFF',s=='N'?'FFFFFF':'000')});
 h+=[k.T,k.D,k.N,k.O,k.AL].map(v=>c(v,'EEEEFF')).join('')+'</tr>'});
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
-[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]].forEach(([k,lab,arr])=>{const oc=k=='OD'||k=='ON';h+='<tr>'+c(lab+' · '+t('req')+' '+arr[0],oc?'FDE9C9':'DDDDDD','000','text-align:left;')+(sid?c('','FFFFFF'):'');for(let d=0;d<days;d++){const v=stats[d][k];h+=c(v,v<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF')}h+='</tr>'});
+[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]].forEach(([k,lab,arr])=>{const oc=k=='OD'||k=='ON';h+='<tr>'+c(lab+' · '+t('req')+' '+arr[0],oc?'FDE9C9':'DDDDDD','000','text-align:left;')+c('',oc?'FDE9C9':'DDDDDD')+(sid?c('','FFFFFF'):'');for(let d=0;d<days;d++){const v=stats[d][k];h+=c(v,v<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF')}h+='</tr>'});
 const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body><table style="border-collapse:collapse">'+h+'</table></body></html>';
 const url=URL.createObjectURL(new Blob(['﻿'+html],{type:'application/vnd.ms-excel'}));const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xls`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlOld()}}
 function xlOld(){if(!R.length)return alert(t('alert_gen'));try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
 const hex=(h,s,l)=>{s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0')};return(f(0)+f(8)+f(4)).toUpperCase()};
 async function xl(){if(!R.length)return alert(t('alert_gen'));
 if(typeof ExcelJS==='undefined')return xlHtml();
-try{const sid=$('showid').checked,wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Roster',{views:[{state:'frozen',xSplit:sid?2:1,ySplit:3}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:8,margins:{left:0.2,right:0.2,top:0.3,bottom:0.3,header:0.1,footer:0.1}}});
-const nc0=sid?2:1,dc0=nc0+1,tc0=dc0+days,lastC=tc0+4;
+try{const sid=$('showid').checked,wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Roster',{views:[{state:'frozen',xSplit:sid?3:2,ySplit:3}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:8,margins:{left:0.2,right:0.2,top:0.3,bottom:0.3,header:0.1,footer:0.1}}});
+const nc0=sid?3:2,dc0=nc0+1,tc0=dc0+days,lastC=tc0+4;
 const bd={style:'thin',color:{argb:'FF888888'}},B={top:bd,left:bd,bottom:bd,right:bd};
 const fill=c=>({type:'pattern',pattern:'solid',fgColor:{argb:'FF'+c}});
 const st=(cell,o)=>{cell.border=B;cell.alignment={horizontal:'center',vertical:'middle'};if(o.f)cell.fill=fill(o.f);cell.font={name:'Calibri',size:o.sz||10,bold:!!o.b,color:{argb:'FF'+(o.c||'000000')}}};
 ws.mergeCells(1,1,1,lastC);const tt=ws.getCell(1,1);tt.value='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0');tt.font={size:16,bold:true,color:{argb:'FF0F3F6F'}};tt.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=26;
 const hd=(r,c,v,f,col)=>{const x=ws.getCell(r,c);x.value=v;st(x,{f:f||'E9EDF2',b:true,c:col})};
-hd(2,1,t('c_staff'));ws.mergeCells(2,1,3,1);if(sid){hd(2,2,'ID');ws.mergeCells(2,2,3,2)}
+hd(2,1,t('c_staff'));ws.mergeCells(2,1,3,1);hd(2,2,t('c_role'));ws.mergeCells(2,2,3,2);if(sid){hd(2,3,'ID');ws.mergeCells(2,3,3,3)}
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay(),f=w==5?'F6C6C6':'E9EDF2';hd(2,dc0+d,d+1,f);hd(3,dc0+d,DOW[w],f)}
 [[t('c_total'),'T'],['D','D'],['N','N'],['OC','O'],['AL','AL']].forEach(([l,k],x)=>{hd(2,tc0+x,l,'D9DDF5');ws.mergeCells(2,tc0+x,3,tc0+x)});
 nurses.forEach((n,i)=>{const r=4+i,c=cnts(i);const a=ws.getCell(r,1);a.value=(i+1)+'. '+n.name;st(a,{f:hex((i*137.5)%360,70,80),b:true});a.alignment={horizontal:'left',vertical:'middle'};
-if(sid){const b=ws.getCell(r,2);b.value=n.id;st(b,{})}
+{const rr=ws.getCell(r,2);rr.value=role(i);st(rr,{f:CNI[i]?'FFD9A8':'FFFFFF',b:!!CNI[i]})}if(sid){const b=ws.getCell(r,3);b.value=n.id;st(b,{})}
 R[i].forEach((s,d)=>{const x=ws.getCell(r,dc0+d),oc=OC[i]&&OC[i][d]&&(s=='D'||s=='N');x.value=(s=='OFF'?'':s)+(oc?'·OC':'');
 if(s=='D')st(x,{f:'FFF3B0',b:true});else if(s=='N')st(x,{f:'26397A',c:'FFFFFF',b:true});else if(s=='AL')st(x,{f:'9BE0A8',b:true});else st(x,{f:'FFFFFF',c:'AAAAAA'});
 if(oc){x.font={name:'Calibri',size:10,bold:true,color:{argb:s=='N'?'FFFFD27F':'FFC0392B'}}}});
 [c.T,c.D,c.N,c.O,c.AL].forEach((v,x)=>{const y=ws.getCell(r,tc0+x);y.value=v;st(y,{f:'EEEEFF',b:true})})});
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
-[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]].forEach(([k,lab,arr],q)=>{const r=4+nurses.length+q,oc=k=='OD'||k=='ON';const a=ws.getCell(r,1);a.value=lab+' · '+t('req')+' '+arr[0];st(a,{f:oc?'FDE9C9':'DDDDDD',b:true});a.alignment={horizontal:'left',vertical:'middle'};if(sid)st(ws.getCell(r,2),{f:oc?'FDE9C9':'DDDDDD'});
+[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]].forEach(([k,lab,arr],q)=>{const r=4+nurses.length+q,oc=k=='OD'||k=='ON';const a=ws.getCell(r,1);a.value=lab+' · '+t('req')+' '+arr[0];st(a,{f:oc?'FDE9C9':'DDDDDD',b:true});a.alignment={horizontal:'left',vertical:'middle'};for(let q=2;q<=nc0;q++)st(ws.getCell(r,q),{f:oc?'FDE9C9':'DDDDDD'});
 for(let d=0;d<days;d++){const n=stats[d][k],x=ws.getCell(r,dc0+d);x.value=n;st(x,{f:n<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF',b:true})}});
-ws.getColumn(1).width=26;if(sid)ws.getColumn(2).width=9;for(let d=0;d<days;d++)ws.getColumn(dc0+d).width=5.2;for(let x=0;x<5;x++)ws.getColumn(tc0+x).width=7;
+ws.getColumn(1).width=26;ws.getColumn(2).width=7;if(sid)ws.getColumn(3).width=9;for(let d=0;d<days;d++)ws.getColumn(dc0+d).width=5.2;for(let x=0;x<5;x++)ws.getColumn(tc0+x).width=7;
 const buf=await wb.xlsx.writeBuffer();const url=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
 const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xlsx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlHtml()}}
 function cp(){if(!R.length)return alert(t('alert_gen'));const x=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(x).then(()=>alert(t('alert_copied')))}catch(e){prompt('Copy:',x)}}
