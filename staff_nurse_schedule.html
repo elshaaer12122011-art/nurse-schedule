@@ -697,10 +697,23 @@ const stats=Array.from({length:days},(_,d)=>dayStats(d));
 [['D','Day',dRA],['N','Night',nRA],['OD','Day OC',docA],['ON','Night OC',nocA]].forEach(([k,lab,arr],q)=>{const y=y0+(N+q)*rowH,oc=k=='OD'||k=='ON';cell(x0,y,nameW,rowH,lab+'  (req '+arr[0]+')',{f:oc?'FDE9C9':'DDDDDD',b:1,left:1});
 for(let d=0;d<days;d++){const v=stats[d][k];cell(dx0+d*dw,y,dw,rowH,String(v),{f:v<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF',b:1})}});
 doc.save('Roster_'+Y+'-'+String(M).padStart(2,'0')+'.pdf')}catch(e){window.print()}}
+
+function xlHtml(){try{const sid=$('showid').checked,B='border:1px solid #888;text-align:center;font:bold 11px Calibri,Arial;';
+const c=(v,bg,col,x)=>`<td style="${B}background:#${bg};color:#${col||'000'};${x||''}">${v}</td>`;
+let h='<tr><td colspan="'+(1+(sid?1:0)+days+5)+'" style="font:bold 16px Calibri;text-align:center">Staff Nurse Schedule - '+Y+'/'+String(M).padStart(2,'0')+'</td></tr><tr>'+c(t('c_staff'),'E9EDF2')+(sid?c('ID','E9EDF2'):'');
+for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=c(d+1+'<br>'+DOW[w],w==5?'F6C6C6':'E9EDF2')}
+h+=['Total','D','N','OC','AL'].map(l=>c(l,'D9DDF5')).join('')+'</tr>';
+nurses.forEach((n,i)=>{const k=cnts(i);h+='<tr>'+c((i+1)+'. '+n.name,hex((i*137.5)%360,70,80),'000','text-align:left;')+(sid?c(n.id,'FFFFFF'):'');
+R[i].forEach((s,d)=>{const oc=OC[i]&&OC[i][d]&&(s=='D'||s=='N'),v=(s=='D'||s=='N'||s=='AL'?s:'')+(oc?'·OC':'');h+=c(v,s=='D'?'FFF3B0':s=='N'?'26397A':s=='AL'?'9BE0A8':'FFFFFF',s=='N'?'FFFFFF':'000')});
+h+=[k.T,k.D,k.N,k.O,k.AL].map(v=>c(v,'EEEEFF')).join('')+'</tr>'});
+const stats=Array.from({length:days},(_,d)=>dayStats(d));
+[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]].forEach(([k,lab,arr])=>{const oc=k=='OD'||k=='ON';h+='<tr>'+c(lab+' · '+t('req')+' '+arr[0],oc?'FDE9C9':'DDDDDD','000','text-align:left;')+(sid?c('','FFFFFF'):'');for(let d=0;d<days;d++){const v=stats[d][k];h+=c(v,v<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF')}h+='</tr>'});
+const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body><table style="border-collapse:collapse">'+h+'</table></body></html>';
+const url=URL.createObjectURL(new Blob(['﻿'+html],{type:'application/vnd.ms-excel'}));const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xls`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlOld()}}
 function xlOld(){if(!R.length)return alert(t('alert_gen'));try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
 const hex=(h,s,l)=>{s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0')};return(f(0)+f(8)+f(4)).toUpperCase()};
 async function xl(){if(!R.length)return alert(t('alert_gen'));
-if(typeof ExcelJS==='undefined')return xlOld();
+if(typeof ExcelJS==='undefined')return xlHtml();
 try{const sid=$('showid').checked,wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Roster',{views:[{state:'frozen',xSplit:sid?2:1,ySplit:3}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:8,margins:{left:0.2,right:0.2,top:0.3,bottom:0.3,header:0.1,footer:0.1}}});
 const nc0=sid?2:1,dc0=nc0+1,tc0=dc0+days,lastC=tc0+4;
 const bd={style:'thin',color:{argb:'FF888888'}},B={top:bd,left:bd,bottom:bd,right:bd};
@@ -722,7 +735,7 @@ const stats=Array.from({length:days},(_,d)=>dayStats(d));
 for(let d=0;d<days;d++){const n=stats[d][k],x=ws.getCell(r,dc0+d);x.value=n;st(x,{f:n<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF',b:true})}});
 ws.getColumn(1).width=26;if(sid)ws.getColumn(2).width=9;for(let d=0;d<days;d++)ws.getColumn(dc0+d).width=5.2;for(let x=0;x<5;x++)ws.getColumn(tc0+x).width=7;
 const buf=await wb.xlsx.writeBuffer();const url=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
-const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xlsx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlOld()}}
+const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xlsx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlHtml()}}
 function cp(){if(!R.length)return alert(t('alert_gen'));const x=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(x).then(()=>alert(t('alert_copied')))}catch(e){prompt('Copy:',x)}}
 nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}
 </script></body></html>
