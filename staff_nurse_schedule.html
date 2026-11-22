@@ -40,7 +40,7 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <div><label>OC مطلوب نايت</label><input type="number" id="noc" value="1"></div></div></div>
 <div class="card noprint"><h2>3) تعديل عدد شفتات ممرضين معيّنين</h2><div id="cnt"></div><button onclick="add('cnt')">+ إضافة</button></div>
 <div class="card noprint"><h2>4) الأجازات السنوية (AL)</h2><div id="al"></div><button onclick="add('al')">+ إضافة</button><div class="hint">من يوم / إلى يوم (رقم اليوم في الشهر)</div></div>
-<div class="card noprint"><h2>5) رغبات التمريض (تُنفَّذ بالظبط)</h2><div id="wish"></div><button onclick="add('wish')">+ إضافة رغبة</button><div class="hint">D = داي، N = نايت، OFF = إجازة. تتقدم على أي قاعدة تانية.</div></div>
+<div class="card noprint"><h2>5) رغبات التمريض (تُنفَّذ بالظبط)</h2><textarea id="wishtxt" style="min-height:130px" placeholder="اكتب سطر لكل ممرض، مثال:&#10;Ahmed Omar اجازة 5-7, نايت 10-12, داي 20&#10;Sarah off 3, 15-16&#10;Mohamed Ahmed night 1-4"></textarea><div class="hint">اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. أي رغبة تتقدم على باقي القواعد، وأي سطر مش مفهوم هيظهر في التحذيرات.</div></div>
 <div class="card noprint"><h2>6) توصيات الهيد نرس</h2>
 <textarea id="rec" placeholder="مثال:&#10;Ahmed ثلاث ارباع الشفتات نايت والباقي داي&#10;Sarah night only&#10;Omar half day"></textarea>
 <div class="hint">اكتب اسم الممرض (أول اسم) + نايت/داي + (ثلاث أرباع، نص، ربع، 75%…) وإلا اتفهم إنه كله على النوع ده.</div></div>
@@ -113,15 +113,23 @@ $('names').onchange=()=>{nurses=parseN();['cnt','al','wish'].forEach(draw)};
 $('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const wb=XLSX.read(await f.arrayBuffer());const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});$('names').value=rows.filter(r=>r[0]&&isNaN(r[0])).map(r=>[r[0],r[1]||'',r[2]||''].join(',')).join('\n');$('names').onchange()}catch(x){alert('تعذر قراءة الملف')}};
 function rng(r){const a=+r.a;if(!a)return[];const b=+r.b||a;const o=[];for(let d=a;d<=Math.min(b,days);d++)o.push(d-1);return o}
 function fr(txt){if(/ثلاث|3\/4|75/.test(txt))return .75;if(/نص|half|1\/2|50/i.test(txt))return .5;if(/ربع|1\/4|25/.test(txt))return .25;return 1}
+let badW=[];
+function findN(line){const lo=line.toLowerCase();let b=null,s=0;nurses.forEach(n=>{const sc=n.name.toLowerCase().split(/\s+/).filter(w=>w.length>1&&lo.includes(w)).length;if(sc>s){s=sc;b=n}});return b}
+function parseWish(req){badW=[];$('wishtxt').value.split('\n').forEach(line=>{if(!line.trim())return;const n=findN(line);if(!n){badW.push(line.trim());return}
+let rest=line.toLowerCase();n.name.toLowerCase().split(/\s+/).forEach(w=>{if(w.length>1)rest=rest.split(w).join(' ')});let ok=false;
+rest.split(/[,،;؛]/).forEach(seg=>{const t=/off|اجاز|إجاز|راح/.test(seg)?'OFF':/night|نايت|ليل|\bn\b/.test(seg)?'N':/day|داي|نهار|\bd\b/.test(seg)?'D':null;if(!t)return;
+let s2=seg;[...seg.matchAll(/(\d+)\s*(?:-|–|to|الى|إلى)\s*(\d+)/g)].forEach(m=>{for(let d=+m[1];d<=Math.min(+m[2],days);d++)if(d>=1&&req[n.i][d-1]!=='AL'){req[n.i][d-1]=t;ok=true}s2=s2.replace(m[0],' ')});
+(s2.match(/\d+/g)||[]).forEach(x=>{const d=+x;if(d>=1&&d<=days&&req[n.i][d-1]!=='AL'){req[n.i][d-1]=t;ok=true}})});
+if(!ok)badW.push(line.trim())})}
 function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
 const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0;
 const tot=nurses.map(()=>base);L.cnt.forEach(r=>{if(r.a!=='')tot[+r.n]=+r.a});
 const req=nurses.map(()=>Array(days).fill(''));
 L.al.forEach(r=>rng(r).forEach(d=>req[+r.n][d]='AL'));
-L.wish.forEach(r=>rng(r).forEach(d=>{if(req[+r.n][d]!=='AL')req[+r.n][d]=r.t}));
+parseWish(req);
 const demN=nR/(dR+nR||1);const frac=nurses.map(()=>demN),hard=nurses.map(()=>false);
-$('rec').value.split('\n').forEach(line=>{const lo=line.toLowerCase();const n=nurses.find(x=>lo.includes(x.name.split(' ')[0].toLowerCase()));if(!n)return;
+$('rec').value.split('\n').forEach(line=>{const lo=line.toLowerCase();const n=findN(line);if(!n)return;
 const iN=lo.search(/night|نايت|ليل/),iD=lo.search(/day|داي|نهار/);const f=fr(line);
 const nightFirst=iN>=0&&(iD<0||iN<iD);const dayFirst=iD>=0&&(iN<0||iD<iN);
 if(nightFirst)frac[n.i]=f;else if(dayFirst)frac[n.i]=1-f;else return;hard[n.i]=f==1;});
@@ -145,7 +153,7 @@ c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}
 if(need>0)warn.push(`يوم ${d+1}: نقص ${need} في ${s=='N'?'النايت':'الداي'}`)}
 for(const s of['N','D']){let k=s=='N'?nO:dO;nurses.map((_,i)=>i).filter(i=>a[i]==s).sort((x,y)=>oc[x]-oc[y]||x-y).slice(0,k).forEach(i=>{OC[i][d]=true;oc[i]++})}
 nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1}else{st[i]=0;ns[i]=0}prev[i]=s});}
-$('warn').innerHTML=warn.length?'⚠️ '+warn.slice(0,8).join(' • ')+(warn.length>8?' …':'')+' — زوّد عدد الشفتات أو التمريض.':'✅ التغطية كاملة.';
+if(badW.length)warn.unshift('رغبة غير مفهومة: '+badW.join(' | '));$('warn').innerHTML=warn.length?'⚠️ '+warn.slice(0,8).join(' • ')+(warn.length>8?' …':'')+' — زوّد عدد الشفتات أو التمريض.':'✅ التغطية كاملة.';
 render()}
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function cnts(i){let D=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D')D++;else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i][d]&&(s=='D'||s=='N'))O++});return{D,N,AL,O,T:D+N}}
