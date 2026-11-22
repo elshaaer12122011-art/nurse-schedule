@@ -45,7 +45,7 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <textarea id="rec" placeholder="مثال:&#10;Ahmed ثلاث ارباع الشفتات نايت والباقي داي&#10;Sarah night only&#10;Omar half day"></textarea>
 <div class="hint">اكتب اسم الممرض (أول اسم) + نايت/داي + (ثلاث أرباع، نص، ربع، 75%…) وإلا اتفهم إنه كله على النوع ده.</div></div>
 <div class="card noprint"><button class="p" onclick="gen()">⚙️ إنشاء الروستر</button> <button onclick="xl()">⬇ Excel</button> <button onclick="window.print()">🖨 PDF / طباعة</button> <button onclick="cp()">📋 نسخ للـ Excel</button>
-<div id="warn"></div><div class="hint">اضغط على أي خانة في الروستر لتغييرها (D ← N ← فاضي). للـ PDF اختر "Save as PDF" من نافذة الطباعة.</div></div>
+<div id="warn"></div><div id="wsum" class="hint"></div><div class="hint">اضغط على أي خانة في الروستر لتغييرها (D ← N ← فاضي). للـ PDF اختر "Save as PDF" من نافذة الطباعة.</div></div>
 <div class="wrap"><table id="tb"></table></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -121,15 +121,49 @@ rest.split(/[,،;؛]/).forEach(seg=>{const t=/off|اجاز|إجاز|راح/.test
 let s2=seg;[...seg.matchAll(/(\d+)\s*(?:-|–|to|الى|إلى)\s*(\d+)/g)].forEach(m=>{for(let d=+m[1];d<=Math.min(+m[2],days);d++)if(d>=1&&req[n.i][d-1]!=='AL'){req[n.i][d-1]=t;ok=true}s2=s2.replace(m[0],' ')});
 (s2.match(/\d+/g)||[]).forEach(x=>{const d=+x;if(d>=1&&d<=days&&req[n.i][d-1]!=='AL'){req[n.i][d-1]=t;ok=true}})});
 if(!ok)badW.push(line.trim())})}
+let MXC=5;
+function ar2en(s){return s.replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632)}
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];for(let j=1;j<=b.length;j++)m[i][j]=i?Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1)):j}return m[a.length][b.length]}
+const KW={OFF:/^(off|اوف|اجازه|اجازة|إجازة|راحه|راحة)$/,N:/^(night|nights|نايت|ليل|n)$/,D:/^(day|days|داي|نهار|d)$/};
+const STOP=new Set('and the for from with shift shifts till until please plz consider request december dec between thanks thank'.split(' '));
+function kwOf(w){for(const k in KW)if(KW[k].test(w))return k;return null}
+function sim(a,b){if(a==b)return 2;if(a.length<3||b.length<3||a[0]!=b[0])return 0;return lev(a,b)<=(Math.max(a.length,b.length)>=6?2:1)?1:0}
+function fmt(a){a=[...new Set(a)].sort((x,y)=>x-y);const o=[];for(let i=0;i<a.length;){let j=i;while(a[j+1]==a[j]+1)j++;o.push(j>i?a[i]+'-'+a[j]:a[i]);i=j+1}return o.join(',')}
+function parseWish2(req){
+badW=[];const sum={};
+const t=ar2en($('wishtxt').value).toLowerCase().replace(/(\d+)(st|nd|rd|th)\b/g,'$1').replace(/(\d+)\s*[.)\-]\s*(?=(?!off|night|day|نايت|داي|اجاز|اوف)[a-z\u0600-\u06ff])/g,' ');
+const toks=[];const re=/(\d+)\s*(?:-|–|to|till|until|الى|إلى|لحد)\s*(\d+)|(\d+)|([a-z\u0600-\u06ff]+)/g;let m;
+while(m=re.exec(t)){if(m[1])toks.push({r:[+m[1],+m[2]]});else if(m[3])toks.push({n:+m[3],raw:m[3]});else toks.push({w:m[4]})}
+const ids=nurses.map(n=>n.id).filter(Boolean);
+const cand=w=>{if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach(x=>{s=Math.max(s,sim(w,x))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null};
+const ment=[];
+for(let i=0;i<toks.length;i++){const k=toks[i];
+if(k.n!==undefined&&ids.includes(k.raw)){ment.push({s:i,e:i,c:[nurses.find(x=>x.id==k.raw)]});continue}
+if(k.w){const c=cand(k.w);if(!c)continue;let e=i,cs=c;
+while(toks[e+1]&&toks[e+1].w){const c2=cand(toks[e+1].w);if(!c2)break;const x=cs.filter(a=>c2.includes(a));if(!x.length)break;cs=x;e++}
+if(toks[e+1]&&toks[e+1].n!==undefined){const hit=cs.find(a=>a.id==toks[e+1].raw);if(hit){cs=[hit];e++}}
+ment.push({s:i,e,c:cs});i=e}}
+const ms=new Map(ment.map(x=>[x.s,x]));let cur=null,pend=[],fwd=null;
+const apply=(ty,ds)=>{if(!cur)return;ds=ds.filter(d=>d>=1&&d<=days);if(!ds.length)return;ds.forEach(d=>{if(req[cur.i][d-1]!=='AL')req[cur.i][d-1]=ty});(sum[cur.i]=sum[cur.i]||[]).push(ty+' '+fmt(ds))};
+const seen=new Set();
+for(let i=0;i<toks.length;i++){const k=toks[i],mm=ms.get(i);
+if(mm){cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else badW.push('اسم غير واضح ('+mm.c.slice(0,3).map(x=>x.name).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
+if(!cur)continue;
+let ds=null;if(k.r){ds=[];for(let d=k.r[0];d<=Math.min(k.r[1],days);d++)ds.push(d)}else if(k.n!==undefined&&k.n>=1&&k.n<=days)ds=[k.n];
+if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
+else if(k.w){const ty=kwOf(k.w);if(ty){if(pend.length){apply(ty,pend);pend=[];fwd=null}else fwd=ty}}}
+seen.forEach(i=>{if(!sum[i])badW.push(nurses[i].name+': ما فهمتش الأيام')});
+$('wsum').innerHTML=Object.keys(sum).length?'<b>اللي اتفهم من الرغبات (راجعها):</b><br>'+Object.keys(sum).map(i=>nurses[i].name+': '+sum[i].join(' ، ')).join('<br>'):''}
 function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
 const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0;
 const tot=nurses.map(()=>base);L.cnt.forEach(r=>{if(r.a!=='')tot[+r.n]=+r.a});
 const req=nurses.map(()=>Array(days).fill(''));
 L.al.forEach(r=>rng(r).forEach(d=>req[+r.n][d]='AL'));
-parseWish(req);
+parseWish2(req);
 const demN=nR/(dR+nR||1);const frac=nurses.map(()=>demN),hard=nurses.map(()=>false);
-$('rec').value.split('\n').forEach(line=>{const lo=line.toLowerCase();const n=findN(line);if(!n)return;
+const mm0=ar2en($('rec').value).match(/(?:اكتر من|أكثر من|more than|max(?:imum)?|اقصى|أقصى)\D{0,12}?(\d+)[^\n]{0,40}?(?:ورا بعض|وراء بعض|متتال|consecutive|in a row)/i);MXC=mm0?+mm0[1]:5;const indiv=[];
+$('rec').value.split('\n').forEach(line=>{const lo=ar2en(line).toLowerCase();const n=findN(line);if(!n){const a=lo.search(/night|نايت|ليل/),b=lo.search(/day|داي|نهار/),f=fr(lo);if(/كل|all|every|staff|استاف/.test(lo)&&(a>=0||b>=0)){const v=(a>=0&&(b<0||a<b))?f:1-f;nurses.forEach((_,i)=>{if(!indiv[i])frac[i]=v})}return}indiv[n.i]=1;
 const iN=lo.search(/night|نايت|ليل/),iD=lo.search(/day|داي|نهار/);const f=fr(line);
 const nightFirst=iN>=0&&(iD<0||iN<iD);const dayFirst=iD>=0&&(iN<0||iD<iN);
 if(nightFirst)frac[n.i]=f;else if(dayFirst)frac[n.i]=1-f;else return;hard[n.i]=f==1;});
@@ -145,7 +179,7 @@ for(let pass=0;pass<3&&need>0;pass++){
 const c=[];nurses.forEach((n,i)=>{if(a[i]!=='')return;if(s=='D'&&prev[i]=='N')return;
 if(hard[i]&&((s=='N')!=(frac[i]==1)))return;
 const done=nD[i]+nN[i],left=tot[i]-done,tn=s=='N'?nt[i]-nN[i]:dt[i]-nD[i];
-if(pass<2&&left<=0)return;if(pass<1&&tn<=0)return;if(st[i]>=(pass<2?5:7))return;
+if(pass<2&&left<=0)return;if(pass<1&&tn<=0)return;if(st[i]>=(pass<2?MXC:MXC+2))return;
 let sc=Math.max(tn,0)*10+left/(days-d)*100+Math.random()*3;
 if(s=='N'&&prev[i]=='N'&&ns[i]<3)sc+=500;if(s=='D'&&prev[i]=='D')sc+=40;
 c.push([sc,i])});
