@@ -40,7 +40,7 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <div><label>OC مطلوب نايت</label><input type="number" id="noc" value="1"></div></div></div>
 <div class="card noprint"><h2>3) تعديل عدد شفتات ممرضين معيّنين</h2><div id="cnt"></div><button onclick="add('cnt')">+ إضافة</button></div>
 <div class="card noprint"><h2>4) الأجازات السنوية (AL)</h2><div id="al"></div><button onclick="add('al')">+ إضافة</button><div class="hint">من يوم / إلى يوم (رقم اليوم في الشهر)</div></div>
-<div class="card noprint"><h2>5) رغبات التمريض (تُنفَّذ بالظبط)</h2><textarea id="wishtxt" style="min-height:130px" placeholder="اكتب سطر لكل ممرض، مثال:&#10;Ahmed Omar اجازة 5-7, نايت 10-12, داي 20&#10;Sarah off 3, 15-16&#10;Mohamed Ahmed night 1-4"></textarea><div class="hint">اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. أي رغبة تتقدم على باقي القواعد، وأي سطر مش مفهوم هيظهر في التحذيرات.</div></div>
+<div class="card noprint"><h2>5) رغبات التمريض (تُنفَّذ بالظبط)</h2><textarea id="wishtxt" style="min-height:130px" placeholder="اكتب سطر لكل ممرض، مثال:&#10;Ahmed Omar اجازة 5-7, نايت 10-12, داي 20&#10;Sarah off 3, 15-16&#10;Mohamed Ahmed night 1-4"></textarea><div class="hint">اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. الأرقام اللي من غير كلمة قدامها بتتعامل على إنها أيام أوف. أي رغبة تتقدم على باقي القواعد، وأي سطر مش مفهوم هيظهر في التحذيرات.</div></div>
 <div class="card noprint"><h2>6) توصيات الهيد نرس</h2>
 <textarea id="rec" placeholder="مثال:&#10;Ahmed ثلاث ارباع الشفتات نايت والباقي داي&#10;Sarah night only&#10;Omar half day"></textarea>
 <div class="hint">اكتب اسم الممرض (أول اسم) + نايت/داي + (ثلاث أرباع، نص، ربع، 75%…) وإلا اتفهم إنه كله على النوع ده.</div></div>
@@ -145,14 +145,14 @@ if(toks[e+1]&&toks[e+1].n!==undefined){const hit=cs.find(a=>a.id==toks[e+1].raw)
 ment.push({s:i,e,c:cs});i=e}}
 const ms=new Map(ment.map(x=>[x.s,x]));let cur=null,pend=[],fwd=null;
 const apply=(ty,ds)=>{if(!cur)return;ds=ds.filter(d=>d>=1&&d<=days);if(!ds.length)return;ds.forEach(d=>{if(req[cur.i][d-1]!=='AL')req[cur.i][d-1]=ty});(sum[cur.i]=sum[cur.i]||[]).push(ty+' '+fmt(ds))};
-const seen=new Set();
+const seen=new Set();const flush=()=>{if(pend.length)apply('OFF',pend);pend=[]};
 for(let i=0;i<toks.length;i++){const k=toks[i],mm=ms.get(i);
-if(mm){cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else badW.push('اسم غير واضح ('+mm.c.slice(0,3).map(x=>x.name).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
+if(mm){flush();cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else badW.push('اسم غير واضح ('+mm.c.slice(0,3).map(x=>x.name).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
 if(!cur)continue;
 let ds=null;if(k.r){ds=[];for(let d=k.r[0];d<=Math.min(k.r[1],days);d++)ds.push(d)}else if(k.n!==undefined&&k.n>=1&&k.n<=days)ds=[k.n];
 if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
 else if(k.w){const ty=kwOf(k.w);if(ty){if(pend.length){apply(ty,pend);pend=[];fwd=null}else fwd=ty}}}
-seen.forEach(i=>{if(!sum[i])badW.push(nurses[i].name+': ما فهمتش الأيام')});
+flush();seen.forEach(i=>{if(!sum[i])badW.push(nurses[i].name+': ما فهمتش الأيام')});
 $('wsum').innerHTML=Object.keys(sum).length?'<b>اللي اتفهم من الرغبات (راجعها):</b><br>'+Object.keys(sum).map(i=>nurses[i].name+': '+sum[i].join(' ، ')).join('<br>'):''}
 function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
