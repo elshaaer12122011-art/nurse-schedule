@@ -168,6 +168,41 @@ if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
 else if(k.w){const ty=kwOf(k.w);if(ty){if(pend.length){apply(ty,pend);pend=[];fwd=null}else fwd=ty}}}
 flush();seen.forEach(i=>{if(!sum[i])badW.push(nurses[i].name+': ما فهمتش الأيام')});
 $('wsum').innerHTML=Object.keys(sum).length?'<b>اللي اتفهم من الرغبات (راجعها):</b><br>'+Object.keys(sum).map(i=>nurses[i].name+': '+sum[i].join(' ، ')).join('<br>')+(guess.length?'<br>⚠️ خمّنت الاسم: '+guess.join('، ')+' (راجعه)':''):''}
+
+let ovr=[];
+function resolveReq(req){const out=[];nurses.forEach((n,i)=>{const cut=[];let o=0,w=0;
+for(let d=0;d<days;d++){const x=req[i][d];
+if(x==='OFF'||x==='AL'){w=0;o++;if(o>MXO&&x==='OFF'){req[i][d]='';cut.push(d+1);o=0}}
+else if(x==='D'||x==='N'){o=0;w++;if(w>MXC){req[i][d]='';cut.push(d+1);w=0}}
+else{o=0;w=0}}
+if(cut.length)out.push(n.name+': '+fmt(cut))});return out}
+function repairR(req,hard,frac,dR,nR,dO,nO,warn){
+const N=nurses.length,W=s=>s=='D'||s=='N',fx=(i,d)=>req[i][d]!=='';
+const cd=Array(days).fill(0),cn=Array(days).fill(0);
+for(let i=0;i<N;i++)for(let d=0;d<days;d++){if(R[i][d]=='D')cd[d]++;else if(R[i][d]=='N')cn[d]++}
+const ok=(i,d,t)=>{if(hard[i]&&t!==(frac[i]==1?'N':'D'))return false;if(PREF[i][d]&&PREF[i][d]!==t)return false;return true};
+const nc=i=>{let c=0,w=0,o=0;const r=R[i];for(let d=0;d<days;d++){const s=r[d];if(W(s)){w++;o=0;if(w>MXC)c+=700;if(d&&r[d-1]=='N'&&s=='D')c+=200}else{o++;w=0;if(o>MXO)c+=700}}return c};
+const cov=d=>1000*(Math.max(0,dR-cd[d])+Math.max(0,nR-cn[d]))+15*(Math.max(0,cd[d]-dR)+Math.max(0,cn[d]-nR));
+const put=(i,d,t)=>{const o=R[i][d];if(o=='D')cd[d]--;else if(o=='N')cn[d]--;R[i][d]=t;if(t=='D')cd[d]++;else if(t=='N')cn[d]++};
+const t0=Date.now();let cur=0;for(let i=0;i<N;i++)cur+=nc(i);for(let d=0;d<days;d++)cur+=cov(d);
+const rnd=k=>Math.floor(Math.random()*k);
+for(let it=0;it<150000&&Date.now()-t0<1500;it++){
+let i,a=-1,b=-1,t;
+const sh=[];if(it%2==0){for(let d=0;d<days;d++){if(cd[d]<dR)sh.push([d,'D']);if(cn[d]<nR)sh.push([d,'N'])}}
+if(sh.length){const[x,ty]=sh[rnd(sh.length)];b=x;t=ty;i=rnd(N);if(R[i][b]!==''||fx(i,b)||!ok(i,b,t))continue;
+const ws=[];for(let d=0;d<days;d++)if(W(R[i][d])&&!fx(i,d))ws.push(d);if(!ws.length)continue;a=ws[rnd(ws.length)]}
+else{i=rnd(N);const m=rnd(5);if(m>=3){const j=rnd(N);a=rnd(days);b=rnd(days);if(i==j||a==b||!W(R[i][a])||fx(i,a)||R[i][b]!==''||fx(i,b)||R[j][a]!==''||fx(j,a)||!W(R[j][b])||fx(j,b))continue;const t1=R[j][b],t2=R[i][a];if(!ok(i,b,t1)||!ok(j,a,t2))continue;const oi=[R[i][a],R[i][b]],oj=[R[j][a],R[j][b]];const bf=nc(i)+nc(j)+cov(a)+cov(b);put(i,a,'');put(i,b,t1);put(j,b,'');put(j,a,t2);const af=nc(i)+nc(j)+cov(a)+cov(b);if(af<=bf){cur+=af-bf}else{put(i,a,oi[0]);put(i,b,oi[1]);put(j,a,oj[0]);put(j,b,oj[1])}continue}
+if(m==2){a=rnd(days);if(!W(R[i][a])||fx(i,a))continue;t=R[i][a]=='D'?'N':'D';if(!ok(i,a,t))continue;b=-1}
+else{a=rnd(days);b=rnd(days);if(!W(R[i][a])||fx(i,a)||R[i][b]!==''||fx(i,b))continue;t=R[i][a];if(m==1)t=t=='D'?'N':'D';if(!ok(i,b,t))continue}}
+const old=[R[i][a],b>=0?R[i][b]:null];const before=nc(i)+cov(a)+(b>=0?cov(b):0);
+if(b<0){put(i,a,t)}else{put(i,a,'');put(i,b,t)}
+const after=nc(i)+cov(a)+(b>=0?cov(b):0);
+if(after<=before){cur+=after-before}else{if(b<0)put(i,a,old[0]);else{put(i,b,old[1]);put(i,a,old[0])}}}
+for(let d=0;d<days;d++)for(let i=0;i<N;i++)OC[i][d]=false;
+const oc=Array(N).fill(0);
+for(let d=0;d<days;d++)for(const s of['N','D']){const k=s=='N'?nO:dO;nurses.map((_,i)=>i).filter(i=>R[i][d]==s).sort((x,y)=>oc[x]-oc[y]||x-y).slice(0,k).forEach(i=>{OC[i][d]=true;oc[i]++})}
+warn.length=0;
+for(let d=0;d<days;d++){if(cd[d]<dR)warn.push(`يوم ${d+1}: نقص ${dR-cd[d]} في الداي`);if(cn[d]<nR)warn.push(`يوم ${d+1}: نقص ${nR-cn[d]} في النايت`)}}
 function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
 const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0;
@@ -176,7 +211,7 @@ const req=nurses.map(()=>Array(days).fill(''));
 L.al.forEach(r=>rng(r).forEach(d=>req[+r.n][d]='AL'));
 parseWish2(req);
 const demN=nR/(dR+nR||1);const frac=nurses.map(()=>demN),hard=nurses.map(()=>false);
-const mm0=ar2en($('rec').value).match(/(?:اكتر من|أكثر من|more than|max(?:imum)?|اقصى|أقصى)\D{0,12}?(\d+)[^\n]{0,40}?(?:ورا بعض|وراء بعض|متتال|consecutive|in a row)/i);MXC=mm0?+mm0[1]:5;const mw=recN().match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:شفت|shift|ايام عمل|work)[^\n]{0,30}?(?:ورا بعض|consecutive|in a row)/i);if(mw)MXC=+mw[1];const mo=recN().match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:ايام|يوم|days?)?\s*(?:اجاز|off|راح)[^\n]{0,30}?(?:ورا بعض|consecutive|in a row)/i);MXO=mo?+mo[1]:99;const indiv=[];
+const mm0=ar2en($('rec').value).match(/(?:اكتر من|أكثر من|more than|max(?:imum)?|اقصى|أقصى)\D{0,12}?(\d+)[^\n]{0,40}?(?:ورا بعض|وراء بعض|متتال|consecutive|in a row)/i);MXC=mm0?+mm0[1]:5;const mw=recN().match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:شفت|shift|ايام عمل|work)[^\n]{0,30}?(?:ورا بعض|consecutive|in a row)/i);if(mw)MXC=+mw[1];const mo=recN().match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:ايام|يوم|days?)?\s*(?:اجاز|off|راح)[^\n]{0,30}?(?:ورا بعض|consecutive|in a row)/i);MXO=mo?+mo[1]:99;ovr=resolveReq(req);const indiv=[];
 $('rec').value.split('\n').forEach(line=>{const lo=ar2en(line).toLowerCase();const n=findN(line);if(!n){const a=lo.search(/night|نايت|ليل/),b=lo.search(/day|داي|نهار/),f=fr(lo);if(/كل|all|every|staff|استاف/.test(lo)&&(a>=0||b>=0)){const v=(a>=0&&(b<0||a<b))?f:1-f;nurses.forEach((_,i)=>{if(!indiv[i])frac[i]=v})}return}indiv[n.i]=1;
 const iN=lo.search(/night|نايت|ليل/),iD=lo.search(/day|داي|نهار/);const f=fr(line);
 const nightFirst=iN>=0&&(iD<0||iN<iD);const dayFirst=iD>=0&&(iN<0||iD<iN);
@@ -203,8 +238,10 @@ c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}
 if(need>0)warn.push(`يوم ${d+1}: نقص ${need} في ${s=='N'?'النايت':'الداي'}`)}
 for(const s of['N','D']){let k=s=='N'?nO:dO;nurses.map((_,i)=>i).filter(i=>a[i]==s).sort((x,y)=>oc[x]-oc[y]||x-y).slice(0,k).forEach(i=>{OC[i][d]=true;oc[i]++})}
 nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1}else{st[i]=0;ns[i]=0}of[i]=(s=='D'||s=='N')?0:of[i]+1;prev[i]=s});}
+repairR(req,hard,frac,dR,nR,dO,nO,warn);
 nurses.forEach((n,i)=>{let w=0,o=0,mw=0,mo=0;R[i].forEach(s=>{if(s=='D'||s=='N'){w++;o=0}else{o++;w=0}mw=Math.max(mw,w);mo=Math.max(mo,o)});if(mw>MXC)warn.push(n.name+': '+mw+' شفتات متتالية (بسبب الرغبات)');if(mo>MXO)warn.push(n.name+': '+mo+' أيام راحة متتالية (بسبب الأجازات/الرغبات)')});
 if(badW.length)warn.unshift('رغبة غير مفهومة: '+badW.join(' | '));$('warn').innerHTML=warn.length?'⚠️ '+warn.slice(0,8).join(' • ')+(warn.length>8?' …':'')+' — زوّد عدد الشفتات أو التمريض.':'✅ التغطية كاملة.';
+$('warn').innerHTML+=ovr.length?'<br>ℹ️ توصيات الهيد نرس قدّمت على الرغبات دي (اتلغت أيامها): '+ovr.join(' • '):'';
 render()}
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function cnts(i){let D=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D')D++;else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i][d]&&(s=='D'||s=='N'))O++});return{D,N,AL,O,T:D+N}}
