@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Staff Nurse Schedule</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mut:#667;--bd:#d5d9df;--pri:#0f6fbf;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171b;--card:#1e2328;--tx:#e8eaed;--mut:#9aa;--bd:#38404a;--pri:#4aa3f0}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,"Segoe UI",Tahoma,Arial,sans-serif;padding:12px}
+h1{font-size:20px;margin:0 0 10px}h2{font-size:15px;margin:0 0 8px;color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+label{font-size:12px;color:var(--mut);display:block}
+input,select,textarea,button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:7px;padding:6px 8px;max-width:100%}
+input,select{width:100%}textarea{width:100%;min-height:90px}
+button{cursor:pointer;width:auto}button.p{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.row{display:flex;gap:6px;margin-bottom:6px}.row>*{flex:1;min-width:0}.row button{flex:0 0 auto}
+.hint{font-size:12px;color:var(--mut);margin:4px 0}
+#warn{color:#c0392b;font-size:13px}
+.wrap{overflow-x:auto;direction:ltr;border:1px solid var(--bd);border-radius:8px;background:#fff}
+table{border-collapse:collapse;font-size:12px;color:#111}
+th,td{border:1px solid #bbb;padding:2px 4px;text-align:center;min-width:26px;white-space:nowrap}
+th{background:#e9edf2}td.nm{text-align:left;font-weight:600;position:sticky;left:0;min-width:150px;z-index:1}
+td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{background:#9be0a8}.OFF{background:#fff}
+.tot{background:#eef;font-weight:700}.we{background:#f6d6d6}.bad{background:#f5a5a5;font-weight:700}
+@media print{body{padding:0;background:#fff}.card,.noprint{display:none}.wrap{border:0;overflow:visible}@page{size:landscape;margin:6mm}table{font-size:8px}}
+</style></head><body>
+<h1 class="noprint">🩺 Staff Nurse Schedule — منشئ روستر التمريض</h1>
+<div class="card noprint"><h2>1) التمريض (سطر لكل ممرض: الاسم, ID, اللقب — ID واللقب اختياري)</h2>
+<textarea id="names" style="min-height:140px;direction:ltr"></textarea>
+<div class="row" style="margin-top:6px"><input type="file" id="file" accept=".csv,.txt,.xlsx,.xls"><label style="flex:0 0 auto;align-self:center"><input type="checkbox" id="showid" style="width:auto"> إظهار الـ ID</label></div>
+<div class="hint">الرفع هنا: Excel/CSV (أعمدة: الاسم، ID، اللقب). لقراءة صورة أو PDF ابعتها لي في الشات وأنا أطلّع الأسماء والبيانات.</div></div>
+<div class="card noprint"><h2>2) الإعدادات</h2><div class="g">
+<div><label>الشهر</label><input type="month" id="month" value="2026-12"></div>
+<div><label>شيفتات كل ممرض (افتراضي)</label><input type="number" id="base" value="19"></div>
+<div><label>المطلوب في الداي</label><input type="number" id="dreq" value="14"></div>
+<div><label>المطلوب في النايت</label><input type="number" id="nreq" value="14"></div>
+<div><label>OC مطلوب داي</label><input type="number" id="doc" value="1"></div>
+<div><label>OC مطلوب نايت</label><input type="number" id="noc" value="1"></div></div></div>
+<div class="card noprint"><h2>3) تعديل عدد شفتات ممرضين معيّنين</h2><div id="cnt"></div><button onclick="add('cnt')">+ إضافة</button></div>
+<div class="card noprint"><h2>4) الأجازات السنوية (AL)</h2><div id="al"></div><button onclick="add('al')">+ إضافة</button><div class="hint">من يوم / إلى يوم (رقم اليوم في الشهر)</div></div>
+<div class="card noprint"><h2>5) رغبات التمريض (تُنفَّذ بالظبط)</h2><div id="wish"></div><button onclick="add('wish')">+ إضافة رغبة</button><div class="hint">D = داي، N = نايت، OFF = إجازة. تتقدم على أي قاعدة تانية.</div></div>
+<div class="card noprint"><h2>6) توصيات الهيد نرس</h2>
+<textarea id="rec" placeholder="مثال:&#10;Ahmed ثلاث ارباع الشفتات نايت والباقي داي&#10;Sarah night only&#10;Omar half day"></textarea>
+<div class="hint">اكتب اسم الممرض (أول اسم) + نايت/داي + (ثلاث أرباع، نص، ربع، 75%…) وإلا اتفهم إنه كله على النوع ده.</div></div>
+<div class="card noprint"><button class="p" onclick="gen()">⚙️ إنشاء الروستر</button> <button onclick="xl()">⬇ Excel</button> <button onclick="window.print()">🖨 PDF / طباعة</button> <button onclick="cp()">📋 نسخ للـ Excel</button>
+<div id="warn"></div><div class="hint">اضغط على أي خانة في الروستر لتغييرها (D ← N ← فاضي). للـ PDF اختر "Save as PDF" من نافذة الطباعة.</div></div>
+<div class="wrap"><table id="tb"></table></div>
+<script>
+const $=id=>document.getElementById(id);
+$('names').value=`Gehan Mohamed,7204,CN
+Ayah Khalid,10508,CN
+Ginu George,11197,CN
+Amr Ismail,12113,SN-ACN
+Verna Salvania,6105,CN
+SHIBU Mammtali babu,9203,SN-S2
+Ahmad Abdelaaty,10500,SN-S2
+Abdulrahman Yahya,10520,SN-S2
+Bincy Sarah Raj,10602,SN-S2
+Ahmad Mahrous,10405,SN-S2
+Mahmoud Magdy,10617,SN-S2
+Nisreen Jikiri,10232,SN-S1
+Ahmed Omar,10614,SN-S2
+Alaa Hashim,10386,SN-S2
+Kusuma Yaravana,9488,
+Swathi sundarrajan,12566,SN-S1
+Sarah Saeed,10770,SN-S2
+Jinoy Cherian,9486,SN-S2
+Elsayed Medhat,10731,SN-S2
+Mohamed Mustafa,10813,SN-S2
+Marie Antonette,3832,SN-S2
+Sinaira Mayasa,10890,SN-S2
+Ahmed Najeeb,10905,SN-S2
+Aparana M Sathyan,12603,SN-S1
+Sijomol John,9483,
+Bashayer Muneer,12125,SN-S1
+Kareem Karam,12163,SN-S1
+Ahmed Elsaadani,10524,SN-S2
+Ibrahim Mohamed,10733,SN-S2
+Mohamed Ahmed,10864,SN-S2
+Ahmed Hussein,12150,SN-S1
+Bharath Kodeeswaran,13837,
+Cellin mary,12315,SN-S1
+karen quirolgico,9197,SN-S2
+Siji Jimmy,11702,SN-S1
+Fatima Vivina,13470,SN-S1
+Anitha Annadhurai,13500,SN-S1
+Simi George,9464,SN-S2
+Ananthi Velmurugan,13504,SN-S1
+Rana Elsaid,7145,SN-S2
+Sruthy Sajeevan,13677,SN-S1
+Dunia Elsayed,13685,SN-S1
+Printhabai Suresh,13768,
+Asmaa Gamal,13849,
+Lekshimi Sagadavan,13842,
+Anisha Mary,13898,
+Kalaivani Hari,13902,
+Esraa Mohsen,13920,
+Rincy Yesudhas,13952,
+Sothimol somilal,13954,
+Deepa Selvaraju,13838,
+Silpa Sasankan,13842,
+Rania Bassuony,13988,`;
+let nurses=[],R=[],OC=[],days=0,Y=0,M=0;
+const L={cnt:[],al:[],wish:[]};
+const DEF={cnt:[{k:'n',t:'n'},{k:'a',t:'#',p:'عدد الشفتات'}],al:[{k:'n',t:'n'},{k:'a',t:'#',p:'من يوم'},{k:'b',t:'#',p:'إلى يوم'}],wish:[{k:'n',t:'n'},{k:'a',t:'#',p:'من يوم'},{k:'b',t:'#',p:'إلى يوم'},{k:'t',t:'s'}]};
+function parseN(){return $('names').value.split('\n').map(l=>l.trim()).filter(Boolean).map((l,i)=>{const p=l.split(',').map(s=>s.trim());return{name:p[0],id:p[1]||'',title:p[2]||'',i}})}
+function add(k){nurses=parseN();L[k].push({n:0,a:'',b:'',t:'D'});draw(k)}
+function draw(k){const box=$(k);box.innerHTML='';L[k].forEach((r,ri)=>{const d=document.createElement('div');d.className='row';DEF[k].forEach(f=>{let e;if(f.t=='n'){e=document.createElement('select');nurses.forEach(n=>e.add(new Option(n.name,n.i)))}else if(f.t=='s'){e=document.createElement('select');['D','N','OFF'].forEach(o=>e.add(new Option(o,o)))}else{e=document.createElement('input');e.type='number';e.placeholder=f.p}
+e.value=r[f.k];e.onchange=e.oninput=()=>r[f.k]=e.value;d.append(e)});const b=document.createElement('button');b.textContent='✕';b.onclick=()=>{L[k].splice(ri,1);draw(k)};d.append(b);box.append(d)})}
+$('names').onchange=()=>{nurses=parseN();['cnt','al','wish'].forEach(draw)};
+$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const wb=XLSX.read(await f.arrayBuffer());const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});$('names').value=rows.filter(r=>r[0]&&isNaN(r[0])).map(r=>[r[0],r[1]||'',r[2]||''].join(',')).join('\n');$('names').onchange()}catch(x){alert('تعذر قراءة الملف')}};
+function rng(r){const a=+r.a;if(!a)return[];const b=+r.b||a;const o=[];for(let d=a;d<=Math.min(b,days);d++)o.push(d-1);return o}
+function fr(txt){if(/ثلاث|3\/4|75/.test(txt))return .75;if(/نص|half|1\/2|50/i.test(txt))return .5;if(/ربع|1\/4|25/.test(txt))return .25;return 1}
+function gen(){
+nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
+const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0;
+const tot=nurses.map(()=>base);L.cnt.forEach(r=>{if(r.a!=='')tot[+r.n]=+r.a});
+const req=nurses.map(()=>Array(days).fill(''));
+L.al.forEach(r=>rng(r).forEach(d=>req[+r.n][d]='AL'));
+L.wish.forEach(r=>rng(r).forEach(d=>{if(req[+r.n][d]!=='AL')req[+r.n][d]=r.t}));
+const demN=nR/(dR+nR||1);const frac=nurses.map(()=>demN),hard=nurses.map(()=>false);
+$('rec').value.split('\n').forEach(line=>{const lo=line.toLowerCase();const n=nurses.find(x=>lo.includes(x.name.split(' ')[0].toLowerCase()));if(!n)return;
+const iN=lo.search(/night|نايت|ليل/),iD=lo.search(/day|داي|نهار/);const f=fr(line);
+const nightFirst=iN>=0&&(iD<0||iN<iD);const dayFirst=iD>=0&&(iN<0||iD<iN);
+if(nightFirst)frac[n.i]=f;else if(dayFirst)frac[n.i]=1-f;else return;hard[n.i]=f==1;});
+const nt=nurses.map((_,i)=>Math.round(tot[i]*frac[i])),dt=nurses.map((_,i)=>tot[i]-nt[i]);
+const nD=Array(N).fill(0),nN=Array(N).fill(0),oc=Array(N).fill(0),st=Array(N).fill(0),ns=Array(N).fill(0),prev=Array(N).fill('');
+R=nurses.map(()=>Array(days).fill(''));OC=nurses.map(()=>Array(days).fill(false));const warn=[];
+for(let d=0;d<days;d++){
+const a=nurses.map((_,i)=>req[i][d]||'');
+const cnt=s=>a.filter(x=>x==s).length;
+for(const s of['N','D']){
+let need=(s=='N'?nR:dR)-cnt(s);
+for(let pass=0;pass<3&&need>0;pass++){
+const c=[];nurses.forEach((n,i)=>{if(a[i]!=='')return;if(s=='D'&&prev[i]=='N')return;
+if(hard[i]&&((s=='N')!=(frac[i]==1)))return;
+const done=nD[i]+nN[i],left=tot[i]-done,tn=s=='N'?nt[i]-nN[i]:dt[i]-nD[i];
+if(pass<2&&left<=0)return;if(pass<1&&tn<=0)return;if(st[i]>=(pass<2?5:7))return;
+let sc=Math.max(tn,0)*10+left/(days-d)*100+Math.random()*3;
+if(s=='N'&&prev[i]=='N'&&ns[i]<3)sc+=500;if(s=='D'&&prev[i]=='D')sc+=40;
+c.push([sc,i])});
+c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}
+if(need>0)warn.push(`يوم ${d+1}: نقص ${need} في ${s=='N'?'النايت':'الداي'}`)}
+for(const s of['N','D']){let k=s=='N'?nO:dO;nurses.map((_,i)=>i).filter(i=>a[i]==s).sort((x,y)=>oc[x]-oc[y]||x-y).slice(0,k).forEach(i=>{OC[i][d]=true;oc[i]++})}
+nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1}else{st[i]=0;ns[i]=0}prev[i]=s});}
+$('warn').innerHTML=warn.length?'⚠️ '+warn.slice(0,8).join(' • ')+(warn.length>8?' …':'')+' — زوّد عدد الشفتات أو التمريض.':'✅ التغطية كاملة.';
+render()}
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function cnts(i){let D=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D')D++;else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i][d]&&(s=='D'||s=='N'))O++});return{D,N,AL,O,T:D+N}}
+function render(){if(!R.length)return;const sid=$('showid').checked;
+let h='<tr><th rowspan=2>Staff</th>';if(sid)h+='<th rowspan=2>ID</th>';
+for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=`<th class="${w==5?'we':''}">${d+1}</th>`}
+h+='<th class="tot" rowspan=2>Total</th><th class="tot" rowspan=2>D</th><th class="tot" rowspan=2>N</th><th class="tot" rowspan=2>OC</th><th class="tot" rowspan=2>AL</th></tr><tr>';
+for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=`<th class="${w==5?'we':''}">${DOW[w]}</th>`}h+='</tr>';
+nurses.forEach((n,i)=>{const c=cnts(i);h+=`<tr><td class="nm" style="background:hsl(${(i*137.5)%360},70%,80%)">${i+1}. ${n.name}</td>`;if(sid)h+=`<td>${n.id}</td>`;
+R[i].forEach((s,d)=>{h+=`<td class="c ${s||'OFF'}" onclick="tg(${i},${d})">${s}${OC[i][d]&&(s=='D'||s=='N')?'·OC':''}</td>`});
+h+=`<td class="tot">${c.T}</td><td class="tot">${c.D}</td><td class="tot">${c.N}</td><td class="tot">${c.O}</td><td class="tot">${c.AL}</td></tr>`});
+for(const s of['D','N']){const q=+$(s=='D'?'dreq':'nreq').value;h+=`<tr><td class="nm" style="background:#eee">${s=='D'?'Day':'Night'} count (req ${q})</td>${sid?'<td></td>':''}`;
+for(let d=0;d<days;d++){const n=R.filter(r=>r[d]==s).length;h+=`<td class="${n<q?'bad':'tot'}">${n}</td>`}h+='<td colspan=5></td></tr>'}
+$('tb').innerHTML=h}
+function tg(i,d){const s=R[i][d];if(s=='AL')return;R[i][d]=s==''?'D':s=='D'?'N':'';render()}
+function aoa(){const sid=$('showid').checked;const t=[['Staff',...(sid?['ID']:[]),...Array.from({length:days},(_,d)=>d+1),'Total','D','N','OC','AL']];
+nurses.forEach((n,i)=>{const c=cnts(i);t.push([n.name,...(sid?[n.id]:[]),...R[i].map((s,d)=>s+(OC[i][d]&&(s=='D'||s=='N')?'·OC':'')),c.T,c.D,c.N,c.O,c.AL])});return t}
+function xl(){if(!R.length)return alert('أنشئ الروستر الأول');try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
+function cp(){if(!R.length)return alert('أنشئ الروستر الأول');const t=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(t).then(()=>alert('تم النسخ — الصقه في Excel'))}catch(e){prompt('انسخ:',t)}}
+nurses=parseN();
+</script></body></html>
