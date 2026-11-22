@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Staff Nurse Schedule</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mut:#667;--bd:#d5d9df;--pri:#0f6fbf;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171b;--card:#1e2328;--tx:#e8eaed;--mut:#9aa;--bd:#38404a;--pri:#4aa3f0}}
@@ -34,6 +35,10 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <textarea id="names" style="min-height:140px;direction:ltr"></textarea>
 <div class="row" style="margin-top:6px"><input type="file" id="file" accept=".csv,.txt,.xlsx,.xls"><label style="flex:0 0 auto;align-self:center"><input type="checkbox" id="showid" style="width:auto" onchange="render()"> <span data-i="show_id"></span></label></div>
 <div class="hint" data-i="h_names_hint"></div></div>
+<div class="card noprint"><h2 data-i="h_load"></h2>
+<input type="file" id="rfile" accept=".xlsx,.xls,.csv,.pdf">
+<div class="row" style="margin-top:6px"><button onclick="clearBase()" data-i="b_clear"></button></div>
+<div class="hint" id="rstat"></div><div class="hint" data-i="h_load_hint"></div></div>
 <div class="card noprint"><h2 data-i="h_set"></h2><div class="g">
 <div><label data-i="l_month"></label><input type="month" id="month" value="2026-12"></div>
 <div><label data-i="l_base"></label><input type="number" id="base" value="19"></div>
@@ -49,7 +54,7 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <div class="hint" data-i="h_rec_hint"></div>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
 <div id="rsum" class="sm"></div></div>
-<div class="card noprint"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
+<div class="card noprint"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
 <div class="wrap"><table id="tb"></table></div>
 <script>
@@ -112,7 +117,7 @@ const TX={
 ar:{
 ttl:'🩺 Staff Nurse Schedule — منشئ روستر التمريض',
 h_names:'1) التمريض (سطر لكل ممرض: الاسم, ID, اللقب — ID واللقب اختياري)',
-show_id:'إظهار الـ ID',
+show_id:'إظهار الـ ID',b_del:'🗑 حذف الروستر وابدأ من الأول',confirm_del:'حذف الروستر والرغبات والتوصيات المحفوظة؟ (الأسماء والإعدادات تفضل)',h_load:'📂 رفع روستر موجود (Excel / PDF)',b_clear:'إلغاء الروستر المرفوع',h_load_hint:'ارفع الروستر الجاهز، وبعدها اكتب التعديلات في خانة الرغبات أو الهيد نرس واضغط إنشاء — البرنامج يعدّل على الروستر بأقل تغيير ممكن ويحافظ على عدد شفتات كل ممرض (±1). لو الـPDF ما اتقرأش صح، حوّله Excel أو ابعته لي في الشات.',load_ok:'تم تحميل الروستر: {0} ممرض و{1} يوم. اكتب التعديلات واضغط إنشاء.',load_fail:'تعذر قراءة الروستر من الملف (لازم يكون فيه صف أرقام الأيام 1..28+ وأسماء الممرضين)',load_days:'تنبيه: الروستر فيه {0} يوم والشهر المختار {1} يوم',load_mis:'تنبيه: أسماء الممرضين اتغيرت عن الروستر المرفوع — اتجاهل الروستر وتم إنشاء جديد',load_none:'لا يوجد روستر مرفوع',w_tot:'{0}: عدد الشفتات {1} بدل {2}',base_used:'الروستر المرفوع اتستخدم كأساس',
 h_names_hint:'الرفع هنا: Excel/CSV (أعمدة: الاسم، ID، اللقب). لقراءة صورة أو PDF ابعتها لي في الشات وأنا أطلّع الأسماء والبيانات.',
 h_set:'2) الإعدادات',l_month:'الشهر',l_base:'شيفتات كل ممرض (افتراضي)',l_dreq:'المطلوب في الداي',l_nreq:'المطلوب في النايت',l_doc:'OC مطلوب داي',l_noc:'OC مطلوب نايت',
 h_cnt:'3) تعديل عدد شفتات ممرضين معيّنين',h_al:'4) الأجازات السنوية (AL)',h_al_hint:'من يوم / إلى يوم (رقم اليوم في الشهر)',add:'+ إضافة',
@@ -150,7 +155,7 @@ n_off:'أوف',n_n:'نايت',n_d:'داي'
 en:{
 ttl:'🩺 Staff Nurse Schedule',
 h_names:'1) Nurses (one per line: Name, ID, Title — ID and Title optional)',
-show_id:'Show ID',
+show_id:'Show ID',b_del:'🗑 Delete roster & start over',confirm_del:'Delete the saved roster, wishes and recommendations? (names and settings stay)',h_load:'📂 Upload an existing roster (Excel / PDF)',b_clear:'Remove uploaded roster',h_load_hint:'Upload the finished roster, then type your changes in the wishes or head-nurse box and press Generate — the program edits it with minimal changes and keeps each nurse within ±1 of her shift count. If a PDF is not read correctly, convert it to Excel or send it to me in chat.',load_ok:'Roster loaded: {0} nurses, {1} days. Type your changes and press Generate.',load_fail:'Could not read a roster from the file (needs a row of day numbers 1..28+ and nurse names)',load_days:'Note: roster has {0} days but the selected month has {1}',load_mis:'Note: nurse names differ from the uploaded roster — it was ignored and a new one generated',load_none:'No roster uploaded',w_tot:'{0}: {1} shifts instead of {2}',base_used:'Uploaded roster used as the base',
 h_names_hint:'Upload Excel/CSV here (columns: name, ID, title). To read a photo or PDF, send it to me in chat and I will extract the data.',
 h_set:'2) Settings',l_month:'Month',l_base:'Shifts per nurse (default)',l_dreq:'Required on Day',l_nreq:'Required on Night',l_doc:'Required OC (Day)',l_noc:'Required OC (Night)',
 h_cnt:'3) Change shift count for specific nurses',h_al:'4) Annual leave (AL)',h_al_hint:'From day / To day (day of month)',add:'+ Add',
@@ -270,6 +275,62 @@ if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
 else if(k.w){const ty=kwOf(k.w);if(ty){if(pend.length){apply(ty,pend);pend=[];fwd=null}else fwd=ty}}}
 flush();seen.forEach(i=>{if(!sum[i])MSG.bad.push(['w_nodays',nurses[i].name])});
 MSG.wsum={items:Object.keys(sum).map(i=>({i:+i,parts:sum[i]})),guess}}
+
+/* ---------- uploaded roster (Excel / CSV / PDF) ---------- */
+let BASEMAP=null;
+function normCell(v){let s=String(v==null?'':v).trim().toUpperCase();s=s.replace(/[\s·\-\/(),+]*\bOC\b/g,'').replace(/ON ?CALL/g,'').trim();
+if(/^(D|DAY|DD|ص|نهار|داي|M|MORNING)$/.test(s))return'D';if(/^(N|NIGHT|NN|ن|ليل|نايت)$/.test(s))return'N';if(/^(AL|A\/L|EL|ANNUAL)$/.test(s))return'AL';return''}
+const SUMROW=/^(day|night|total|req|oc|required|count|sum|sun|mon|tue|wed|thu|fri|sat|اجمالي|الاجمالي|داي|نايت|المطلوب|d|n)\b/i;
+function parseGrid(rows){let best=null;
+rows.forEach((r,ri)=>{for(let c=0;c<r.length;c++){if(String(r[c]).trim()!=='1')continue;let k=1;while(k<31&&String(r[c+k]).trim()===String(k+1))k++;if(k>=28&&(!best||k>best.len))best={ri,c0:c,len:k}}});
+if(!best)return null;
+const names=[],cells=[];
+for(let ri=best.ri+1;ri<rows.length;ri++){const r=rows[ri];let name='',id='';
+for(let c=0;c<best.c0;c++){const v=String(r[c]==null?'':r[c]).trim();if(!v)continue;if(/[A-Za-z؀-ۿ]{2}/.test(v)&&!name)name=v;else if(/^\d{3,}$/.test(v)&&!id)id=v}
+if(!name||SUMROW.test(name))continue;
+const row=[];for(let k=0;k<best.len;k++)row.push(normCell(r[best.c0+k]));
+names.push({name,id});cells.push(row)}
+return names.length?{names,cells,days:best.len}:null}
+async function readPdf(buf){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const pdf=await pdfjsLib.getDocument({data:buf}).promise;const rows=[];let hdr=null;
+for(let pg=1;pg<=pdf.numPages;pg++){const tc=await(await pdf.getPage(pg)).getTextContent();
+const lines=[];tc.items.filter(i=>i.str.trim()).sort((a,b)=>b.transform[5]-a.transform[5]).forEach(i=>{const y=i.transform[5];let L2=lines.find(l=>Math.abs(l.y-y)<3);if(!L2){L2={y,it:[]};lines.push(L2)}L2.it.push({s:i.str.trim(),x:i.transform[4],w:i.width})});
+lines.forEach(l=>l.it.sort((a,b)=>a.x-b.x));
+for(const l of lines){const nums=l.it.filter(x=>/^\d{1,2}$/.test(x.s));
+let h=null;for(let a=0;a<nums.length;a++){if(nums[a].s!=='1')continue;let seq=[nums[a]],k=2;for(let b=a+1;b<nums.length;b++)if(nums[b].s==String(k)){seq.push(nums[b]);k++}if(seq.length>=28){h=seq;break}}
+if(h){hdr={c:h.map(x=>x.x+x.w/2),len:h.length};const sp=(hdr.c[hdr.len-1]-hdr.c[0])/(hdr.len-1);hdr.sp=sp;rows.push(['__H',...h.map(x=>x.s)]);continue}
+if(!hdr)continue;
+const first=hdr.c[0]-hdr.sp*0.6;const name=l.it.filter(x=>x.x+x.w<=first+2&&/[A-Za-z؀-ۿ]{2}/.test(x.s)).map(x=>x.s).join(' ');
+const idt=l.it.find(x=>x.x+x.w<=first+2&&/^\d{3,}$/.test(x.s));
+const cells=Array(hdr.len).fill('');l.it.forEach(x=>{if(x.x+x.w<first)return;const cx=x.x+x.w/2;let bi=-1,bd=1e9;hdr.c.forEach((c,k)=>{const dd=Math.abs(c-cx);if(dd<bd){bd=dd;bi=k}});if(bd<=hdr.sp*0.6)cells[bi]=x.s});
+rows.push([name,idt?idt.s:'',...cells,'__R'])}}
+/* rebuild grid rows: header marker row first */
+const out=[];let hl=null;rows.forEach(r=>{if(r[0]=='__H'){hl=r.slice(1);out.push(['',''].concat(hl))}else out.push(r.slice(0,r.length-1))});
+return parseGrid(out.map(r=>r.map(x=>x)))}
+function applyLoaded(res,fname){if(!res){$('rstat').textContent=t('load_fail');return}
+BASEMAP={};res.names.forEach((n,i)=>{BASEMAP[n.name.toLowerCase()]=res.cells[i]});
+$('names').value=res.names.map(n=>n.name+','+(n.id||'')+',').join('\n');nurses=parseN();['cnt','al'].forEach(draw);
+[Y,M]=$('month').value.split('-').map(Number);const dm=new Date(Y,M,0).getDate();
+$('rstat').textContent='✅ '+fname+' — '+t('load_ok',res.names.length,res.days)+(res.days!=dm?' ⚠️ '+t('load_days',res.days,dm):'');saveState()}
+$('rfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{let res=null;
+if(/\.pdf$/i.test(f.name))res=await readPdf(await f.arrayBuffer());
+else{const wb=XLSX.read(await f.arrayBuffer());for(const sn of wb.SheetNames){res=parseGrid(XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false}));if(res)break}}
+applyLoaded(res,f.name)}catch(x){$('rstat').textContent=t('load_fail')}e.target.value=''};
+function clearBase(){BASEMAP=null;$('rstat').textContent=t('load_none');saveState()}
+/* ---------- persistence ---------- */
+const SKEY='nsl_state_v2',FIELDS=['names','month','base','dreq','nreq','doc','noc','wishtxt','rec'];
+function saveState(){try{const f={};FIELDS.forEach(k=>f[k]=$(k).value);
+localStorage.setItem(SKEY,JSON.stringify({f,sid:$('showid').checked,L,R,OC,Y,M,days,dRA,nRA,docA,nocA,BASEMAP,MSG,rst:$('rstat').textContent}))}catch(e){}}
+function loadState(){try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(!s)return false;
+FIELDS.forEach(k=>{if(s.f[k]!=null&&$(k))$(k).value=s.f[k]});$('showid').checked=!!s.sid;
+if(s.L){L.cnt=s.L.cnt||[];L.al=s.L.al||[]}
+nurses=parseN();['cnt','al'].forEach(draw);
+BASEMAP=s.BASEMAP||null;if(s.rst)$('rstat').textContent=s.rst;
+if(s.R&&s.R.length==nurses.length){R=s.R;OC=s.OC;Y=s.Y;M=s.M;days=s.days;dRA=s.dRA;nRA=s.nRA;docA=s.docA;nocA=s.nocA;if(s.MSG)MSG=s.MSG;return true}}catch(e){}return false}
+let _sv=null;const later=()=>{clearTimeout(_sv);_sv=setTimeout(saveState,400)};
+document.addEventListener('input',later);document.addEventListener('change',later);
+function delAll(){if(!confirm(t('confirm_del')))return;R=[];OC=[];BASEMAP=null;L.cnt=[];L.al=[];['cnt','al'].forEach(draw);$('wishtxt').value='';$('rec').value='';$('rstat').textContent='';
+MSG={bad:[],warn:[],ovr:[],wsum:null,rsum:[],unk:[],ran:false};$('tb').innerHTML='';showMsgs();try{localStorage.removeItem(SKEY)}catch(e){}saveState()}
 /* ================= Head-nurse language engine (Arabic / Egyptian / English) ================= */
 function canon(s){
 s=ar2en(String(s)).toLowerCase();
@@ -473,6 +534,7 @@ if(has('FAIR')){say('r_fair');return 1}
 return null}
 function daysOf2(x){return daysOfTok(x)}
 /* ================= Roster engine ================= */
+let BCELL=null;
 function newP(base){return{tot:base,totadj:0,totcap:null,totmul:null,ncnt:null,dcnt:null,ncap:null,only:null,fracN:null,mxc:5,mxo:99,mxn:99,ran:0,minb:0,minoff:0,mow:0,mpw:99}}
 function resolveReq(req){const out=[];nurses.forEach((n,i)=>{const p=P[i],cut=[];let o=0,w=0;
 for(let d=0;d<days;d++){const x=req[i][d];
@@ -480,7 +542,7 @@ if(x==='OFF'||x==='AL'){w=0;o++;if(o>p.mxo&&x==='OFF'&&!HF[i][d]){req[i][d]='';c
 else if(x==='D'||x==='N'){o=0;w++;if(w>p.mxc&&!HF[i][d]){req[i][d]='';cut.push(d+1);w=0}}
 else{o=0;w=0}}
 if(cut.length)out.push(n.name+': '+fmt(cut))});return out}
-function repairR(req){
+function repairR(req,tot){
 const N=nurses.length,W=s=>s=='D'||s=='N',fx=(i,d)=>req[i][d]!==''||FW[i][d];
 const cd=Array(days).fill(0),cn=Array(days).fill(0);
 for(let i=0;i<N;i++)for(let d=0;d<days;d++){if(R[i][d]=='D')cd[d]++;else if(R[i][d]=='N')cn[d]++}
@@ -491,26 +553,36 @@ for(let d=0;d<days;d++){const s=r[d];
 if(W(s)){if(w==0){if(o>0&&p.minoff&&o<p.minoff&&runS>0)c+=250;runS=d}w++;o=0;if(w>p.mxc)c+=700;
 const g=d-lastN;
 if(p.ran&&g>=1&&g<=p.ran&&(s!='N'||g>=2))c+=500;
-if(s=='N'){nr=(d&&r[d-1]=='N')?nr+1:1;if(nr>p.mxn)c+=700;lastN=d}else{nr=0;if(d&&r[d-1]=='N')c+=200}}
+if(s=='N'){nr=(d&&r[d-1]=='N')?nr+1:1;if(nr>p.mxn)c+=700;lastN=d}else{nr=0;if(d&&r[d-1]=='N'&&!BCELL)c+=200}}
 else{if(o==0){if(w>0&&p.minb&&w<p.minb&&runS>0)c+=250;runS=d}o++;w=0;nr=0;if(o>p.mxo)c+=700;if(FW[i][d])c+=500}}
 if(useWin(i)&&days>=7){let wc=0;for(let d=0;d<days;d++){if(W(r[d]))wc++;if(d>=7&&W(r[d-7]))wc--;if(d>=6){if(wc>p.mpw)c+=400*(wc-p.mpw);if(7-wc<p.mow)c+=400*(p.mow-(7-wc))}}}
 return c};
-const cov=d=>1000*(Math.max(0,dRA[d]-cd[d])+Math.max(0,nRA[d]-cn[d]))+15*(Math.max(0,cd[d]-dRA[d])+Math.max(0,cn[d]-nRA[d]));
+const cov=d=>1000*(Math.max(0,dRA[d]-cd[d])+Math.max(0,nRA[d]-cn[d]))+(BCELL?1:15)*(Math.max(0,cd[d]-dRA[d])+Math.max(0,cn[d]-nRA[d]));
 const put=(i,d,t)=>{const o=R[i][d];if(o=='D')cd[d]--;else if(o=='N')cn[d]--;R[i][d]=t;if(t=='D')cd[d]++;else if(t=='N')cn[d]++};
-const t0=Date.now();
 const rnd=k=>Math.floor(Math.random()*k);
-for(let it=0;it<150000&&Date.now()-t0<1500;it++){
+const bc=(i,d)=>BCELL?(BCELL[i][d]||''):null;const chg=(i,d)=>{if(!BCELL)return 0;const c=W(R[i][d])?R[i][d]:'';return c!==bc(i,d)?3:0};
+const search=ms=>{const t0=Date.now();
+for(let it=0;it<150000&&Date.now()-t0<ms;it++){
 let i,a=-1,b=-1,t;
 const sh=[];if(it%2==0){for(let d=0;d<days;d++){if(cd[d]<dRA[d])sh.push([d,'D']);if(cn[d]<nRA[d])sh.push([d,'N'])}}
 if(sh.length){const[x,ty]=sh[rnd(sh.length)];b=x;t=ty;i=rnd(N);if(R[i][b]!==''||fx(i,b)||!ok(i,b,t))continue;
 const ws=[];for(let d=0;d<days;d++)if(W(R[i][d])&&!fx(i,d))ws.push(d);if(!ws.length)continue;a=ws[rnd(ws.length)]}
-else{i=rnd(N);const m=rnd(5);if(m>=3){const j=rnd(N);a=rnd(days);b=rnd(days);if(i==j||a==b||!W(R[i][a])||fx(i,a)||R[i][b]!==''||fx(i,b)||R[j][a]!==''||fx(j,a)||!W(R[j][b])||fx(j,b))continue;const t1=R[j][b],t2=R[i][a];if(!ok(i,b,t1)||!ok(j,a,t2))continue;const oi=[R[i][a],R[i][b]],oj=[R[j][a],R[j][b]];const bf=nc(i)+nc(j)+cov(a)+cov(b);put(i,a,'');put(i,b,t1);put(j,b,'');put(j,a,t2);const af=nc(i)+nc(j)+cov(a)+cov(b);if(af>bf){put(i,a,oi[0]);put(i,b,oi[1]);put(j,a,oj[0]);put(j,b,oj[1])}continue}
+else{i=rnd(N);const m=rnd(5);if(m>=3){const j=rnd(N);a=rnd(days);b=rnd(days);if(i==j||a==b||!W(R[i][a])||fx(i,a)||R[i][b]!==''||fx(i,b)||R[j][a]!==''||fx(j,a)||!W(R[j][b])||fx(j,b))continue;const t1=R[j][b],t2=R[i][a];if(!ok(i,b,t1)||!ok(j,a,t2))continue;const oi=[R[i][a],R[i][b]],oj=[R[j][a],R[j][b]];const cg=()=>chg(i,a)+chg(i,b)+chg(j,a)+chg(j,b);const bf=nc(i)+nc(j)+cov(a)+cov(b)+cg();put(i,a,'');put(i,b,t1);put(j,b,'');put(j,a,t2);const af=nc(i)+nc(j)+cov(a)+cov(b)+cg();if(af>bf){put(i,a,oi[0]);put(i,b,oi[1]);put(j,a,oj[0]);put(j,b,oj[1])}continue}
 if(m==2){a=rnd(days);if(!W(R[i][a])||fx(i,a))continue;t=R[i][a]=='D'?'N':'D';if(!ok(i,a,t))continue;b=-1}
 else{a=rnd(days);b=rnd(days);if(!W(R[i][a])||fx(i,a)||R[i][b]!==''||fx(i,b))continue;t=R[i][a];if(m==1)t=t=='D'?'N':'D';if(!ok(i,b,t))continue}}
-const old=[R[i][a],b>=0?R[i][b]:null];const before=nc(i)+cov(a)+(b>=0?cov(b):0);
+const old=[R[i][a],b>=0?R[i][b]:null];const before=nc(i)+cov(a)+(b>=0?cov(b):0)+chg(i,a)+(b>=0?chg(i,b):0);
 if(b<0){put(i,a,t)}else{put(i,a,'');put(i,b,t)}
-const after=nc(i)+cov(a)+(b>=0?cov(b):0);
+const after=nc(i)+cov(a)+(b>=0?cov(b):0)+chg(i,a)+(b>=0?chg(i,b):0);
 if(after>before){if(b<0)put(i,a,old[0]);else{put(i,b,old[1]);put(i,a,old[0])}}}
+};
+search(1200);
+/* balance each nurse to target +-1 */
+const cntOf=i=>R[i].filter(W).length;
+for(let i=0;i<N;i++){for(let g=0;g<40;g++){const c=cntOf(i);
+ if(c<tot[i]){let best=null;for(let d=0;d<days;d++){if(R[i][d]!==''||fx(i,d))continue;for(const t of['D','N']){if(!ok(i,d,t))continue;const bf=nc(i)+cov(d)+chg(i,d);put(i,d,t);const af=nc(i)+cov(d)+chg(i,d);put(i,d,'');const dl=af-bf+Math.random();if(!best||dl<best[0])best=[dl,d,t]}}if(!best||best[0]>=690)break;put(i,best[1],best[2])}
+ else if(c>tot[i]){let best=null;for(let d=0;d<days;d++){if(!W(R[i][d])||fx(i,d))continue;const o=R[i][d],bf=nc(i)+cov(d)+chg(i,d);put(i,d,'');const af=nc(i)+cov(d)+chg(i,d);put(i,d,o);const dl=af-bf+Math.random();if(!best||dl<best[0])best=[dl,d]}if(!best||best[0]>=990)break;put(i,best[1],'')}
+ else break}}
+search(700);
 assignOC()}
 function assignOC(){
 const N=nurses.length;OC=nurses.map(()=>Array(days).fill(false));const oc=Array(N).fill(0);
@@ -519,8 +591,10 @@ function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
 const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0;
 dRA=Array(days).fill(dR);nRA=Array(days).fill(nR);docA=Array(days).fill(dO);nocA=Array(days).fill(nO);
-P=nurses.map(()=>newP(base));L.cnt.forEach(r=>{if(r.a!==''&&P[+r.n])P[+r.n].tot=+r.a});
+BCELL=null;let baseOn=false;if(BASEMAP){const ok2=nurses.every(n=>BASEMAP[n.name.toLowerCase()]);if(ok2){baseOn=true;BCELL=nurses.map(n=>{const r=BASEMAP[n.name.toLowerCase()];return Array.from({length:days},(_,d)=>{const x=r[d]||'';return x=='D'||x=='N'?x:''})})}else MSG.bad.push(['load_mis'])}
+P=nurses.map((_,i)=>{const q=newP(base);if(baseOn){q.tot=BCELL[i].filter(Boolean).length;q.mxc=99}return q});L.cnt.forEach(r=>{if(r.a!==''&&P[+r.n])P[+r.n].tot=+r.a});
 const req=nurses.map(()=>Array(days).fill(''));HF=nurses.map(()=>Array(days).fill(false));FW=nurses.map(()=>Array(days).fill(false));
+if(baseOn)nurses.forEach((n,i)=>{const r=BASEMAP[n.name.toLowerCase()];for(let d=0;d<days;d++)if(r[d]=='AL')req[i][d]='AL'});
 L.al.forEach(r=>rng(r).forEach(d=>{if(req[+r.n])req[+r.n][d]='AL'}));
 parseWish2(req);
 parseRec($('rec').value,req);
@@ -535,6 +609,7 @@ if(p.ncap!=null&&a>p.ncap){b+=a-p.ncap;a=p.ncap;if(p.only=='N'){b=0;T=a}}
 tot[i]=T;nt[i]=a;dt[i]=b});
 const lim=Array(N).fill(5),nD=Array(N).fill(0),nN=Array(N).fill(0),st=Array.from({length:N},(_,i)=>i%P[i].mxc),ns=Array(N).fill(0),prev=Array(N).fill(''),of=Array(N).fill(0),lastN=Array(N).fill(-99);
 R=nurses.map(()=>Array(days).fill(''));
+if(baseOn){nurses.forEach((_,i)=>{for(let d=0;d<days;d++)R[i][d]=req[i][d]||BCELL[i][d]||''})}else{
 for(let d=0;d<days;d++){
 const a=nurses.map((_,i)=>req[i][d]||'');
 nurses.forEach((_,i)=>{if(st[i]==0||d==0)lim[i]=1+Math.floor(Math.random()*P[i].mxc)});
@@ -556,15 +631,18 @@ if(PREF[i][d]==s)sc+=120;if(st[i]>=lim[i])sc-=250;else{if(s=='N'&&prev[i]=='N'&&
 c.push([sc,i])});
 c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}}
 nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1;lastN[i]=d}else{st[i]=0;ns[i]=0}of[i]=(s=='D'||s=='N')?0:of[i]+1;prev[i]=s})}
-repairR(req);
+}
+repairR(req,tot);
 const warn=[];
 for(let d=0;d<days;d++){const cd=R.filter(r=>r[d]=='D').length,cn=R.filter(r=>r[d]=='N').length;
 if(cd<dRA[d])warn.push(['w_short_d',d+1,dRA[d]-cd]);if(cn<nRA[d])warn.push(['w_short_n',d+1,nRA[d]-cn]);
 const od=OC.filter((r,i)=>r[d]&&R[i][d]=='D').length,on=OC.filter((r,i)=>r[d]&&R[i][d]=='N').length;
 if(od<docA[d]&&cd>=1)warn.push(['oc_short_d',d+1,docA[d]-od]);if(on<nocA[d]&&cn>=1)warn.push(['oc_short_n',d+1,nocA[d]-on])}
 nurses.forEach((n,i)=>{const p=P[i];let w=0,o=0,mw=0,mo=0;R[i].forEach(s=>{if(s=='D'||s=='N'){w++;o=0}else{o++;w=0}mw=Math.max(mw,w);mo=Math.max(mo,o)});if(mw>p.mxc)warn.push(['w_work',n.name,mw]);if(mo>p.mxo)warn.push(['w_off',n.name,mo])});
+nurses.forEach((n,i)=>{const c=R[i].filter(s=>s=='D'||s=='N').length;if(Math.abs(c-tot[i])>1)warn.push(['w_tot',n.name,c,tot[i]])});
+if(baseOn)MSG.bad.push(['base_used']);
 MSG.warn=warn;MSG.ovr=ovr;MSG.ran=true;
-showMsgs();render()}
+showMsgs();render();saveState()}
 /* ================= table / export ================= */
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function cnts(i){let D=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D')D++;else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i]&&OC[i][d]&&(s=='D'||s=='N'))O++});return{D,N,AL,O,T:D+N}}
@@ -582,7 +660,7 @@ const stats=Array.from({length:days},(_,d)=>dayStats(d));
 rows.forEach(([k,lab,arr])=>{const isOc=k=='OD'||k=='ON';h+=`<tr><td class="nm" style="background:${isOc?'#fde9c9':'#eee'}">${lab} (${t('req')} ${arr[0]})</td>${sid?'<td></td>':''}`;
 for(let d=0;d<days;d++){const n=stats[d][k];h+=`<td class="${n<arr[d]?'bad':isOc?'ocr':'tot'}">${n}</td>`}h+='<td colspan=5></td></tr>'});
 $('tb').innerHTML=h}
-function tg(i,d){const s=R[i][d];if(s=='AL')return;R[i][d]=s==''?'D':s=='D'?'N':'';render()}
+function tg(i,d){const s=R[i][d];if(s=='AL')return;R[i][d]=s==''?'D':s=='D'?'N':'';render();saveState()}
 function aoa(){const sid=$('showid').checked;const t0=[[t('c_staff'),...(sid?['ID']:[]),...Array.from({length:days},(_,d)=>d+1),t('c_total'),'D','N','OC','AL']];
 nurses.forEach((n,i)=>{const c=cnts(i);t0.push([n.name,...(sid?[n.id]:[]),...R[i].map((s,d)=>s+(OC[i]&&OC[i][d]&&(s=='D'||s=='N')?'·OC':'')),c.T,c.D,c.N,c.O,c.AL])});
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
@@ -590,5 +668,5 @@ const stats=Array.from({length:days},(_,d)=>dayStats(d));
 return t0}
 function xl(){if(!R.length)return alert(t('alert_gen'));try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
 function cp(){if(!R.length)return alert(t('alert_gen'));const x=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(x).then(()=>alert(t('alert_copied')))}catch(e){prompt('Copy:',x)}}
-nurses=parseN();applyLang();
+nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}
 </script></body></html>
