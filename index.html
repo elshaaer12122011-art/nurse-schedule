@@ -149,7 +149,7 @@ rs_title:'اللي اتفهم من توصيات الهيد نرس:',us_title:'�
 all:'الكل',days_lbl:'أيام',
 r_maxwork:'أقصى شغل متتالي {0} أيام',r_maxoff:'أقصى راحة متتالية {0} أيام',r_maxnight:'أقصى نايت متتالي {0} ليالي',
 r_minb:'أقل شغل متتالي {0} أيام (مفيش يوم شغل لوحده)',r_minoffrun:'أقل راحة متتالية {0} أيام',r_mow:'أقل راحة {0} يوم في الأسبوع',r_mpw:'أقصى {0} شفتات في الأسبوع',
-r_blk_dn_nd:'الاستاف نصين: النص الأول داي ورا بعض ثم نايت ورا بعض، والنص التاني نايت ورا بعض ثم داي ورا بعض',r_blk_nd_dn:'الاستاف نصين: النص الأول نايت ورا بعض ثم داي ورا بعض، والنص التاني داي ورا بعض ثم نايت ورا بعض',r_blk_dn_dn:'كل الاستاف: داي ورا بعض ثم نايت ورا بعض',r_blk_nd_nd:'كل الاستاف: نايت ورا بعض ثم داي ورا بعض',r_ran:'راحة {0} يوم بعد النايت',r_only_n:'نايت فقط',r_only_d:'داي فقط',r_frac:'{0}% نايت و {1}% داي',
+r_blk_dn_nd:'الاستاف نصين موزّعين بالتبادل في الجدول (من غير ما يتأثروا بترتيب الأسماء): النص الأول داي ورا بعض ثم نايت ورا بعض، والنص التاني نايت ورا بعض ثم داي ورا بعض',r_blk_nd_dn:'الاستاف نصين موزّعين بالتبادل في الجدول (من غير ما يتأثروا بترتيب الأسماء): النص الأول نايت ورا بعض ثم داي ورا بعض، والنص التاني داي ورا بعض ثم نايت ورا بعض',r_blk_dn_dn:'كل الاستاف: داي ورا بعض ثم نايت ورا بعض',r_blk_nd_nd:'كل الاستاف: نايت ورا بعض ثم داي ورا بعض',r_ran:'راحة {0} يوم بعد النايت',r_only_n:'نايت فقط',r_only_d:'داي فقط',r_frac:'{0}% نايت و {1}% داي',
 r_ncnt:'{0} نايت',r_dcnt:'{0} داي',r_tot:'{0} شفت في الشهر',r_totadj:'تعديل الشفتات {0}',r_totcap:'أقصى {0} شفت في الشهر',r_totmul:'{0}% من الشفتات',r_ncap:'أقصى {0} نايت في الشهر',
 r_off:'راحة: {0}',r_must:'لازم يشتغل: {0}',r_type:'{0}: {1}',r_soft:'{0}: {1} (نوع الشفت فقط)',
 r_dreq:'المطلوب داي {0} ({1})',r_nreq:'المطلوب نايت {0} ({1})',r_doc:'أون كول داي {0} ({1})',r_noc:'أون كول نايت {0} ({1})',
@@ -187,7 +187,7 @@ rs_title:'Understood from head nurse recommendations:',us_title:'⚠️ Sentence
 all:'Everyone',days_lbl:'days',
 r_maxwork:'Max consecutive work {0} days',r_maxoff:'Max consecutive rest {0} days',r_maxnight:'Max consecutive nights {0}',
 r_minb:'Min consecutive work {0} days (no isolated work day)',r_minoffrun:'Min consecutive rest {0} days',r_mow:'At least {0} day(s) off per week',r_mpw:'Max {0} shifts per week',
-r_blk_dn_nd:'Staff in two halves: first half days in a row then nights in a row; second half nights in a row then days in a row',r_blk_nd_dn:'Staff in two halves: first half nights in a row then days in a row; second half days in a row then nights in a row',r_blk_dn_dn:'Everyone: days in a row then nights in a row',r_blk_nd_nd:'Everyone: nights in a row then days in a row',r_ran:'{0} rest day(s) after nights',r_only_n:'Nights only',r_only_d:'Days only',r_frac:'{0}% nights and {1}% days',
+r_blk_dn_nd:'Staff in two halves, interleaved through the list (not by name order): first half days in a row then nights in a row; second half nights in a row then days in a row',r_blk_nd_dn:'Staff in two halves, interleaved through the list (not by name order): first half nights in a row then days in a row; second half days in a row then nights in a row',r_blk_dn_dn:'Everyone: days in a row then nights in a row',r_blk_nd_nd:'Everyone: nights in a row then days in a row',r_ran:'{0} rest day(s) after nights',r_only_n:'Nights only',r_only_d:'Days only',r_frac:'{0}% nights and {1}% days',
 r_ncnt:'{0} nights',r_dcnt:'{0} days',r_tot:'{0} shifts per month',r_totadj:'Shift adjustment {0}',r_totcap:'Max {0} shifts per month',r_totmul:'{0}% of the shifts',r_ncap:'Max {0} nights per month',
 r_off:'Off: {0}',r_must:'Must work: {0}',r_type:'{0}: {1}',r_soft:'{0}: {1} (shift type only)',
 r_dreq:'Day requirement {0} ({1})',r_nreq:'Night requirement {0} ({1})',r_doc:'On call day {0} ({1})',r_noc:'On call night {0} ({1})',
@@ -451,8 +451,8 @@ if(!hit.length)return text;
 const first=n=>{const a=n.search(DW),b=n.search(NW);return a<b?'D':'N'};
 const o1=first(hit[0]),o2=hit.length>1?first(hit[1]):(o1=='D'?'N':'D');
 const ord=o=>o=='D'?'DN':'ND';
-const half=Math.ceil(nurses.length/2);
-nurses.forEach((_,i)=>{BLK[i]=i<half?ord(o1):ord(o2);if(P[i])P[i].fracN=0.5});
+const byT={};nurses.forEach((n,i)=>{(byT[n.title.toLowerCase()||'_']=byT[n.title.toLowerCase()||'_']||[]).push(i)});
+Object.values(byT).forEach(l=>l.forEach((i,k)=>{const g=(k%4==0||k%4==3)?0:1;BLK[i]=g==0?ord(o1):ord(o2);if(P[i])P[i].fracN=0.5}));
 MSG.rsum.push({who:t('all'),k:'r_blk_'+ord(o1).toLowerCase()+'_'+ord(o2).toLowerCase(),a:[]});
 return keep.join('\n')}
 function parseRec(text,req){
