@@ -121,13 +121,16 @@ rest.split(/[,،;؛]/).forEach(seg=>{const t=/off|اجاز|إجاز|راح/.test
 let s2=seg;[...seg.matchAll(/(\d+)\s*(?:-|–|to|الى|إلى)\s*(\d+)/g)].forEach(m=>{for(let d=+m[1];d<=Math.min(+m[2],days);d++)if(d>=1&&req[n.i][d-1]!=='AL'){req[n.i][d-1]=t;ok=true}s2=s2.replace(m[0],' ')});
 (s2.match(/\d+/g)||[]).forEach(x=>{const d=+x;if(d>=1&&d<=days&&req[n.i][d-1]!=='AL'){req[n.i][d-1]=t;ok=true}})});
 if(!ok)badW.push(line.trim())})}
-let MXC=5;
+let MXC=5,MXO=99;
 function ar2en(s){return s.replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632)}
 function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];for(let j=1;j<=b.length;j++)m[i][j]=i?Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1)):j}return m[a.length][b.length]}
 const KW={OFF:/^(off|اوف|اجازه|اجازة|إجازة|راحه|راحة)$/,N:/^(night|nights|نايت|ليل|n)$/,D:/^(day|days|داي|نهار|d)$/};
 const STOP=new Set('and the for from with shift shifts till until please plz consider request december dec between thanks thank'.split(' '));
 function kwOf(w){for(const k in KW)if(KW[k].test(w))return k;return null}
-function sim(a,b){if(a==b)return 2;if(a.length<3||b.length<3||a[0]!=b[0])return 0;return lev(a,b)<=(Math.max(a.length,b.length)>=6?2:1)?1:0}
+const nz=w=>w.replace(/ph/g,'f').replace(/h/g,'').replace(/[kq]/g,'c').replace(/j/g,'g').replace(/z/g,'s').replace(/y/g,'i').replace(/w/g,'u').replace(/e/g,'i').replace(/o/g,'u').replace(/(.)\1+/g,'$1');
+function sim(a,b){if(a==b)return 3;if(a.length<3||b.length<3)return 0;const x=nz(a),y=nz(b);if(x==y)return 2;if(x[0]!=y[0])return 0;const L=Math.max(x.length,y.length);return lev(x,y)<=(L>=8?2:L>=5?1:0)?1:0}
+function candOf(w){if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach((x,k)=>{s=Math.max(s,sim(w,x)*10+(sim(w,x)&&k==0?1:0))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null}
+function findN(line){const ws=ar2en(line).toLowerCase().match(/[a-z]+/g)||[];for(let i=0;i<ws.length;i++){let cs=candOf(ws[i]);if(!cs)continue;let e=i;while(ws[e+1]){const c2=candOf(ws[e+1]);if(!c2)break;const x=cs.filter(a=>c2.includes(a));if(!x.length)break;cs=x;e++}return cs.length==1?cs[0]:null}return null}
 function fmt(a){a=[...new Set(a)].sort((x,y)=>x-y);const o=[];for(let i=0;i<a.length;){let j=i;while(a[j+1]==a[j]+1)j++;o.push(j>i?a[i]+'-'+a[j]:a[i]);i=j+1}return o.join(',')}
 function parseWish2(req){
 badW=[];const sum={};
@@ -135,7 +138,7 @@ const t=ar2en($('wishtxt').value).toLowerCase().replace(/(\d+)(st|nd|rd|th)\b/g,
 const toks=[];const re=/(\d+)\s*(?:-|–|to|till|until|الى|إلى|لحد)\s*(\d+)|(\d+)|([a-z\u0600-\u06ff]+)/g;let m;
 while(m=re.exec(t)){if(m[1])toks.push({r:[+m[1],+m[2]]});else if(m[3])toks.push({n:+m[3],raw:m[3]});else toks.push({w:m[4]})}
 const ids=nurses.map(n=>n.id).filter(Boolean);
-const cand=w=>{if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach(x=>{s=Math.max(s,sim(w,x))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null};
+const cand=w=>{if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach(x=>{s=Math.max(s,sim(w,x)*10+(sim(w,x)&&x==n.name.toLowerCase().split(/\s+/)[0]?1:0))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null};
 const ment=[];
 for(let i=0;i<toks.length;i++){const k=toks[i];
 if(k.n!==undefined&&ids.includes(k.raw)){ment.push({s:i,e:i,c:[nurses.find(x=>x.id==k.raw)]});continue}
@@ -147,7 +150,7 @@ const ms=new Map(ment.map(x=>[x.s,x]));let cur=null,pend=[],fwd=null;
 const apply=(ty,ds)=>{if(!cur)return;ds=ds.filter(d=>d>=1&&d<=days);if(!ds.length)return;ds.forEach(d=>{if(req[cur.i][d-1]!=='AL')req[cur.i][d-1]=ty});(sum[cur.i]=sum[cur.i]||[]).push(ty+' '+fmt(ds))};
 const seen=new Set();const flush=()=>{if(pend.length)apply('OFF',pend);pend=[]};
 for(let i=0;i<toks.length;i++){const k=toks[i],mm=ms.get(i);
-if(mm){flush();cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else badW.push('اسم غير واضح ('+mm.c.slice(0,3).map(x=>x.name).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
+if(mm){flush();cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else badW.push('اسم غير واضح ('+mm.c.slice(0,4).map(x=>x.name+' '+x.id).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
 if(!cur)continue;
 let ds=null;if(k.r){ds=[];for(let d=k.r[0];d<=Math.min(k.r[1],days);d++)ds.push(d)}else if(k.n!==undefined&&k.n>=1&&k.n<=days)ds=[k.n];
 if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
@@ -162,13 +165,13 @@ const req=nurses.map(()=>Array(days).fill(''));
 L.al.forEach(r=>rng(r).forEach(d=>req[+r.n][d]='AL'));
 parseWish2(req);
 const demN=nR/(dR+nR||1);const frac=nurses.map(()=>demN),hard=nurses.map(()=>false);
-const mm0=ar2en($('rec').value).match(/(?:اكتر من|أكثر من|more than|max(?:imum)?|اقصى|أقصى)\D{0,12}?(\d+)[^\n]{0,40}?(?:ورا بعض|وراء بعض|متتال|consecutive|in a row)/i);MXC=mm0?+mm0[1]:5;const indiv=[];
+const mm0=ar2en($('rec').value).match(/(?:اكتر من|أكثر من|more than|max(?:imum)?|اقصى|أقصى)\D{0,12}?(\d+)[^\n]{0,40}?(?:ورا بعض|وراء بعض|متتال|consecutive|in a row)/i);MXC=mm0?+mm0[1]:5;const mw=ar2en($('rec').value).match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:شفت|shift|ايام عمل|work)[^\n]{0,30}?(?:ورا بعض|consecutive|in a row)/i);if(mw)MXC=+mw[1];const mo=ar2en($('rec').value).match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:ايام|يوم|days?)?\s*(?:اجاز|off|راح)[^\n]{0,30}?(?:ورا بعض|consecutive|in a row)/i);MXO=mo?+mo[1]:99;const indiv=[];
 $('rec').value.split('\n').forEach(line=>{const lo=ar2en(line).toLowerCase();const n=findN(line);if(!n){const a=lo.search(/night|نايت|ليل/),b=lo.search(/day|داي|نهار/),f=fr(lo);if(/كل|all|every|staff|استاف/.test(lo)&&(a>=0||b>=0)){const v=(a>=0&&(b<0||a<b))?f:1-f;nurses.forEach((_,i)=>{if(!indiv[i])frac[i]=v})}return}indiv[n.i]=1;
 const iN=lo.search(/night|نايت|ليل/),iD=lo.search(/day|داي|نهار/);const f=fr(line);
 const nightFirst=iN>=0&&(iD<0||iN<iD);const dayFirst=iD>=0&&(iN<0||iD<iN);
 if(nightFirst)frac[n.i]=f;else if(dayFirst)frac[n.i]=1-f;else return;hard[n.i]=f==1;});
 const nt=nurses.map((_,i)=>Math.round(tot[i]*frac[i])),dt=nurses.map((_,i)=>tot[i]-nt[i]);
-const nD=Array(N).fill(0),nN=Array(N).fill(0),oc=Array(N).fill(0),st=Array(N).fill(0),ns=Array(N).fill(0),prev=Array(N).fill('');
+const nD=Array(N).fill(0),nN=Array(N).fill(0),oc=Array(N).fill(0),st=Array(N).fill(0),ns=Array(N).fill(0),prev=Array(N).fill(''),of=Array(N).fill(0);
 R=nurses.map(()=>Array(days).fill(''));OC=nurses.map(()=>Array(days).fill(false));const warn=[];
 for(let d=0;d<days;d++){
 const a=nurses.map((_,i)=>req[i][d]||'');
@@ -180,13 +183,13 @@ const c=[];nurses.forEach((n,i)=>{if(a[i]!=='')return;if(s=='D'&&prev[i]=='N')re
 if(hard[i]&&((s=='N')!=(frac[i]==1)))return;
 const done=nD[i]+nN[i],left=tot[i]-done,tn=s=='N'?nt[i]-nN[i]:dt[i]-nD[i];
 if(pass<2&&left<=0)return;if(pass<1&&tn<=0)return;if(st[i]>=(pass<2?MXC:MXC+2))return;
-let sc=Math.max(tn,0)*10+left/(days-d)*100+Math.random()*3;
+let sc=Math.max(tn,0)*10+left/(days-d)*100+Math.random()*3+(of[i]>=MXO?400:0);
 if(s=='N'&&prev[i]=='N'&&ns[i]<3)sc+=500;if(s=='D'&&prev[i]=='D')sc+=40;
 c.push([sc,i])});
 c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}
 if(need>0)warn.push(`يوم ${d+1}: نقص ${need} في ${s=='N'?'النايت':'الداي'}`)}
 for(const s of['N','D']){let k=s=='N'?nO:dO;nurses.map((_,i)=>i).filter(i=>a[i]==s).sort((x,y)=>oc[x]-oc[y]||x-y).slice(0,k).forEach(i=>{OC[i][d]=true;oc[i]++})}
-nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1}else{st[i]=0;ns[i]=0}prev[i]=s});}
+nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1}else{st[i]=0;ns[i]=0}of[i]=(s=='D'||s=='N')?0:of[i]+1;prev[i]=s});}
 if(badW.length)warn.unshift('رغبة غير مفهومة: '+badW.join(' | '));$('warn').innerHTML=warn.length?'⚠️ '+warn.slice(0,8).join(' • ')+(warn.length>8?' …':'')+' — زوّد عدد الشفتات أو التمريض.':'✅ التغطية كاملة.';
 render()}
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
