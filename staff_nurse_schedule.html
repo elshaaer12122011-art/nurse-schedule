@@ -4,6 +4,7 @@
 <title>Staff Nurse Schedule</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mut:#667;--bd:#d5d9df;--pri:#0f6fbf;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171b;--card:#1e2328;--tx:#e8eaed;--mut:#9aa;--bd:#38404a;--pri:#4aa3f0}}
@@ -28,7 +29,8 @@ th,td{border:1px solid #bbb;padding:2px 4px;text-align:center;min-width:26px;whi
 th{background:#e9edf2}td.nm{text-align:left;font-weight:600;position:sticky;left:0;min-width:150px;z-index:1}
 td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{background:#9be0a8}.OFF{background:#fff}
 .tot{background:#eef;font-weight:700}.we{background:#f6d6d6}.bad{background:#f5a5a5;font-weight:700}.ocr{background:#fde9c9;font-weight:700}
-@media print{body{padding:0;background:#fff}.card,.noprint{display:none}.wrap{border:0;overflow:visible}@page{size:landscape;margin:6mm}table{font-size:8px}}
+#ptitle{display:none}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
 </style></head><body>
 <div class="top noprint"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><button id="langbtn" onclick="toggleLang()">EN</button></div>
 <div class="card noprint"><h2 data-i="h_names"></h2>
@@ -56,6 +58,7 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <div id="rsum" class="sm"></div></div>
 <div class="card noprint"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
+<div id="ptitle"></div>
 <div class="wrap"><table id="tb"></table></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -647,7 +650,7 @@ showMsgs();render();saveState()}
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function cnts(i){let D=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D')D++;else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i]&&OC[i][d]&&(s=='D'||s=='N'))O++});return{D,N,AL,O,T:D+N}}
 function dayStats(d){return{D:R.filter(r=>r[d]=='D').length,N:R.filter(r=>r[d]=='N').length,OD:OC.filter((r,i)=>r[d]&&R[i][d]=='D').length,ON:OC.filter((r,i)=>r[d]&&R[i][d]=='N').length}}
-function render(){if(!R.length||!nurses.length)return;const sid=$('showid').checked;
+function render(){if(!R.length||!nurses.length)return;const sid=$('showid').checked;$('ptitle').textContent='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0')+'   |   D = Day · N = Night · OC = On-call · AL = Annual leave';
 let h='<tr><th rowspan=2>'+t('c_staff')+'</th>';if(sid)h+='<th rowspan=2>ID</th>';
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();h+=`<th class="${w==5?'we':''}">${d+1}</th>`}
 h+=`<th class="tot" rowspan=2>${t('c_total')}</th><th class="tot" rowspan=2>${t('c_day')}</th><th class="tot" rowspan=2>${t('c_night')}</th><th class="tot" rowspan=2>OC</th><th class="tot" rowspan=2>AL</th></tr><tr>`;
@@ -657,7 +660,7 @@ R[i].forEach((s,d)=>{h+=`<td class="c ${s||'OFF'}" onclick="tg(${i},${d})">${s}$
 h+=`<td class="tot">${c.T}</td><td class="tot">${c.D}</td><td class="tot">${c.N}</td><td class="tot">${c.O}</td><td class="tot">${c.AL}</td></tr>`});
 const rows=[['D',t('r_day'),dRA,'D'],['N',t('r_night'),nRA,'N'],['OD',t('r_dayoc'),docA,'OD'],['ON',t('r_nightoc'),nocA,'ON']];
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
-rows.forEach(([k,lab,arr])=>{const isOc=k=='OD'||k=='ON';h+=`<tr><td class="nm" style="background:${isOc?'#fde9c9':'#eee'}">${lab} (${t('req')} ${arr[0]})</td>${sid?'<td></td>':''}`;
+rows.forEach(([k,lab,arr])=>{const isOc=k=='OD'||k=='ON';h+=`<tr><td class="nm" style="background:${isOc?'#fde9c9':'#eee'}">${lab} · ${t('req')} ${arr[0]}</td>${sid?'<td></td>':''}`;
 for(let d=0;d<days;d++){const n=stats[d][k];h+=`<td class="${n<arr[d]?'bad':isOc?'ocr':'tot'}">${n}</td>`}h+='<td colspan=5></td></tr>'});
 $('tb').innerHTML=h}
 function tg(i,d){const s=R[i][d];if(s=='AL')return;R[i][d]=s==''?'D':s=='D'?'N':'';render();saveState()}
@@ -666,7 +669,32 @@ nurses.forEach((n,i)=>{const c=cnts(i);t0.push([n.name,...(sid?[n.id]:[]),...R[i
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
 [['D',t('r_day')],['N',t('r_night')],['OD',t('r_dayoc')],['ON',t('r_nightoc')]].forEach(([k,lab])=>t0.push([lab,...(sid?['']:[]),...stats.map(s=>s[k])]));
 return t0}
-function xl(){if(!R.length)return alert(t('alert_gen'));try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
+function xlOld(){if(!R.length)return alert(t('alert_gen'));try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
+const hex=(h,s,l)=>{s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0')};return(f(0)+f(8)+f(4)).toUpperCase()};
+async function xl(){if(!R.length)return alert(t('alert_gen'));
+if(typeof ExcelJS==='undefined')return xlOld();
+try{const sid=$('showid').checked,wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Roster',{views:[{state:'frozen',xSplit:sid?2:1,ySplit:3}],pageSetup:{orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:8,margins:{left:0.2,right:0.2,top:0.3,bottom:0.3,header:0.1,footer:0.1}}});
+const nc0=sid?2:1,dc0=nc0+1,tc0=dc0+days,lastC=tc0+4;
+const bd={style:'thin',color:{argb:'FF888888'}},B={top:bd,left:bd,bottom:bd,right:bd};
+const fill=c=>({type:'pattern',pattern:'solid',fgColor:{argb:'FF'+c}});
+const st=(cell,o)=>{cell.border=B;cell.alignment={horizontal:'center',vertical:'middle'};if(o.f)cell.fill=fill(o.f);cell.font={name:'Calibri',size:o.sz||10,bold:!!o.b,color:{argb:'FF'+(o.c||'000000')}}};
+ws.mergeCells(1,1,1,lastC);const tt=ws.getCell(1,1);tt.value='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0');tt.font={size:16,bold:true,color:{argb:'FF0F3F6F'}};tt.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=26;
+const hd=(r,c,v,f,col)=>{const x=ws.getCell(r,c);x.value=v;st(x,{f:f||'E9EDF2',b:true,c:col})};
+hd(2,1,t('c_staff'));ws.mergeCells(2,1,3,1);if(sid){hd(2,2,'ID');ws.mergeCells(2,2,3,2)}
+for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay(),f=w==5?'F6C6C6':'E9EDF2';hd(2,dc0+d,d+1,f);hd(3,dc0+d,DOW[w],f)}
+[[t('c_total'),'T'],['D','D'],['N','N'],['OC','O'],['AL','AL']].forEach(([l,k],x)=>{hd(2,tc0+x,l,'D9DDF5');ws.mergeCells(2,tc0+x,3,tc0+x)});
+nurses.forEach((n,i)=>{const r=4+i,c=cnts(i);const a=ws.getCell(r,1);a.value=(i+1)+'. '+n.name;st(a,{f:hex((i*137.5)%360,70,80),b:true});a.alignment={horizontal:'left',vertical:'middle'};
+if(sid){const b=ws.getCell(r,2);b.value=n.id;st(b,{})}
+R[i].forEach((s,d)=>{const x=ws.getCell(r,dc0+d),oc=OC[i]&&OC[i][d]&&(s=='D'||s=='N');x.value=(s=='OFF'?'':s)+(oc?'·OC':'');
+if(s=='D')st(x,{f:'FFF3B0',b:true});else if(s=='N')st(x,{f:'26397A',c:'FFFFFF',b:true});else if(s=='AL')st(x,{f:'9BE0A8',b:true});else st(x,{f:'FFFFFF',c:'AAAAAA'});
+if(oc){x.font={name:'Calibri',size:10,bold:true,color:{argb:s=='N'?'FFFFD27F':'FFC0392B'}}}});
+[c.T,c.D,c.N,c.O,c.AL].forEach((v,x)=>{const y=ws.getCell(r,tc0+x);y.value=v;st(y,{f:'EEEEFF',b:true})})});
+const stats=Array.from({length:days},(_,d)=>dayStats(d));
+[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]].forEach(([k,lab,arr],q)=>{const r=4+nurses.length+q,oc=k=='OD'||k=='ON';const a=ws.getCell(r,1);a.value=lab+' · '+t('req')+' '+arr[0];st(a,{f:oc?'FDE9C9':'DDDDDD',b:true});a.alignment={horizontal:'left',vertical:'middle'};if(sid)st(ws.getCell(r,2),{f:oc?'FDE9C9':'DDDDDD'});
+for(let d=0;d<days;d++){const n=stats[d][k],x=ws.getCell(r,dc0+d);x.value=n;st(x,{f:n<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF',b:true})}});
+ws.getColumn(1).width=26;if(sid)ws.getColumn(2).width=9;for(let d=0;d<days;d++)ws.getColumn(dc0+d).width=5.2;for(let x=0;x<5;x++)ws.getColumn(tc0+x).width=7;
+const buf=await wb.xlsx.writeBuffer();const url=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xlsx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlOld()}}
 function cp(){if(!R.length)return alert(t('alert_gen'));const x=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(x).then(()=>alert(t('alert_copied')))}catch(e){prompt('Copy:',x)}}
 nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}
 </script></body></html>
