@@ -5,6 +5,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mut:#667;--bd:#d5d9df;--pri:#0f6fbf;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171b;--card:#1e2328;--tx:#e8eaed;--mut:#9aa;--bd:#38404a;--pri:#4aa3f0}}
@@ -56,7 +57,7 @@ td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{b
 <div class="hint" data-i="h_rec_hint"></div>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
 <div id="rsum" class="sm"></div></div>
-<div class="card noprint"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
+<div class="card noprint"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
 <div id="ptitle"></div>
 <div class="wrap"><table id="tb"></table></div>
@@ -669,6 +670,33 @@ nurses.forEach((n,i)=>{const c=cnts(i);t0.push([n.name,...(sid?[n.id]:[]),...R[i
 const stats=Array.from({length:days},(_,d)=>dayStats(d));
 [['D',t('r_day')],['N',t('r_night')],['OD',t('r_dayoc')],['ON',t('r_nightoc')]].forEach(([k,lab])=>t0.push([lab,...(sid?['']:[]),...stats.map(s=>s[k])]));
 return t0}
+
+function pdf(){if(!R.length)return alert(t('alert_gen'));
+if(!window.jspdf||nurses.some(n=>/[^\x00-\xff]/.test(n.name)))return window.print();
+try{const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a3'});
+const W=420,H=297,m=8,sid=$('showid').checked,N=nurses.length;
+const rgb=h=>[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+const nameW=sid?62:50,idW=sid?14:0,totW=11;const x0=m,dx0=m+nameW,dw=(W-2*m-nameW-5*totW)/days,tx0=dx0+dw*days;
+const top=m+16,hh=5.5,rowH=Math.max(3.4,Math.min(7,(H-m-top-2*hh-4)/(N+4)));
+doc.setLineWidth(0.15);doc.setDrawColor(120,120,120);
+const cell=(x,y,w,h,txt,o={})=>{doc.setFillColor(...rgb(o.f||'FFFFFF'));doc.rect(x,y,w,h,'FD');if(txt===''||txt==null)return;
+doc.setFont('helvetica',o.b?'bold':'normal');let fs=o.fs||Math.min(9,h*2.3);doc.setFontSize(fs);const maxW=w-1.6;while(doc.getTextWidth(String(txt))>maxW&&fs>4){fs-=0.5;doc.setFontSize(fs)}
+doc.setTextColor(...rgb(o.c||'000000'));
+if(o.left)doc.text(String(txt),x+1.2,y+h/2,{baseline:'middle'});else doc.text(String(txt),x+w/2,y+h/2,{align:'center',baseline:'middle'})};
+doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(15,63,111);doc.text('Staff Nurse Schedule  -  '+Y+'/'+String(M).padStart(2,'0'),W/2,m+7,{align:'center'});
+doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);doc.text('D = Day   N = Night   OC = On-call   AL = Annual leave',W/2,m+12,{align:'center'});
+cell(x0,top,nameW,hh*2,'Staff',{f:'E9EDF2',b:1});
+for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay(),f=w==5?'F6C6C6':'E9EDF2';cell(dx0+d*dw,top,dw,hh,String(d+1),{f,b:1});cell(dx0+d*dw,top+hh,dw,hh,DOW[w],{f,fs:6.5})}
+['Total','Day','Night','OC','AL'].forEach((l,k)=>cell(tx0+k*totW,top,totW,hh*2,l,{f:'D9DDF5',b:1}));
+const y0=top+2*hh;
+nurses.forEach((n,i)=>{const y=y0+i*rowH,c=cnts(i);cell(x0,y,nameW,rowH,(i+1)+'. '+n.name+(sid&&n.id?'  ('+n.id+')':''),{f:hex((i*137.5)%360,70,80),b:1,left:1});
+R[i].forEach((s,d)=>{const oc=OC[i]&&OC[i][d]&&(s=='D'||s=='N'),txt=(s=='D'||s=='N'||s=='AL'?s:'')+(oc?'-OC':'');
+const o=s=='D'?{f:'FFF3B0',b:1}:s=='N'?{f:'26397A',c:'FFFFFF',b:1}:s=='AL'?{f:'9BE0A8',b:1}:{f:'FFFFFF'};if(oc)o.c=s=='N'?'FFD27F':'C0392B';cell(dx0+d*dw,y,dw,rowH,txt,o)});
+[c.T,c.D,c.N,c.O,c.AL].forEach((v,k)=>cell(tx0+k*totW,y,totW,rowH,String(v),{f:'EEEEFF',b:1}))});
+const stats=Array.from({length:days},(_,d)=>dayStats(d));
+[['D','Day',dRA],['N','Night',nRA],['OD','Day OC',docA],['ON','Night OC',nocA]].forEach(([k,lab,arr],q)=>{const y=y0+(N+q)*rowH,oc=k=='OD'||k=='ON';cell(x0,y,nameW,rowH,lab+'  (req '+arr[0]+')',{f:oc?'FDE9C9':'DDDDDD',b:1,left:1});
+for(let d=0;d<days;d++){const v=stats[d][k];cell(dx0+d*dw,y,dw,rowH,String(v),{f:v<arr[d]?'F5A5A5':oc?'FDE9C9':'EEEEFF',b:1})}});
+doc.save('Roster_'+Y+'-'+String(M).padStart(2,'0')+'.pdf')}catch(e){window.print()}}
 function xlOld(){if(!R.length)return alert(t('alert_gen'));try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(aoa()),'Roster');XLSX.writeFile(wb,`Roster_${Y}-${M}.xlsx`)}catch(e){cp()}}
 const hex=(h,s,l)=>{s/=100;l/=100;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0')};return(f(0)+f(8)+f(4)).toUpperCase()};
 async function xl(){if(!R.length)return alert(t('alert_gen'));
