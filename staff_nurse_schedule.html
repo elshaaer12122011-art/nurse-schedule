@@ -142,8 +142,9 @@ const top=R2.filter(r=>r.cnt==R2[0].cnt&&r.sum==R2[0].sum);let e=top[0].e,c=top.
 if(c.length>1&&ok(ws[e+1])){const w=ws[e+1];const sc=c.map(n=>Math.max(0,...n.name.toLowerCase().split(/\s+/).map(x=>{const a=skel(w),b=skel(x);return a&&a==b?2:(a.length>=3&&lev(a,b)<=1?1:0)})));const m=Math.max(...sc);if(m>0){const t2=c.filter((_,j)=>sc[j]==m);if(t2.length==1){c=t2;e++}}}
 return{c,e}}
 function recN(){return ar2en($('rec').value).replace(/ثلاث[ةه]?|تلات[ةه]?/g,'3').replace(/اتنين|اثنين|إثنين/g,'2').replace(/اربع[ةه]|اربع(?!ا)/g,'4').replace(/خمس[ةه]?/g,'5').replace(/متتال\S*/g,'ورا بعض')}
+let PREF=[];
 function parseWish2(req){
-badW=[];const sum={};
+badW=[];const sum={};PREF=nurses.map(()=>Array(days).fill(''));const CAPm=recN().match(/(?:يزيد|more than|max|اكتر من|اقصى)\D{0,25}?(\d+)\s*(?:شفت|shift|ايام عمل|work)/i);const CAP=CAPm?+CAPm[1]:5;
 const t=ar2en($('wishtxt').value).toLowerCase().replace(/(\d+)(st|nd|rd|th)\b/g,'$1').replace(/(\d+)\s*[.)\-]\s*(?=(?!off|night|day|نايت|داي|اجاز|اوف)[a-z\u0600-\u06ff])/g,' ');
 const toks=[];const re=/(\d+)\s*(?:-|–|to|till|until|الى|إلى|لحد)\s*(\d+)|(\d+)|([a-z\u0600-\u06ff]+)/g;let m;
 while(m=re.exec(t)){if(m[1])toks.push({r:[+m[1],+m[2]]});else if(m[3])toks.push({n:+m[3],raw:m[3]});else toks.push({w:m[4]})}
@@ -157,12 +158,12 @@ while(toks[e+1]&&toks[e+1].w){const c2=cand(toks[e+1].w);if(!c2)break;const x=cs
 if(toks[e+1]&&toks[e+1].n!==undefined){const hit=cs.find(a=>a.id==toks[e+1].raw);if(hit){cs=[hit];e++}}
 ment.push({s:i,e,c:cs});i=e}}
 const ms=new Map(ment.map(x=>[x.s,x]));let cur=null,pend=[],fwd=null;
-const apply=(ty,ds)=>{if(!cur)return;ds=ds.filter(d=>d>=1&&d<=days);if(!ds.length)return;ds.forEach(d=>{if(req[cur.i][d-1]!=='AL')req[cur.i][d-1]=ty});(sum[cur.i]=sum[cur.i]||[]).push(ty+' '+fmt(ds))};
+const apply=(ty,ds)=>{if(!cur)return;ds=ds.filter(x=>x.d>=1&&x.d<=days);if(!ds.length)return;const hardD=[],softD=[];ds.forEach(x=>{if(x.full&&ty!=='OFF')x.full.forEach(d=>{softD.push(d);if(req[cur.i][d-1]!=='AL')PREF[cur.i][d-1]=ty});else{hardD.push(x.d);if(req[cur.i][x.d-1]!=='AL')req[cur.i][x.d-1]=ty}});const sm=sum[cur.i]=sum[cur.i]||[];if(hardD.length)sm.push(ty+' '+fmt(hardD));if(softD.length)sm.push(ty+' '+fmt(softD)+' (نوع الشفت فقط، مع يوم راحة بين الشغل حسب القاعدة)')};
 const seen=new Set(),guess=[],taken=new Set(ment.filter(x=>x.c.length==1).map(x=>x.c[0].i));let GL;const flush=()=>{if(pend.length)apply('OFF',pend);pend=[]};
 for(let i=0;i<toks.length;i++){const k=toks[i],mm=ms.get(i);
 if(mm){flush();cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else if((GL=mm.c.filter(x=>!taken.has(x.i))).length==1){cur=GL[0];taken.add(cur.i);seen.add(cur.i);guess.push(cur.name)}else badW.push('اسم غير واضح ('+mm.c.slice(0,4).map(x=>x.name+' '+x.id).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
 if(!cur)continue;
-let ds=null;if(k.r){ds=[];for(let d=k.r[0];d<=Math.min(k.r[1],days);d++)ds.push(d)}else if(k.n!==undefined&&k.n>=1&&k.n<=days)ds=[k.n];
+let ds=null;if(k.r){const a=k.r[0],b=Math.min(k.r[1],days),full=[];for(let d=a;d<=b;d++)full.push(d);ds=[{d:a,full},{d:b,full}]}else if(k.n!==undefined&&k.n>=1&&k.n<=days)ds=[{d:k.n}];
 if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
 else if(k.w){const ty=kwOf(k.w);if(ty){if(pend.length){apply(ty,pend);pend=[];fwd=null}else fwd=ty}}}
 flush();seen.forEach(i=>{if(!sum[i])badW.push(nurses[i].name+': ما فهمتش الأيام')});
@@ -181,21 +182,22 @@ const iN=lo.search(/night|نايت|ليل/),iD=lo.search(/day|داي|نهار/);
 const nightFirst=iN>=0&&(iD<0||iN<iD);const dayFirst=iD>=0&&(iN<0||iD<iN);
 if(nightFirst)frac[n.i]=f;else if(dayFirst)frac[n.i]=1-f;else return;hard[n.i]=f==1;});
 const nt=nurses.map((_,i)=>Math.round(tot[i]*frac[i])),dt=nurses.map((_,i)=>tot[i]-nt[i]);
-const nD=Array(N).fill(0),nN=Array(N).fill(0),oc=Array(N).fill(0),st=Array.from({length:N},(_,i)=>i%MXC),ns=Array(N).fill(0),prev=Array(N).fill(''),of=Array(N).fill(0);
+const lim=Array(N).fill(MXC),nD=Array(N).fill(0),nN=Array(N).fill(0),oc=Array(N).fill(0),st=Array.from({length:N},(_,i)=>i%MXC),ns=Array(N).fill(0),prev=Array(N).fill(''),of=Array(N).fill(0);
 R=nurses.map(()=>Array(days).fill(''));OC=nurses.map(()=>Array(days).fill(false));const warn=[];
 for(let d=0;d<days;d++){
 const a=nurses.map((_,i)=>req[i][d]||'');
+nurses.forEach((_,i)=>{if(st[i]==0||d==0)lim[i]=1+Math.floor(Math.random()*MXC)});
 const cnt=s=>a.filter(x=>x==s).length;
 nurses.forEach((n,i)=>{if(a[i]===''&&of[i]>=MXO){a[i]=hard[i]?(frac[i]==1?'N':'D'):(((nR-cnt('N'))>(dR-cnt('D')))?'N':((nR-cnt('N'))<(dR-cnt('D')))?'D':((nt[i]-nN[i])>(dt[i]-nD[i])?'N':'D'))}});
 for(const s of['N','D']){
 let need=(s=='N'?nR:dR)-cnt(s);
 for(let pass=0;pass<3&&need>0;pass++){
 const c=[];nurses.forEach((n,i)=>{if(a[i]!=='')return;if(s=='D'&&prev[i]=='N')return;
-if(hard[i]&&((s=='N')!=(frac[i]==1)))return;
+if(hard[i]&&((s=='N')!=(frac[i]==1)))return;if(PREF[i][d]&&PREF[i][d]!==s)return;
 const done=nD[i]+nN[i],left=tot[i]-done,tn=s=='N'?nt[i]-nN[i]:dt[i]-nD[i];
 if(pass<2&&left<=0)return;if(pass<1&&tn<=0)return;if(st[i]>=MXC)return;
 let sc=Math.max(tn,0)*10+left/(days-d)*100+Math.random()*3+(of[i]>=MXO?400:0);
-if(s=='N'&&prev[i]=='N'&&ns[i]<3)sc+=500;if(s=='D'&&prev[i]=='D')sc+=40;
+if(PREF[i][d]==s)sc+=120;if(st[i]>=lim[i])sc-=250;else{if(s=='N'&&prev[i]=='N'&&ns[i]<3)sc+=500;if(s=='D'&&prev[i]=='D')sc+=40}
 c.push([sc,i])});
 c.sort((x,y)=>y[0]-x[0]);for(const[,i]of c){if(need<=0)break;a[i]=s;need--}}
 if(need>0)warn.push(`يوم ${d+1}: نقص ${need} في ${s=='N'?'النايت':'الداي'}`)}
