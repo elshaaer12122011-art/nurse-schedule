@@ -132,6 +132,15 @@ function sim(a,b){if(a==b)return 3;if(a.length<3||b.length<3)return 0;const x=nz
 function candOf(w){if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach((x,k)=>{s=Math.max(s,sim(w,x)*10+(sim(w,x)&&k==0?1:0))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null}
 function findN(line){const ws=ar2en(line).toLowerCase().match(/[a-z]+/g)||[];for(let i=0;i<ws.length;i++){let cs=candOf(ws[i]);if(!cs)continue;let e=i;while(ws[e+1]){const c2=candOf(ws[e+1]);if(!c2)break;const x=cs.filter(a=>c2.includes(a));if(!x.length)break;cs=x;e++}return cs.length==1?cs[0]:null}return null}
 function fmt(a){a=[...new Set(a)].sort((x,y)=>x-y);const o=[];for(let i=0;i<a.length;){let j=i;while(a[j+1]==a[j]+1)j++;o.push(j>i?a[i]+'-'+a[j]:a[i]);i=j+1}return o.join(',')}
+function skel(w){return nz(w).replace(/[aiu]/g,'')}
+function runScore(ws,i){const ok=w=>typeof w==='string'&&w.length>=3&&!STOP.has(w)&&!kwOf(w);if(!ok(ws[i]))return null;
+const R2=[];nurses.forEach(n=>{const nw=n.name.toLowerCase().split(/\s+/),used=new Set();let cnt=0,sum=0,k=i;
+for(;k<ws.length&&ok(ws[k]);k++){let bj=-1,bs=0;nw.forEach((x,j)=>{if(used.has(j))return;const s=sim(ws[k],x);if(s>bs){bs=s;bj=j}});if(!bs)break;used.add(bj);cnt++;sum+=bs*10+(bj==0&&k==i?1:0)}
+if(cnt)R2.push({n,cnt,sum,e:i+cnt-1})});
+if(!R2.length)return null;R2.sort((a,b)=>b.cnt-a.cnt||b.sum-a.sum);
+const top=R2.filter(r=>r.cnt==R2[0].cnt&&r.sum==R2[0].sum);let e=top[0].e,c=top.map(r=>r.n);
+if(c.length>1&&ok(ws[e+1])){const w=ws[e+1];const sc=c.map(n=>Math.max(0,...n.name.toLowerCase().split(/\s+/).map(x=>{const a=skel(w),b=skel(x);return a&&a==b?2:(a.length>=3&&lev(a,b)<=1?1:0)})));const m=Math.max(...sc);if(m>0){const t2=c.filter((_,j)=>sc[j]==m);if(t2.length==1){c=t2;e++}}}
+return{c,e}}
 function parseWish2(req){
 badW=[];const sum={};
 const t=ar2en($('wishtxt').value).toLowerCase().replace(/(\d+)(st|nd|rd|th)\b/g,'$1').replace(/(\d+)\s*[.)\-]\s*(?=(?!off|night|day|نايت|داي|اجاز|اوف)[a-z\u0600-\u06ff])/g,' ');
@@ -139,24 +148,24 @@ const toks=[];const re=/(\d+)\s*(?:-|–|to|till|until|الى|إلى|لحد)\s*(
 while(m=re.exec(t)){if(m[1])toks.push({r:[+m[1],+m[2]]});else if(m[3])toks.push({n:+m[3],raw:m[3]});else toks.push({w:m[4]})}
 const ids=nurses.map(n=>n.id).filter(Boolean);
 const cand=w=>{if(w.length<3||STOP.has(w)||kwOf(w))return null;let best=0,c=[];nurses.forEach(n=>{let s=0;n.name.toLowerCase().split(/\s+/).forEach(x=>{s=Math.max(s,sim(w,x)*10+(sim(w,x)&&x==n.name.toLowerCase().split(/\s+/)[0]?1:0))});if(s>best){best=s;c=[n]}else if(s&&s==best)c.push(n)});return best?c:null};
-const ment=[];
+const ment=[];const ws=toks.map(k=>k.w);const runAt=i=>runScore(ws,i);
 for(let i=0;i<toks.length;i++){const k=toks[i];
 if(k.n!==undefined&&ids.includes(k.raw)){ment.push({s:i,e:i,c:[nurses.find(x=>x.id==k.raw)]});continue}
-if(k.w){const c=cand(k.w);if(!c)continue;let e=i,cs=c;
+if(k.w){const RS=runAt(i);if(!RS)continue;let e=RS.e,cs=RS.c;
 while(toks[e+1]&&toks[e+1].w){const c2=cand(toks[e+1].w);if(!c2)break;const x=cs.filter(a=>c2.includes(a));if(!x.length)break;cs=x;e++}
 if(toks[e+1]&&toks[e+1].n!==undefined){const hit=cs.find(a=>a.id==toks[e+1].raw);if(hit){cs=[hit];e++}}
 ment.push({s:i,e,c:cs});i=e}}
 const ms=new Map(ment.map(x=>[x.s,x]));let cur=null,pend=[],fwd=null;
 const apply=(ty,ds)=>{if(!cur)return;ds=ds.filter(d=>d>=1&&d<=days);if(!ds.length)return;ds.forEach(d=>{if(req[cur.i][d-1]!=='AL')req[cur.i][d-1]=ty});(sum[cur.i]=sum[cur.i]||[]).push(ty+' '+fmt(ds))};
-const seen=new Set();const flush=()=>{if(pend.length)apply('OFF',pend);pend=[]};
+const seen=new Set(),guess=[],taken=new Set(ment.filter(x=>x.c.length==1).map(x=>x.c[0].i));let GL;const flush=()=>{if(pend.length)apply('OFF',pend);pend=[]};
 for(let i=0;i<toks.length;i++){const k=toks[i],mm=ms.get(i);
-if(mm){flush();cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else badW.push('اسم غير واضح ('+mm.c.slice(0,4).map(x=>x.name+' '+x.id).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
+if(mm){flush();cur=null;pend=[];fwd=null;if(mm.c.length==1){cur=mm.c[0];seen.add(cur.i)}else if((GL=mm.c.filter(x=>!taken.has(x.i))).length==1){cur=GL[0];taken.add(cur.i);seen.add(cur.i);guess.push(cur.name)}else badW.push('اسم غير واضح ('+mm.c.slice(0,4).map(x=>x.name+' '+x.id).join(' / ')+') اكتب الاسم كامل أو الـ ID');i=mm.e;continue}
 if(!cur)continue;
 let ds=null;if(k.r){ds=[];for(let d=k.r[0];d<=Math.min(k.r[1],days);d++)ds.push(d)}else if(k.n!==undefined&&k.n>=1&&k.n<=days)ds=[k.n];
 if(ds){if(fwd)apply(fwd,ds);else pend.push(...ds)}
 else if(k.w){const ty=kwOf(k.w);if(ty){if(pend.length){apply(ty,pend);pend=[];fwd=null}else fwd=ty}}}
 flush();seen.forEach(i=>{if(!sum[i])badW.push(nurses[i].name+': ما فهمتش الأيام')});
-$('wsum').innerHTML=Object.keys(sum).length?'<b>اللي اتفهم من الرغبات (راجعها):</b><br>'+Object.keys(sum).map(i=>nurses[i].name+': '+sum[i].join(' ، ')).join('<br>'):''}
+$('wsum').innerHTML=Object.keys(sum).length?'<b>اللي اتفهم من الرغبات (راجعها):</b><br>'+Object.keys(sum).map(i=>nurses[i].name+': '+sum[i].join(' ، ')).join('<br>')+(guess.length?'<br>⚠️ خمّنت الاسم: '+guess.join('، ')+' (راجعه)':''):''}
 function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
 const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0;
