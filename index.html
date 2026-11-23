@@ -408,8 +408,9 @@ MSG={bad:[],warn:[],ovr:[],wsum:null,rsum:[],unk:[],ran:false};showMsgs();render
 function parseCSV(txt,fs){const rows=[];let r=[],c='',q=false;for(let i=0;i<txt.length;i++){const ch=txt[i];if(q){if(ch=='"'){if(txt[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==fs){r.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&txt[i+1]=='\n')i++;r.push(c);c='';rows.push(r);r=[]}else c+=ch}if(c!==''||r.length){r.push(c);rows.push(r)}return rows}
 const AR_=()=>(typeof LANG!=='undefined'&&LANG=='en')?0:1;
 /* ---------- AI reading of images / scanned PDFs (needs the user's proxy URL) ---------- */
-const AIURL=()=>{try{return(localStorage.getItem('nsl_ai')||'').trim()}catch(e){return''}};
-function setAI(){const v=($('aiurl').value||'').trim();try{localStorage.setItem('nsl_ai',v)}catch(e){}$('aist').textContent=v?'✅':''}
+const AIDEF='https://nurse-api.elshaaer12122011.workers.dev';
+const AIURL=()=>{try{return(localStorage.getItem('nsl_ai')||'').trim()||AIDEF}catch(e){return AIDEF}};
+function setAI(){const v=($('aiurl').value||'').trim();try{if(v&&v!==AIDEF)localStorage.setItem('nsl_ai',v);else localStorage.removeItem('nsl_ai')}catch(e){}$('aist').textContent=AIURL()?'✅':''}
 function loadAI(){try{const v=AIURL();if($('aiurl')){$('aiurl').value=v;$('aist').textContent=v?'✅':''}}catch(e){}}
 const imgToJpeg=(src,max)=>new Promise((ok,no)=>{const im=new Image();im.onload=()=>{let w=im.naturalWidth,h=im.naturalHeight;const k=Math.min(1,max/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);ok(c.toDataURL('image/jpeg',0.88).split(',')[1])};im.onerror=()=>no(new Error('img'));im.src=src});
 async function pdfPagesJpeg(buf){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';const pdf=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;const out=[];
