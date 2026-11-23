@@ -122,6 +122,30 @@ details{background:var(--tile);border-radius:14px;padding:10px 14px}
 .dh{border-radius:12px 12px 0 0}.dl{border-radius:0 0 12px 12px}
 .hint{line-height:1.6}
 
+/* ===== INPUT OUTLINES ===== */
+:root{--io:#1f86d6;--iof:#12a05c}
+textarea,input[type=text],input[type=number],input[type=month],input:not([type]),select{border:2px solid var(--io)!important;background:var(--card)!important;box-shadow:inset 0 1px 3px rgba(15,70,140,.08)}
+textarea:focus,input[type=text]:focus,input[type=number]:focus,input[type=month]:focus,input:not([type]):focus,select:focus{border-color:var(--iof)!important;box-shadow:0 0 0 4px rgba(18,160,92,.18)!important;outline:none}
+.g>div{border:2px solid var(--io);background:var(--card)}.g>div:focus-within{border-color:var(--iof);box-shadow:0 0 0 4px rgba(18,160,92,.18)}
+.g>div input{border:0!important;box-shadow:none!important;background:transparent!important}
+.row>input[type=number],.row>select{border-width:2px!important}
+.blkbtn input,input[type=checkbox]{border:0!important}
+/* ===== MSG + NEXT ===== */
+#warn{background:transparent!important;padding:0!important;color:inherit;margin-top:12px}#wsum{margin-top:10px}
+.wbox{border-radius:14px;padding:12px 14px;margin:0 0 10px;font-size:13.5px;line-height:1.7}
+.warnc{background:#fff6e0;border:1px solid #f1d49a;color:#6b4800}.warnc .wh{font-weight:800;color:#8a5a00;margin-bottom:4px}
+.wl{margin:0;padding-inline-start:20px}.wl li{margin:3px 0}.wl .more{list-style:none;opacity:.7}.wf{margin-top:8px;padding-top:8px;border-top:1px dashed #e4c27a;font-size:12.5px}
+.okc{background:#e6f6ec;border:1px solid #a9deb9;color:#15622e;font-weight:700}
+.infc{background:#e8f1fe;border:1px solid #b7d2fb;color:#1c4a8c}
+.sbox{background:var(--tile);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin:0 0 10px}
+.sh{font-weight:800;margin-bottom:8px;color:var(--tx)}
+.srow{display:flex;flex-direction:column;gap:5px;padding:8px 0;border-top:1px solid var(--bd);font-size:13.5px}.srow:first-of-type{border-top:0;padding-top:0}
+.srow b{font-weight:700;direction:ltr;text-align:start}.srow>span{color:var(--mut);line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;direction:ltr}.chips i{font-style:normal;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(15,111,191,.12);color:var(--pri)}
+.chips i.soft{background:rgba(18,160,176,.14);color:#0e7f8c}.sn{margin-top:8px;font-size:12px;color:var(--mut)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .warnc{background:rgba(245,176,65,.12);border-color:rgba(245,176,65,.3);color:#f3d08a}:root:not([data-theme="light"]) .warnc .wh{color:#f6c36b}:root:not([data-theme="light"]) .okc{background:rgba(39,174,96,.15);border-color:rgba(39,174,96,.35);color:#7fe0a0}:root:not([data-theme="light"]) .infc{background:rgba(45,136,255,.14);border-color:rgba(45,136,255,.3);color:#9cc8ff}}
+.nextbar{margin:4px 12px 16px}.nextbar .nx{width:100%;border-radius:18px;padding:15px;font-size:16px;font-weight:800;color:#fff;background:linear-gradient(135deg,#0f6fbf,#12a0b0);box-shadow:0 10px 22px rgba(15,111,191,.35)}
+.sm .u{color:inherit}
 /* ===== HORAS BRAND BG ===== */
 body{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a2a6e'/%3E%3Cstop offset='.55' stop-color='%230f6fbf'/%3E%3Cstop offset='1' stop-color='%2312a0b0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg opacity='.10'%3E%3Cg%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 46V18M44 46V18' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") right -110px bottom -90px/460px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='190' viewBox='0 0 260 190'%3E%3Cg transform='rotate(-18 130 95)' opacity='.075' fill='%230f4fa8'%3E%3Cg transform='translate(34 70) scale(.62)'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a2a6e'/%3E%3Cstop offset='.55' stop-color='%230f6fbf'/%3E%3Cstop offset='1' stop-color='%2312a0b0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 46V18M44 46V18' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/g%3E%3Ctext x='80' y='108' font-family='Arial%2CHelvetica%2Csans-serif' font-weight='800' font-size='34' letter-spacing='7' fill='%230f4fa8'%3EHORAS%3C/text%3E%3C/g%3E%3C/svg%3E") 0 0/260px 190px repeat,radial-gradient(circle at 0% 0%,rgba(18,160,176,.30),transparent 45%),radial-gradient(circle at 100% 40%,rgba(15,111,191,.26),transparent 50%),linear-gradient(165deg,#d6e8fb 0%,#c9e0f7 45%,#cfe9ee 100%);background-attachment:fixed}
 html{background:#cfe3f7}
@@ -146,7 +170,7 @@ html{background:#cfe3f7}
 <input type="file" id="rfile" accept=".xlsx,.xlsm,.xlsb,.xls,.ods,.csv,.tsv,.txt,.html,.htm,.pdf,image/*">
 <div class="row" style="margin-top:6px"><button onclick="clearBase()" data-i="b_clear"></button></div>
 <div class="row" style="margin-top:6px"><input id="aiurl" placeholder="🤖 رابط الذكاء الاصطناعي / AI service URL (اختياري)" onchange="setAI()" style="flex:1;direction:ltr"><span id="aist"></span></div>
-<div class="hint" id="rstat"></div><div class="hint" data-i="h_load_hint"></div></div>
+<div class="hint" id="rstat"></div><div class="hint" data-i="h_load_hint"></div></div><div class="nextbar noprint" data-tab="n"><button class="nx" onclick="showTab('s')" data-i="b_next"></button></div>
 <div class="card noprint" data-tab="s"><h2 data-i="h_set"></h2><div class="g">
 <div><label data-i="l_month"></label><input type="month" id="month" value="2026-12"></div>
 <div><label data-i="l_base"></label><input type="number" id="base" value="19"></div>
@@ -156,15 +180,15 @@ html{background:#cfe3f7}
 <div><label data-i="l_noc"></label><input type="number" id="noc" value="1"></div>
 <div><label data-i="l_ereq"></label><input type="number" id="ereq" value="0"></div></div></div>
 <div class="card noprint" data-tab="s"><h2 data-i="h_cnt"></h2><div id="cnt"></div><button onclick="add('cnt')" data-i="add"></button></div>
-<div class="card noprint" data-tab="s"><h2 data-i="h_al"></h2><div id="al"></div><button onclick="add('al')" data-i="add"></button><div class="hint" data-i="h_al_hint"></div></div>
-<div class="card noprint" data-tab="w"><h2 data-i="h_wish"></h2><textarea id="wishtxt" style="min-height:130px" data-p="ph_wish"></textarea><div class="hint" data-i="h_wish_hint"></div></div>
+<div class="card noprint" data-tab="s"><h2 data-i="h_al"></h2><div id="al"></div><button onclick="add('al')" data-i="add"></button><div class="hint" data-i="h_al_hint"></div></div><div class="nextbar noprint" data-tab="s"><button class="nx" onclick="showTab('w')" data-i="b_next"></button></div>
+<div class="card noprint" data-tab="w"><h2 data-i="h_wish"></h2><textarea id="wishtxt" style="min-height:130px" data-p="ph_wish"></textarea><div class="hint" data-i="h_wish_hint"></div></div><div class="nextbar noprint" data-tab="w"><button class="nx" onclick="showTab('r')" data-i="b_next"></button></div>
 <div class="card noprint" data-tab="r"><h2 data-i="h_rec"></h2>
 <textarea id="rec" style="min-height:120px" data-p="ph_rec"></textarea>
 <div class="hint" data-i="h_rec_hint"></div>
 <label class="blkbtn"><input type="checkbox" id="blkon" onchange="saveState()"><span data-i="b_blk"></span></label>
 <label class="blkbtn"><input type="checkbox" id="cnnoc" onchange="saveState()"><span data-i="b_cnnoc"></span></label>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
-<div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="genAI()" data-i="b_gen"></button></div><div id="ainlu" class="hint" style="margin-top:8px"></div></div>
+<div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="genAI()" data-i="b_gen"></button></div><div id="ainlu" class="hint" style="margin-top:8px"></div></div><div class="nextbar noprint" data-tab="r"><button class="nx" onclick="showTab('g')" data-i="b_next"></button></div>
 <div class="card noprint" data-tab="g"><div class="seg" id="vseg"><button type="button" data-v="m" data-i="v_month" class="on"></button><button type="button" data-v="w" data-i="v_week"></button><button type="button" data-v="d" data-i="v_day"></button></div><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option><option value="d" data-i="v_day"></option></select><select id="vday" onchange="render()" style="flex:2;display:none"></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><div class="acts"><button class="p" onclick="gen()" data-i="b_gen"></button><button onclick="xl()">⬇ Excel</button><button onclick="pdf()">⬇ PDF</button><button onclick="window.print()" data-i="b_print"></button><button onclick="cp()" data-i="b_copy"></button><button class="dng" onclick="delAll()" data-i="b_del"></button></div>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
 <div id="dayv" class="card noprint" data-tab="g" style="display:none"></div>
@@ -254,7 +278,7 @@ c_staff:'الاسم',c_role:'الوظيفة',r_cn_mark:'أول {0} أسماء = 
 w_short_d:'يوم {0}: نقص {1} في الداي',w_short_n:'يوم {0}: نقص {1} في النايت',oc_short_d:'يوم {0}: نقص أون كول {1} في الداي',oc_short_n:'يوم {0}: نقص أون كول {1} في النايت',
 w_work:'{0}: {1} شفتات متتالية (بسبب الأجازات/الطلبات)',w_off:'{0}: {1} أيام راحة متتالية (بسبب الأجازات/الطلبات)',
 w_bad:'رغبة غير مفهومة: {0}',w_amb:'اسم غير واضح ({0}) اكتب الاسم كامل أو الـ ID',w_nodays:'{0}: ما فهمتش الأيام',
-w_tail:'زوّد عدد الشفتات أو التمريض.',w_ok:'✅ التغطية كاملة.',
+w_tail:'💡 زوّد عدد الشفتات أو التمريض لتغطية النقص.',w_title:'ملاحظات على التغطية',b_next:'التالي ←',ws_star:'* نوع الشفت فقط، مع راحة بين الشغل حسب القاعدة',w_ok:'✅ التغطية كاملة.',
 i_ovr:'ℹ️ ضوابط الهيد نرس قدّمت على الطلبات دي (اتلغت أيامها): {0}',
 ws_title:'اللي اتفهم من الطلبات (راجعها):',ws_soft:'(نوع الشفت فقط، مع يوم راحة بين الشغل حسب القاعدة)',ws_guess:'⚠️ خمّنت الاسم: {0} (راجعه)',
 rs_title:'اللي اتفهم من ضوابط الهيد نرس:',us_title:'⚠️ جمل مش مفهومة (اكتبها بشكل تاني):',
@@ -292,7 +316,7 @@ c_staff:'Staff',c_role:'Role',r_cn_mark:'First {0} names = CN (Charge Nurse)',r_
 w_short_d:'Day {0}: short by {1} on Day shift',w_short_n:'Day {0}: short by {1} on Night shift',oc_short_d:'Day {0}: OC short by {1} on Day shift',oc_short_n:'Day {0}: OC short by {1} on Night shift',
 w_work:'{0}: {1} consecutive shifts (due to leave/requests)',w_off:'{0}: {1} consecutive rest days (due to leave/requests)',
 w_bad:'Request not understood: {0}',w_amb:'Ambiguous name ({0}) write the full name or ID',w_nodays:'{0}: could not understand the days',
-w_tail:'Increase shifts or staff.',w_ok:'✅ Coverage is complete.',
+w_tail:'💡 Increase shifts or staff to cover the gaps.',w_title:'Coverage notes',b_next:'Next →',ws_star:'* shift type only, with rest between work per the rule',w_ok:'✅ Coverage is complete.',
 i_ovr:'ℹ️ Head nurse rules took priority over these requests (days removed): {0}',
 ws_title:'Understood from staff requests (please review):',ws_soft:'(shift type only, with rest days between work per the rule)',ws_guess:'⚠️ Guessed the name: {0} (please check)',
 rs_title:'Understood from head nurse recommendations:',us_title:'⚠️ Sentences not understood (rephrase them):',
@@ -321,19 +345,20 @@ $('exlist').innerHTML=TX[LANG].ex.map(x=>'<li>'+x+'</li>').join('');
 function toggleLang(){LANG=LANG=='ar'?'en':'ar';try{localStorage.setItem('nsl_lang',LANG)}catch(e){}applyLang()}
 function scopeName(sc){if(!sc||sc.all)return sc&&sc.exc&&sc.exc.length?t('sc_except',t('all'),sc.exc.map(i=>nurses[i].name).join(', ')):t('all');const n=sc.list.map(i=>nurses[i].name);return n.length>4?n.slice(0,4).join(', ')+' +'+(n.length-4):n.join(', ')}
 function showMsgs(){
+const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const rs=$('rsum');
-rs.innerHTML=(MSG.rsum.length?'<b>'+t('rs_title')+'</b>'+MSG.rsum.map(x=>x.who+': '+t(x.k,...x.a)).join('<br>'):'')+(MSG.unk.length?'<div class="u"><b>'+t('us_title')+'</b>'+MSG.unk.map(x=>x).join('<br>')+'</div>':'');
+rs.innerHTML=(MSG.rsum.length?'<div class="sbox"><div class="sh">🧠 '+t('rs_title').replace(/:$/,'')+'</div>'+MSG.rsum.map(x=>'<div class="srow"><b>'+esc(x.who)+'</b><span>'+t(x.k,...x.a)+'</span></div>').join('')+'</div>':'')+(MSG.unk.length?'<div class="wbox warnc"><div class="wh">❓ '+t('us_title').replace(/^⚠️\s*/,'').replace(/:$/,'')+'</div><ul class="wl">'+MSG.unk.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>':'');
 if(!MSG.ran){$('warn').innerHTML='';$('wsum').innerHTML='';return}
 const w=MSG.warn.map(m=>t(m[0],...m.slice(1)));
 let h='';
 const bad=MSG.bad.map(m=>t(m[0],...m.slice(1)));
-if(bad.length)h+=bad.join(' | ')+'<br>';
-if(w.length)h+='⚠️ '+w.slice(0,8).join(' • ')+(w.length>8?' …':'')+' — '+t('w_tail');
-else h+='<span class="okk">'+t('w_ok')+'</span>';
-if(MSG.ovr.length)h+='<br><span class="inf">'+t('i_ovr',MSG.ovr.join(' • '))+'</span>';
+if(bad.length)h+='<div class="wbox warnc"><ul class="wl">'+bad.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>';
+if(w.length)h+='<div class="wbox warnc"><div class="wh">📌 '+t('w_title')+' ('+w.length+')</div><ul class="wl">'+w.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+(w.length>8?'<li class="more">+ '+(w.length-8)+' …</li>':'')+'</ul><div class="wf">'+t('w_tail')+'</div></div>';
+else h+='<div class="wbox okc">'+t('w_ok')+'</div>';
+if(MSG.ovr.length)h+='<div class="wbox infc">'+t('i_ovr',MSG.ovr.join(' • '))+'</div>';
 $('warn').innerHTML=h;
-const ws=MSG.wsum;
-$('wsum').innerHTML=ws&&ws.items.length?'<b>'+t('ws_title')+'</b>'+ws.items.map(x=>nurses[x.i].name+': '+x.parts.map(p=>p.soft?p.txt+' '+t('ws_soft'):p.txt).join(' ، ')).join('<br>')+(ws.guess.length?'<br>'+t('ws_guess',ws.guess.join('، ')):''):''}
+const ws=MSG.wsum;let anySoft=false;
+$('wsum').innerHTML=ws&&ws.items.length?'<div class="sbox"><div class="sh">📝 '+t('ws_title').replace(/:$/,'')+'</div>'+ws.items.map(x=>'<div class="srow"><b>'+esc(nurses[x.i].name)+'</b><span class="chips">'+x.parts.map(p=>{if(p.soft)anySoft=true;return '<i class="'+(p.soft?'soft':'')+'">'+esc(p.txt)+(p.soft?' *':'')+'</i>'}).join('')+'</span></div>').join('')+(anySoft?'<div class="sn">'+t('ws_star')+'</div>':'')+'</div>'+(ws.guess.length?'<div class="wbox warnc">'+t('ws_guess',ws.guess.join('، '))+'</div>':''):''}
 let EON=false,eRA=[],mRA=[],EV=[],PREL=[],BEV=null,DOFF=0,VSUF='',CNI=[],MINCN=0,MCD=0,MCN=0,ROLES=[],BLK=[],BSP=[],nurses=[],R=[],OC=[],days=0,Y=0,M=0,P=[],HF=[],FW=[],PREF=[],dRA=[],nRA=[],docA=[],nocA=[],ovr=[];
 const L={cnt:[],al:[]};
 const DEF={cnt:[{k:'n',t:'n'},{k:'a',t:'#',p:'shifts_n'}],al:[{k:'n',t:'n'},{k:'a',t:'#',p:'from_day'},{k:'b',t:'#',p:'to_day'}]};
