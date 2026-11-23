@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Staff Nurse Schedule</title>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f6fbf"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a2a6e"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
@@ -65,6 +65,75 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 .blkbtn{display:flex;gap:10px;align-items:center;padding:11px 12px;border:1.5px solid var(--bd);border-radius:12px;margin:8px 0;cursor:pointer;font-size:14px;line-height:1.5}.blkbtn input{width:20px;height:20px;flex:none}.blkbtn:has(input:checked){background:#d8f5de;border-color:#2e9d4e;font-weight:700;color:#0b4d1f}
 .tabhide{display:none!important}.dsec{margin-bottom:10px}.dh{padding:6px 10px;border-radius:8px 8px 0 0;font-weight:700;display:flex;justify-content:space-between;color:#000}.dl{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--bg);border-radius:0 0 8px 8px}.chip{padding:4px 9px;border-radius:14px;font-size:13px;font-weight:600;color:#000}.chip i{color:#c0392b;font-style:normal;font-weight:800}
 #ptitle{display:none}
+/* ===== PRO THEME ===== */
+:root{--ac:#12a0b0;--sh2:0 10px 28px rgba(15,70,140,.12);--cardbg:rgba(255,255,255,.86);--tile:#f2f6fb}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--cardbg:rgba(30,36,46,.92);--tile:#273140;--sh2:0 10px 28px rgba(0,0,0,.35)}}
+html{background:#eaf2fb}
+body{min-height:100vh;background:
+url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 24v16M24 32h16' stroke='%230f6fbf' stroke-opacity='.07' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E"),
+radial-gradient(circle at 0% 0%,rgba(18,160,176,.22),transparent 42%),
+radial-gradient(circle at 100% 35%,rgba(15,111,191,.18),transparent 48%),
+radial-gradient(circle at 20% 100%,rgba(90,70,200,.10),transparent 45%),
+linear-gradient(180deg,#f4f9fe,#e6eff9);background-attachment:fixed;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) html{background:#0d131c}:root:not([data-theme="light"]) body{background:
+url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 24v16M24 32h16' stroke='%2362b3ff' stroke-opacity='.07' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E"),
+radial-gradient(circle at 0% 0%,rgba(18,160,176,.20),transparent 42%),radial-gradient(circle at 100% 35%,rgba(45,136,255,.16),transparent 48%),linear-gradient(180deg,#101822,#0b1118);background-attachment:fixed}}
+.stk{background:linear-gradient(135deg,#0a2a6e 0%,#0f6fbf 58%,#12a0b0 100%);border-radius:0 0 26px 26px;box-shadow:0 10px 26px rgba(10,50,120,.35);padding-bottom:12px;margin-bottom:12px;position:sticky;overflow:hidden}
+.stk::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='90' viewBox='0 0 360 90'%3E%3Cpath d='M0 55h70l12-30 16 52 14-40 10 18h238' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center 20px/cover no-repeat}
+.stk .top{background:transparent;position:relative;padding:12px 16px 6px}
+.top h1,.stk .top h1{color:#fff;font-size:20px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.stk .top button{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.45);backdrop-filter:blur(4px);width:42px;height:42px}
+.tabs{border-top:0;margin:6px 10px 0;padding:5px;gap:4px;background:rgba(255,255,255,.16);border-radius:18px;position:relative;backdrop-filter:blur(6px)}
+.tabs button{border:none!important;border-radius:14px;color:rgba(255,255,255,.88);padding:7px 6px 6px;min-width:58px;transition:.18s}
+.tabs button span{filter:none;opacity:1;font-size:19px}.tabs button b{font-size:11.5px;font-weight:700}
+.tabs button.on{background:#fff;color:#0d4fa5;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.card{background:var(--cardbg);border:1px solid rgba(255,255,255,.65);border-radius:20px;padding:16px;margin:0 12px 12px;box-shadow:var(--sh2);backdrop-filter:blur(8px);animation:cin .35s ease both}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .card{border-color:rgba(255,255,255,.07)}}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.card{animation:none}}
+h2{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+h2::before{content:"";flex:none;width:5px;height:20px;border-radius:4px;background:linear-gradient(180deg,var(--pri),var(--ac))}
+input,select,textarea{border:1.5px solid transparent;background:var(--tile);border-radius:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 4px rgba(24,119,242,.15)}
+input[type=file]{border:1.5px dashed var(--bd);background:transparent;border-radius:14px;padding:12px}
+.g{grid-template-columns:repeat(2,1fr);gap:10px}
+.g>div{background:var(--tile);border:1px solid var(--bd);border-radius:16px;padding:10px 10px 8px;text-align:center}
+.g>div label{font-size:12px;margin-bottom:4px;min-height:32px;display:flex;align-items:center;justify-content:center;line-height:1.3}
+.g>div input{background:transparent;text-align:center;font-size:24px;font-weight:800;color:var(--pri);padding:2px;border:0;box-shadow:none}
+.g>div input[type=month]{font-size:16px;padding:6px 2px}
+.g>div:focus-within{border-color:var(--pri);box-shadow:0 0 0 4px rgba(24,119,242,.12)}
+button{border-radius:14px;padding:11px 14px;transition:.15s}
+button.p{background:linear-gradient(135deg,#1877f2,#12a0b0);box-shadow:0 8px 18px rgba(24,119,242,.35);border-radius:16px;padding:13px 20px;font-size:16px}
+button.p:hover{background:linear-gradient(135deg,#166fe5,#0e8e9d)}button:active{transform:scale(.97)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}.acts .p{grid-column:1/-1}.acts .dng{grid-column:1/-1;color:#c0392b;background:rgba(192,57,43,.09)}
+.acts button:not(.p):not(.dng){background:var(--tile);border:1px solid var(--bd)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.seg button{background:var(--tile);border:1.5px solid var(--bd);border-radius:16px;padding:12px 4px;font-size:12.5px;line-height:1.35;color:var(--tx)}
+.seg button.on{background:linear-gradient(135deg,#0f6fbf,#12a0b0);color:#fff;border-color:transparent;box-shadow:0 8px 16px rgba(15,111,191,.32)}
+#vmode{display:none}
+.blkbtn{background:var(--tile);border:1.5px solid var(--bd);border-radius:18px;padding:14px;margin:10px 0;gap:12px;transition:.18s;color:var(--tx);font-weight:600;line-height:1.55}
+.blkbtn input{appearance:none;-webkit-appearance:none;position:relative;flex:none;width:48px;height:28px;border-radius:14px;background:#b8c0cc;border:0;padding:0;cursor:pointer;transition:.2s}
+.blkbtn input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.3);transition:.2s}
+.blkbtn input:checked{background:#27ae60}.blkbtn input:checked::after{inset-inline-start:23px}
+.blkbtn:has(input:checked){background:linear-gradient(135deg,rgba(39,174,96,.16),rgba(18,160,176,.14));border-color:#27ae60;color:inherit;font-weight:700}
+details{background:var(--tile);border-radius:14px;padding:10px 14px}
+#warn{background:var(--tile);border-radius:14px}
+.wrap{margin:0 12px 12px;border-radius:16px;box-shadow:var(--sh2);background:#fff}
+.dh{border-radius:12px 12px 0 0}.dl{border-radius:0 0 12px 12px}
+.hint{line-height:1.6}
+
+/* ===== HORAS BRAND BG ===== */
+body{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a2a6e'/%3E%3Cstop offset='.55' stop-color='%230f6fbf'/%3E%3Cstop offset='1' stop-color='%2312a0b0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg opacity='.10'%3E%3Cg%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 46V18M44 46V18' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") right -110px bottom -90px/460px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='190' viewBox='0 0 260 190'%3E%3Cg transform='rotate(-18 130 95)' opacity='.075' fill='%230f4fa8'%3E%3Cg transform='translate(34 70) scale(.62)'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a2a6e'/%3E%3Cstop offset='.55' stop-color='%230f6fbf'/%3E%3Cstop offset='1' stop-color='%2312a0b0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 46V18M44 46V18' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/g%3E%3Ctext x='80' y='108' font-family='Arial%2CHelvetica%2Csans-serif' font-weight='800' font-size='34' letter-spacing='7' fill='%230f4fa8'%3EHORAS%3C/text%3E%3C/g%3E%3C/svg%3E") 0 0/260px 190px repeat,radial-gradient(circle at 0% 0%,rgba(18,160,176,.30),transparent 45%),radial-gradient(circle at 100% 40%,rgba(15,111,191,.26),transparent 50%),linear-gradient(165deg,#d6e8fb 0%,#c9e0f7 45%,#cfe9ee 100%);background-attachment:fixed}
+html{background:#cfe3f7}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) html{background:#0b1220}:root:not([data-theme="light"]) body{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a2a6e'/%3E%3Cstop offset='.55' stop-color='%230f6fbf'/%3E%3Cstop offset='1' stop-color='%2312a0b0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg opacity='.16'%3E%3Cg%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 46V18M44 46V18' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") right -110px bottom -90px/460px no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='190' viewBox='0 0 260 190'%3E%3Cg transform='rotate(-18 130 95)' opacity='.075' fill='%237fb8ff'%3E%3Cg transform='translate(34 70) scale(.62)'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a2a6e'/%3E%3Cstop offset='.55' stop-color='%230f6fbf'/%3E%3Cstop offset='1' stop-color='%2312a0b0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 46V18M44 46V18' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/g%3E%3Ctext x='80' y='108' font-family='Arial%2CHelvetica%2Csans-serif' font-weight='800' font-size='34' letter-spacing='7' fill='%237fb8ff'%3EHORAS%3C/text%3E%3C/g%3E%3C/svg%3E") 0 0/260px 190px repeat,radial-gradient(circle at 0% 0%,rgba(18,160,176,.22),transparent 45%),radial-gradient(circle at 100% 40%,rgba(45,136,255,.18),transparent 50%),linear-gradient(165deg,#0f1b2e,#0a1019);background-attachment:fixed}}
+.card{background:var(--cardbg)}
+.brand{display:flex;flex-direction:column;align-items:center;gap:6px;margin:22px 0 10px;color:#0f4fa8;opacity:.9}
+.brand svg{width:54px;height:54px;filter:drop-shadow(0 6px 10px rgba(15,70,140,.3))}
+.brand b{font:800 20px/1 Arial,Helvetica,sans-serif;letter-spacing:9px;padding-inline-start:9px}
+.brand small{font-size:11px;letter-spacing:.5px;opacity:.75}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand{color:#8cc4ff}}
+@media print{.brand{display:none}}
+.hz{display:inline-flex;vertical-align:middle;margin-inline-end:6px}.hz svg{width:30px;height:30px}
 @media print{.wrap.tabhide{display:block!important}#ptitle.tabhide{display:block!important}.stk{display:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
 </style></head><body>
 <div class="stk noprint"><div class="top"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><button id="langbtn" onclick="toggleLang()">EN</button></div>
@@ -96,12 +165,15 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 <label class="blkbtn"><input type="checkbox" id="cnnoc" onchange="saveState()"><span data-i="b_cnnoc"></span></label>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
 <div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="genAI()" data-i="b_gen"></button></div><div id="ainlu" class="hint" style="margin-top:8px"></div></div>
-<div class="card noprint" data-tab="g"><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option><option value="d" data-i="v_day"></option></select><select id="vday" onchange="render()" style="flex:2;display:none"></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
+<div class="card noprint" data-tab="g"><div class="seg" id="vseg"><button type="button" data-v="m" data-i="v_month" class="on"></button><button type="button" data-v="w" data-i="v_week"></button><button type="button" data-v="d" data-i="v_day"></button></div><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option><option value="d" data-i="v_day"></option></select><select id="vday" onchange="render()" style="flex:2;display:none"></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><div class="acts"><button class="p" onclick="gen()" data-i="b_gen"></button><button onclick="xl()">⬇ Excel</button><button onclick="pdf()">⬇ PDF</button><button onclick="window.print()" data-i="b_print"></button><button onclick="cp()" data-i="b_copy"></button><button class="dng" onclick="delAll()" data-i="b_del"></button></div>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
 <div id="dayv" class="card noprint" data-tab="g" style="display:none"></div>
 <div id="ptitle" data-tab="g"></div>
 <div class="wrap" data-tab="g"><table id="tb"></table></div>
 <div id="legx" class="hint" data-tab="g" style="margin-top:6px"></div>
+<script>(function(){var s=document.getElementById('vseg'),v=document.getElementById('vmode');if(!s||!v)return;function sync(){s.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v.value)})}
+s.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;v.value=b.dataset.v;v.dispatchEvent(new Event('change'));sync()});v.addEventListener('change',sync);setInterval(sync,700);sync()})();</script>
+<div class='brand noprint'><svg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#0a2a6e'/><stop offset='.55' stop-color='#0f6fbf'/><stop offset='1' stop-color='#12a0b0'/></linearGradient></defs><g><rect x='4' y='4' width='56' height='56' rx='16' fill='url(#g)'/><path d='M20 46V18M44 46V18' stroke='#fff' stroke-width='6' stroke-linecap='round'/><path d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='#fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></g></svg><b>HORAS</b><small>Staff Nurse Schedule</small></div>
 <script>
 const $=id=>document.getElementById(id);
 $('names').value=`Gehan Mohamed,7204,CN
@@ -161,31 +233,31 @@ Rania Bassuony,13988,`;
 const TX={
 ar:{
 ttl:'🩺 Staff Nurse Schedule — منشئ روستر التمريض',
-l_ereq:'المطلوب في E (مسائي) — 0 = بدون E',v_day:'📆 عرض يوم',v_dy:'يوم',v_off:'راحة',v_month:'📅 عرض الشهر كله',v_week:'🗓 عرض أسبوع (من السبت)',v_wk:'أسبوع',w_short_e:'يوم {0}: ناقص {1} في E',t_names:'الأسماء',t_set:'الإعدادات',t_wish:'الرغبات',t_rec:'التوصيات',t_roster:'الروستر',h_names:'👥 أسماء تمريض القسم',
-show_id:'إظهار الـ ID',b_del:'🗑 حذف الروستر وابدأ من الأول',confirm_del:'حذف الروستر والرغبات والتوصيات المحفوظة؟ (الأسماء والإعدادات تفضل)',h_load:'📂 رفع روستر',b_clear:'إلغاء الروستر المرفوع',h_load_hint:'ارفع الروستر الجاهز، وبعدها اكتب التعديلات في خانة الرغبات أو الهيد نرس واضغط إنشاء — البرنامج يعدّل على الروستر بأقل تغيير ممكن ويحافظ على عدد شفتات كل ممرض (±1). لو الـPDF ما اتقرأش صح، حوّله Excel أو ابعته لي في الشات.',load_ok:'تم تحميل الروستر: {0} ممرض و{1} يوم. اكتب التعديلات واضغط إنشاء.',load_fail:'تعذر قراءة الروستر من الملف (لازم يكون فيه صف أرقام الأيام 1..28+ وأسماء الممرضين)',load_days:'تنبيه: الروستر فيه {0} يوم والشهر المختار {1} يوم',load_mis:'تنبيه: أسماء الممرضين اتغيرت عن الروستر المرفوع — اتجاهل الروستر وتم إنشاء جديد',load_none:'لا يوجد روستر مرفوع',w_tot:'{0}: عدد الشفتات {1} بدل {2}',base_used:'الروستر المرفوع اتستخدم كأساس',
+l_ereq:'المطلوب في E (مسائي) — 0 = بدون E',v_day:'📆 عرض يومي',v_dy:'يوم',v_off:'راحة',v_month:'📅 عرض الشهر كاملًا',v_week:'🗓 عرض أسبوعي (يبدأ من السبت)',v_wk:'أسبوع',w_short_e:'يوم {0}: ناقص {1} في E',t_names:'الأسماء',t_set:'المتطلبات',t_wish:'الطلبات',t_rec:'الضوابط',t_roster:'الروستر',h_names:'👥 أسماء تمريض القسم',
+show_id:'إظهار الـ ID',b_del:'🗑 حذف الروستر والبدء من جديد',confirm_del:'حذف الروستر والطلبات والضوابط المحفوظة؟ (الأسماء والمتطلبات تفضل)',h_load:'📂 رفع روستر',b_clear:'إزالة الروستر المرفوع',h_load_hint:'ارفع الروستر الجاهز، وبعدها اكتب التعديلات في خانة الطلبات أو الهيد نرس واضغط إنشاء — البرنامج يعدّل على الروستر بأقل تغيير ممكن ويحافظ على عدد شفتات كل ممرض (±1). لو الـPDF ما اتقرأش صح، حوّله Excel أو ابعته لي في الشات.',load_ok:'تم تحميل الروستر: {0} ممرض و{1} يوم. اكتب التعديلات واضغط إنشاء.',load_fail:'تعذر قراءة الروستر من الملف (لازم يكون فيه صف أرقام الأيام 1..28+ وأسماء الممرضين)',load_days:'تنبيه: الروستر فيه {0} يوم والشهر المختار {1} يوم',load_mis:'تنبيه: أسماء الممرضين اتغيرت عن الروستر المرفوع — اتجاهل الروستر وتم إنشاء جديد',load_none:'لا يوجد روستر مرفوع',w_tot:'{0}: عدد الشفتات {1} بدل {2}',base_used:'الروستر المرفوع اتستخدم كأساس',
 h_names_hint:'سطر لكل ممرض: الاسم, ID, اللقب (ID واللقب اختياري). الرفع هنا: Excel/CSV (أعمدة: الاسم، ID، اللقب). لقراءة صورة أو PDF ابعتها لي في الشات وأنا أطلّع الأسماء والبيانات.',
-h_set:'⚙️ الإعدادات',l_month:'الشهر',l_base:'شيفتات كل ممرض (افتراضي)',l_dreq:'المطلوب في الداي',l_nreq:'المطلوب في النايت',l_doc:'OC مطلوب داي',l_noc:'OC مطلوب نايت',
+h_set:'⚙️ متطلبات الجدول',l_month:'الشهر',l_base:'شيفتات كل ممرض (افتراضي)',l_dreq:'المطلوب في الداي',l_nreq:'المطلوب في النايت',l_doc:'OC مطلوب داي',l_noc:'OC مطلوب نايت',
 h_cnt:'🔢 تعديل الشفتات',h_al:'🌴 الأجازات السنوية',h_al_hint:'من يوم / إلى يوم (رقم اليوم في الشهر)',add:'+ إضافة',
 from_day:'من يوم',to_day:'إلى يوم',shifts_n:'عدد الشفتات',
-h_wish:'📝 رغبات التمريض',
+h_wish:'📝 طلبات التمريض',
 ph_wish:'اكتب سطر لكل ممرض، مثال:\nAhmed Omar اجازة 5-7, نايت 10-12, داي 20\nSarah off 3, 15-16\nMohamed Ahmed night 1-4',
-h_wish_hint:'الرغبات بتتنفذ بالظبط. اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. الأرقام اللي من غير كلمة قدامها بتتعامل على إنها أيام أوف. أوف بمدى (5-9) = اليوم الأول والأخير بس. نايت/داي بمدى = نوع الشفت فقط. توصيات الهيد نرس بتتقدم على الرغبات.',
-h_rec:'📋 توصيات الهيد نرس',
+h_wish_hint:'الطلبات بتتنفذ بالظبط. اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. الأرقام اللي من غير كلمة قدامها بتتعامل على إنها أيام أوف. أوف بمدى (5-9) = اليوم الأول والأخير بس. نايت/داي بمدى = نوع الشفت فقط. ضوابط الهيد نرس بتتقدم على الطلبات.',
+h_rec:'📋 ضوابط الهيد نرس',
 ph_rec:'مثال:\nلا يزيد اي ممرض عن ٣ ايام عمل متتالية ولا عن ٣ ايام راحة متتالية\nAhmed ثلاث ارباع الشفتات نايت والباقي داي\nSarah night only\nكل الـ CN مفيش نايت\nاونكول داي 2 ونايت 1',
 h_rec_hint:'اكتب بحرية — عربي / مصري / English. البرنامج بيفهم الجمل الحرة: حدود الشغل والراحة المتتالية، نوع الشفت (نايت/داي/نسب)، عدد الشفتات، الأيام والجمعة والويك اند، المطلوب في كل شيفت، الأون كول، الراحة بعد النايت… ولو جملة مش مفهومة هتظهر لك تحت.',
 ex_title:'📖 أمثلة على اللي البرنامج بيفهمه',
 ex:['نص الاستاف داي ورا بعض ثم نايت ورا بعض والنص التاني العكس (عشان النوم يتظبط)','لا يزيد اي ممرض عن 3 ايام عمل متتالية ولا عن 3 ايام راحة متتالية','النايت المتتالي ما يزيدش عن 3 ليالي','Ahmed ثلاث ارباع الشفتات نايت والباقي داي','Sara نايت بس  /  Omar داي بس  /  Mona مفيش نايت','كل الاستاف نص داي ونص نايت  /  كل الـ CN 60% داي','Ahmed 8 نايت والباقي داي','Sara 15 شفت  /  Omar زود شفتين  /  Mona ناقص شفت','الجمعة راحة للكل ما عدا Sara','Ahmed راحة يوم 5 و 10-12  /  Sara نايت يوم 20','الويك اند راحة لكل الـ SN-S1','Ahmed لازم يشتغل كل جمعة','المطلوب في الداي 15 يوم 10 و 11','النايت 12 كل جمعة','اونكول داي 2 ونايت 1','راحة يومين بعد النايت','اقل راحة يوم في الاسبوع  /  حد اقصى 5 شفتات في الاسبوع','اقل شغل يومين ورا بعض (مفيش يوم شغل لوحده)','توزيع النايت بالتساوي على الكل'],
-b_gen:'⚙️ إنشاء الروستر',b_blk:'🔀 بلوكات: نص شفتات كل ممرض داي ورا بعض ونصها نايت ورا بعض (أو العكس)',b_cnnoc:'👑 الـ CN المطلوب في كل شفت يكون شفت أساسي — مش OC ولا O.C',b_print:'🖨 PDF / طباعة',b_copy:'📋 نسخ للـ Excel',
+b_gen:'⚙️ إنشاء الروستر',b_blk:'🔀 تجميع الشفتات المتماثلة: تتابع الداي ثم تتابع النايت لكل ممرض',b_cnnoc:'👑 اشتراط CN أساسي في كل شفت (لا يُحتسب الأونكول)',b_print:'🖨 طباعة / حفظ PDF',b_copy:'📋 نسخ البيانات إلى Excel',
 h_tap:'اضغط على أي خانة في الروستر لتغييرها (D ← N ← فاضي). للـ PDF اختر "Save as PDF" من نافذة الطباعة.',
 alert_gen:'أنشئ الروستر الأول',alert_copied:'تم النسخ — الصقه في Excel',alert_file:'تعذر قراءة الملف',
 c_staff:'الاسم',c_role:'الوظيفة',r_cn_mark:'أول {0} أسماء = CN (Charge Nurse)',r_cn_min:'كل شيفت لازم فيه على الأقل {0} CN',r_cn_none:'مفيش شرط CN في الشيفتات',r_cn_who:'اتحددوا CN (Charge Nurse)',r_sn_who:'اتحددوا SN (Staff Nurse)',r_hn_who:'اتحددوا HN (Head Nurse)',r_cn_minD:'كل شيفت داي لازم فيه على الأقل {0} CN',r_cn_minN:'كل شيفت نايت لازم فيه على الأقل {0} CN',r_wkoff:'كل ممرض ياخد على الأقل {0} ويك اند (جمعة+سبت) راحة',r_minoffm:'على الأقل {0} أيام راحة في الشهر (الجدول بيدي {1})',w_minoffm:'طلب {0} أيام راحة بس الجدول بيدي {1} فقط',r_nodn:'مفيش داي بعد نايت علطول (متطبق تلقائيًا)',w_cn:'مفيش CN كفاية في {0} — الأيام: {1}',c_total:'الإجمالي',c_day:'Day',c_night:'Night',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'المطلوب',
 w_short_d:'يوم {0}: نقص {1} في الداي',w_short_n:'يوم {0}: نقص {1} في النايت',oc_short_d:'يوم {0}: نقص أون كول {1} في الداي',oc_short_n:'يوم {0}: نقص أون كول {1} في النايت',
-w_work:'{0}: {1} شفتات متتالية (بسبب الأجازات/الرغبات)',w_off:'{0}: {1} أيام راحة متتالية (بسبب الأجازات/الرغبات)',
+w_work:'{0}: {1} شفتات متتالية (بسبب الأجازات/الطلبات)',w_off:'{0}: {1} أيام راحة متتالية (بسبب الأجازات/الطلبات)',
 w_bad:'رغبة غير مفهومة: {0}',w_amb:'اسم غير واضح ({0}) اكتب الاسم كامل أو الـ ID',w_nodays:'{0}: ما فهمتش الأيام',
 w_tail:'زوّد عدد الشفتات أو التمريض.',w_ok:'✅ التغطية كاملة.',
-i_ovr:'ℹ️ توصيات الهيد نرس قدّمت على الرغبات دي (اتلغت أيامها): {0}',
-ws_title:'اللي اتفهم من الرغبات (راجعها):',ws_soft:'(نوع الشفت فقط، مع يوم راحة بين الشغل حسب القاعدة)',ws_guess:'⚠️ خمّنت الاسم: {0} (راجعه)',
-rs_title:'اللي اتفهم من توصيات الهيد نرس:',us_title:'⚠️ جمل مش مفهومة (اكتبها بشكل تاني):',
+i_ovr:'ℹ️ ضوابط الهيد نرس قدّمت على الطلبات دي (اتلغت أيامها): {0}',
+ws_title:'اللي اتفهم من الطلبات (راجعها):',ws_soft:'(نوع الشفت فقط، مع يوم راحة بين الشغل حسب القاعدة)',ws_guess:'⚠️ خمّنت الاسم: {0} (راجعه)',
+rs_title:'اللي اتفهم من ضوابط الهيد نرس:',us_title:'⚠️ جمل مش مفهومة (اكتبها بشكل تاني):',
 all:'الكل',days_lbl:'أيام',
 r_maxwork:'أقصى شغل متتالي {0} أيام',r_maxoff:'أقصى راحة متتالية {0} أيام',r_maxnight:'أقصى نايت متتالي {0} ليالي',
 r_minb:'أقل شغل متتالي {0} أيام (مفيش يوم شغل لوحده)',r_minoffrun:'أقل راحة متتالية {0} أيام',r_mow:'أقل راحة {0} يوم في الأسبوع',r_mpw:'أقصى {0} شفتات في الأسبوع',
@@ -199,21 +271,21 @@ n_off:'أوف',n_n:'نايت',n_d:'داي'
 },
 en:{
 ttl:'🩺 Staff Nurse Schedule',
-l_ereq:'Evening (E) required — 0 = none',v_day:'📆 One day',v_dy:'Day',v_off:'Off',v_month:'📅 Whole month',v_week:'🗓 One week (from Saturday)',v_wk:'Week',w_short_e:'Day {0}: short {1} in E',t_names:'Names',t_set:'Settings',t_wish:'Wishes',t_rec:'Head nurse',t_roster:'Roster',h_names:'👥 Department Nurses',
-show_id:'Show ID',b_del:'🗑 Delete roster & start over',confirm_del:'Delete the saved roster, wishes and recommendations? (names and settings stay)',h_load:'📂 Upload Roster',b_clear:'Remove uploaded roster',h_load_hint:'Upload the finished roster, then type your changes in the wishes or head-nurse box and press Generate — the program edits it with minimal changes and keeps each nurse within ±1 of her shift count. If a PDF is not read correctly, convert it to Excel or send it to me in chat.',load_ok:'Roster loaded: {0} nurses, {1} days. Type your changes and press Generate.',load_fail:'Could not read a roster from the file (needs a row of day numbers 1..28+ and nurse names)',load_days:'Note: roster has {0} days but the selected month has {1}',load_mis:'Note: nurse names differ from the uploaded roster — it was ignored and a new one generated',load_none:'No roster uploaded',w_tot:'{0}: {1} shifts instead of {2}',base_used:'Uploaded roster used as the base',
+l_ereq:'Evening (E) required — 0 = none',v_day:'📆 Daily view',v_dy:'Day',v_off:'Off',v_month:'📅 Full month view',v_week:'🗓 Weekly view (starts Saturday)',v_wk:'Week',w_short_e:'Day {0}: short {1} in E',t_names:'Names',t_set:'Requirements',t_wish:'Requests',t_rec:'Rules',t_roster:'Roster',h_names:'👥 Department Nurses',
+show_id:'Show ID',b_del:'🗑 Delete roster and start over',confirm_del:'Delete the saved roster, requests and rules? (names and requirements stay)',h_load:'📂 Upload Roster',b_clear:'Remove uploaded roster',h_load_hint:'Upload the finished roster, then type your changes in the requests or head-nurse rules box and press Generate — the program edits it with minimal changes and keeps each nurse within ±1 of her shift count. If a PDF is not read correctly, convert it to Excel or send it to me in chat.',load_ok:'Roster loaded: {0} nurses, {1} days. Type your changes and press Generate.',load_fail:'Could not read a roster from the file (needs a row of day numbers 1..28+ and nurse names)',load_days:'Note: roster has {0} days but the selected month has {1}',load_mis:'Note: nurse names differ from the uploaded roster — it was ignored and a new one generated',load_none:'No roster uploaded',w_tot:'{0}: {1} shifts instead of {2}',base_used:'Uploaded roster used as the base',
 h_names_hint:'One nurse per line: Name, ID, Title (ID and Title optional). Upload Excel/CSV here (columns: name, ID, title). To read a photo or PDF, send it to me in chat and I will extract the data.',
-h_set:'⚙️ Settings',l_month:'Month',l_base:'Shifts per nurse (default)',l_dreq:'Required on Day',l_nreq:'Required on Night',l_doc:'Required OC (Day)',l_noc:'Required OC (Night)',
+h_set:'⚙️ Schedule Requirements',l_month:'Month',l_base:'Shifts per nurse (default)',l_dreq:'Required on Day',l_nreq:'Required on Night',l_doc:'Required OC (Day)',l_noc:'Required OC (Night)',
 h_cnt:'🔢 Adjust Shifts',h_al:'🌴 Annual Leave',h_al_hint:'From day / To day (day of month)',add:'+ Add',
 from_day:'From day',to_day:'To day',shifts_n:'Shifts',
 h_wish:'📝 Staff Requests',
 ph_wish:'One line per nurse, e.g.:\nAhmed Omar off 5-7, night 10-12, day 20\nSarah off 3, 15-16\nMohamed Ahmed night 1-4',
-h_wish_hint:'Requests are applied exactly. Nurse name + (off) or (night) or (day) + dates (number or from-to), separate requests with commas. Bare numbers mean OFF days. An off range (5-9) means the first and last day only. Night/day ranges set the shift type only. Head nurse recommendations take priority over requests.',
-h_rec:'📋 Head Nurse Notes',
+h_wish_hint:'Requests are applied exactly. Nurse name + (off) or (night) or (day) + dates (number or from-to), separate requests with commas. Bare numbers mean OFF days. An off range (5-9) means the first and last day only. Night/day ranges set the shift type only. Head nurse rules take priority over requests.',
+h_rec:'📋 Head Nurse Scheduling Rules',
 ph_rec:'Examples:\nNo nurse may work more than 3 consecutive days or rest more than 3 consecutive days\nAhmed three quarters nights, the rest days\nSarah night only\nAll CN no nights\nOn call day 2 and night 1',
 h_rec_hint:'Write freely — Arabic / Egyptian / English. The program understands free sentences: max consecutive work/rest, shift type (night/day/ratios), shift counts, days/Fridays/weekends, staffing per shift, on-call, rest after nights… Sentences it cannot understand are listed below.',
 ex_title:'📖 Examples of what it understands',
 ex:['Half the staff days in a row then nights in a row; the other half the reverse','No nurse may work more than 3 consecutive days nor rest more than 3 consecutive days','Max 3 consecutive nights','Ahmed three quarters nights and the rest days','Sara night only  /  Omar day only  /  Mona no nights','All staff half day half night  /  All CN 60% day','Ahmed 8 nights and the rest days','Sara 15 shifts  /  Omar 2 extra shifts  /  Mona 1 less shift','Friday off for everyone except Sara','Ahmed off on day 5 and 10-12  /  Sara night on day 20','Weekends off for all SN-S1','Ahmed must work every Friday','Day shift needs 15 on days 10 and 11','Night needs 12 every Friday','On call day 2 and night 1','2 days off after nights','At least 1 day off per week  /  max 5 shifts per week','Minimum 2 consecutive working days (no isolated work day)','Distribute nights evenly for everyone'],
-b_gen:'⚙️ Generate roster',b_blk:'🔀 Half days in a row + half nights in a row (or reverse)',b_cnnoc:'👑 The required CN in each shift must be on a main shift — not OC / O.C',b_print:'🖨 PDF / Print',b_copy:'📋 Copy for Excel',
+b_gen:'⚙️ Generate roster',b_blk:'🔀 Shift clustering: group each nurse\'s days together and nights together',b_cnnoc:'👑 Require a primary CN per shift (on-call excluded)',b_print:'🖨 Print / Save as PDF',b_copy:'📋 Copy data to Excel',
 h_tap:'Tap any cell in the roster to change it (D → N → empty). For PDF choose "Save as PDF" in the print dialog.',
 alert_gen:'Generate the roster first',alert_copied:'Copied — paste into Excel',alert_file:'Could not read the file',
 c_staff:'Staff',c_role:'Role',r_cn_mark:'First {0} names = CN (Charge Nurse)',r_cn_min:'Every shift needs at least {0} CN',r_cn_none:'No CN requirement per shift',r_cn_who:'set as CN (Charge Nurse)',r_sn_who:'set as SN (Staff Nurse)',r_hn_who:'set as HN (Head Nurse)',r_cn_minD:'Every day shift needs at least {0} CN',r_cn_minN:'Every night shift needs at least {0} CN',r_wkoff:'Everyone gets at least {0} weekend(s) off (Fri+Sat)',r_minoffm:'At least {0} days off per month (roster gives {1})',w_minoffm:'Asked for {0} days off but the roster gives only {1}',r_nodn:'No day shift right after a night (applied automatically)',w_cn:'Not enough CN on {0} shifts — days: {1}',c_total:'Total',c_day:'D',c_night:'N',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'req',
@@ -221,7 +293,7 @@ w_short_d:'Day {0}: short by {1} on Day shift',w_short_n:'Day {0}: short by {1} 
 w_work:'{0}: {1} consecutive shifts (due to leave/requests)',w_off:'{0}: {1} consecutive rest days (due to leave/requests)',
 w_bad:'Request not understood: {0}',w_amb:'Ambiguous name ({0}) write the full name or ID',w_nodays:'{0}: could not understand the days',
 w_tail:'Increase shifts or staff.',w_ok:'✅ Coverage is complete.',
-i_ovr:'ℹ️ Head nurse recommendations took priority over these requests (days removed): {0}',
+i_ovr:'ℹ️ Head nurse rules took priority over these requests (days removed): {0}',
 ws_title:'Understood from staff requests (please review):',ws_soft:'(shift type only, with rest days between work per the rule)',ws_guess:'⚠️ Guessed the name: {0} (please check)',
 rs_title:'Understood from head nurse recommendations:',us_title:'⚠️ Sentences not understood (rephrase them):',
 all:'Everyone',days_lbl:'days',
