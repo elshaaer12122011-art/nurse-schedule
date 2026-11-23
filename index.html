@@ -92,7 +92,7 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 <textarea id="rec" style="min-height:120px" data-p="ph_rec"></textarea>
 <div class="hint" data-i="h_rec_hint"></div>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
-<div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="gen()" data-i="b_gen"></button></div></div>
+<div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="genAI()" data-i="b_gen"></button></div><div id="ainlu" class="hint" style="margin-top:8px"></div></div>
 <div class="card noprint" data-tab="g"><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option><option value="d" data-i="v_day"></option></select><select id="vday" onchange="render()" style="flex:2;display:none"></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
 <div id="dayv" class="card noprint" data-tab="g" style="display:none"></div>
@@ -324,7 +324,7 @@ flush();seen.forEach(i=>{if(!sum[i])MSG.bad.push(['w_nodays',nurses[i].name])});
 MSG.wsum={items:Object.keys(sum).map(i=>({i:+i,parts:sum[i]})),guess}}
 
 /* ---------- uploaded roster (Excel / CSV / PDF) ---------- */
-let BASEMAP=null,BASEX=null,WK=[],LEGX={},LT=[],PT=[];
+let RECX=[];let BASEMAP=null,BASEX=null,WK=[],LEGX={},LT=[],PT=[];
 const LVEN={AL:'Annual leave',SL:'Sick leave',EL:'Educational leave',CL:'Compassionate leave',ML:'Maternity leave',ABS:'Absent',HC:'Home care',TB:'Time back'};
 const LVAR={AL:'إجازة سنوية',SL:'إجازة مرضية',EL:'إجازة دراسية',CL:'إجازة وفاة/عزاء',ML:'إجازة وضع',ABS:'غياب',HC:'هوم كير',TB:'تايم باك (تعويض)'};
 function cellInfo(v){let s=String(v==null?'':v).trim().toUpperCase().replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);const o={c:'',oc:false,lt:'',pt:''};if(!s)return o;
@@ -644,6 +644,7 @@ if(!used)keep.push(s)});
 return keep.join('\n')}
 function parseRec(text,req){
 MSG.rsum=[];MSG.unk=[];
+text=String(text)+(RECX.length?'\n'+RECX.join('\n'):'');
 text=detectBlocks(text);
 text=detectCN(text);
 text=detectExtra(text,req);
@@ -825,6 +826,17 @@ function applyBaseExtras(){LT=nurses.map(()=>Array(days).fill(''));PT=nurses.map
 nurses.forEach((n,i)=>{const k=n.name.toLowerCase(),x=BASEX[k],b=BASEMAP[k];if(!x||!b)return;for(let d=0;d<days;d++){const s=R[i][d],bs=b[d]=='E'?'D':b[d];if(s=='AL'&&x.lt[d])LT[i][d]=x.lt[d];if((s=='D'||s=='N')&&s==bs&&x.pt[d])PT[i][d]=x.pt[d];if(x.oc[d])od.add(d)}});
 if(od.size)for(let d=0;d<days;d++)od.add(d);
 od.forEach(d=>{nurses.forEach((_,i)=>{OC[i][d]=false});nurses.forEach((n,i)=>{const k=n.name.toLowerCase(),x=BASEX[k],b=BASEMAP[k];if(!x||!b||!x.oc[d])return;const bs=b[d]=='E'?'D':b[d];if(R[i][d]==bs&&(bs=='D'||bs=='N'))OC[i][d]=true})})}
+const NLUC=()=>{try{return JSON.parse(localStorage.getItem('nsl_nlu')||'{}')}catch(e){return{}}};
+async function genAI(){RECX=[];gen();const st=$('ainlu'),url=AIURL();if(st)st.textContent='';if(!url||!MSG.unk.length)return;
+const U=MSG.unk.slice(),cache=NLUC(),need=U.filter(s=>!(s in cache));
+if(st)st.textContent=AR_()?'⏳ الذكاء الاصطناعي بيفسّر الجمل اللي البرنامج ما فهمهاش...':'⏳ AI is interpreting the sentences the parser did not understand…';
+try{if(need.length){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'nlu',sentences:need,names:nurses.map(n=>n.name),days})});if(r.status==429)throw new Error('limit');if(!r.ok)throw new Error('ai '+r.status);const j=await r.json();
+need.forEach((s,k)=>{const a=(j.out||[])[k];cache[s]=Array.isArray(a)?a.filter(x=>typeof x=='string'&&x.trim()).slice(0,6):[]});try{localStorage.setItem('nsl_nlu',JSON.stringify(cache))}catch(e){}}
+const M={};U.forEach(s=>{if(cache[s]&&cache[s].length)M[s]=cache[s]});RECX=Object.values(M).flat();
+if(!RECX.length){if(st)st.textContent=AR_()?'الذكاء الاصطناعي ما لقاش تعليمات جدولة في الجمل دي.':'AI found no scheduling instruction in those sentences.';return}
+gen();const n=Object.keys(M).length;MSG.unk=MSG.unk.filter(s=>!(s in M));showMsgs();
+if(st)st.textContent=(AR_()?'🤖 الذكاء الاصطناعي فسّر ':'🤖 AI interpreted ')+n+(AR_()?' جملة وطبّقها في الروستر':' sentence(s) and applied them')}
+catch(e){if(st)st.textContent='⚠️ '+(AR_()?'الذكاء الاصطناعي ما قدرش يفسّر الجمل ['+(e.message||e)+'] — الروستر اتعمل بالجمل اللي اتفهمت.':'AI could not interpret the sentences ['+(e.message||e)+'] — roster built from the understood ones.')}}
 function gen(){
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
 const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0,eR=Math.max(0,+$('ereq').value||0);
