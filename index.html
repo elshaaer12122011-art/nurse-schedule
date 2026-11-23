@@ -420,7 +420,7 @@ pages.forEach(j=>{(j.rows||[]).forEach(r=>{const name=String(r.name||'').trim();
 return names.length?{names,cells,raw:raws,days,month,workers,legend}:null}
 async function aiRoster(jpegs,onp){const url=AIURL();if(!url)throw new Error('noai');const pages=[];
 for(let i=0;i<jpegs.length;i++){if(onp)onp(i+1,jpegs.length);const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'roster',image:jpegs[i],type:'image/jpeg'})});
-if(r.status==429)throw new Error('limit');if(!r.ok)throw new Error('ai '+r.status);pages.push(await r.json())}
+if(r.status==429)throw new Error('limit');if(!r.ok){let dt='';try{const q=await r.json();dt=(q.error||'')+' '+(q.status||'')+' '+(q.detail||'')}catch(x){}throw new Error('ai '+r.status+' '+dt.trim())}pages.push(await r.json())}
 return aiToRes(pages)}
 const AIMSG=k=>({noai:AR_()?'عشان التطبيق يقرا الصور والـ PDF الممسوح لازم تفعّل الذكاء الاصطناعي: حط رابط الخدمة في الخانة اللي تحت (الخطوات اللي اتفقنا عليها)، أو ابعت الصورة لـ Claude في الشات.':'To read photos / scanned PDFs, enter your AI service URL below (or send the image to Claude in the chat).',
 limit:AR_()?'وصلت للحد اليومي للذكاء الاصطناعي — جرب بكرة أو ارفع Excel/CSV.':'Daily AI limit reached — try tomorrow or upload Excel/CSV.',
@@ -428,7 +428,7 @@ fail:AR_()?'الذكاء الاصطناعي ما قدرش يقرا الصورة 
 none:AR_()?'الذكاء الاصطناعي ما لقاش جدول ممرضين في الصورة — صوّر الجدول أوضح وبدون ظل.':'AI found no nurse table in the image — retake a clearer photo.'}[k]);
 async function readByAI(jpegs){$('rstat').textContent=AR_()?'⏳ الذكاء الاصطناعي بيقرا الروستر...':'⏳ AI is reading…';
 try{const res=await aiRoster(jpegs,(i,n)=>{$('rstat').textContent=(AR_()?'⏳ بيقرا صفحة ':'⏳ reading page ')+i+'/'+n});return{res,why:res?'':AIMSG('none')}}
-catch(e){return{res:null,why:e.message=='noai'?AIMSG('noai'):e.message=='limit'?AIMSG('limit'):AIMSG('fail')}}}
+catch(e){return{res:null,why:e.message=='noai'?AIMSG('noai'):e.message=='limit'?AIMSG('limit'):AIMSG('fail')+' ['+(e&&e.message||e)+']'}}}
 $('rfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;let why='';try{let res=null;const buf=await f.arrayBuffer();
 if(/\.pdf$/i.test(f.name)||new Uint8Array(buf.slice(0,4)).join()=='37,80,68,70'){try{res=await readPdf(buf);if(!res){if(AIURL()){const o=await readByAI(await pdfPagesJpeg(buf));res=o.res;why=o.why}else why=AIMSG('noai')}if(false)why=AR_()?'الـ PDF ده صورة ممسوحة (زي CamScanner) مفيهوش نص، فالتطبيق ما يقدرش يقراه لوحده. ابعته لي في الشات وأحوّله لك لملف جاهز للرفع (أو صدّر الروستر Excel/CSV)':'this PDF is a scanned image with no text, so the app cannot read it. Send it to Claude in the chat to convert, or export Excel/CSV'}catch(x){why=(AR_()?'مشكلة في قراءة PDF: ':'could not read the PDF: ')+(x&&x.message||x)}}
 else if(/\.(png|jpe?g|webp|gif|bmp|heic)$/i.test(f.name)||/^image\//.test(f.type)){if(!AIURL())why=AIMSG('noai');else{try{const u=URL.createObjectURL(f);const jp=await imgToJpeg(u,2400);URL.revokeObjectURL(u);const o=await readByAI([jp]);res=o.res;why=o.why}catch(x){why=AIMSG('fail')}}}
