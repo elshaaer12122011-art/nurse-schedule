@@ -75,6 +75,7 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 <div class="card noprint" data-tab="n"><h2 data-i="h_load"></h2>
 <input type="file" id="rfile" accept=".xlsx,.xlsm,.xlsb,.xls,.ods,.csv,.tsv,.txt,.html,.htm,.pdf,image/*">
 <div class="row" style="margin-top:6px"><button onclick="clearBase()" data-i="b_clear"></button></div>
+<div class="row" style="margin-top:6px"><input id="aiurl" placeholder="🤖 رابط الذكاء الاصطناعي / AI service URL (اختياري)" onchange="setAI()" style="flex:1;direction:ltr"><span id="aist"></span></div>
 <div class="hint" id="rstat"></div><div class="hint" data-i="h_load_hint"></div></div>
 <div class="card noprint" data-tab="s"><h2 data-i="h_set"></h2><div class="g">
 <div><label data-i="l_month"></label><input type="month" id="month" value="2026-12"></div>
@@ -323,9 +324,9 @@ MSG.wsum={items:Object.keys(sum).map(i=>({i:+i,parts:sum[i]})),guess}}
 
 /* ---------- uploaded roster (Excel / CSV / PDF) ---------- */
 let BASEMAP=null;
-function normCell(v){let s=String(v==null?'':v).trim().toUpperCase().replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);s=s.replace(/[\s·\-\/(),+]*\bOC\b/g,'').replace(/ON ?CALL/g,'').replace(/\s+/g,' ').trim();
-if(/^(E|EV|EVE|EVEN|EVENING|EVG|م|مساء|مسائي|مسائى|مسا)$/.test(s))return'E';if(/^(D|DAY|DD|DY|ص|صباح|صباحي|صباحى|نهار|نهاري|داي|M|MO|MOR|MORN|MORNING)$/.test(s))return'D';if(/^(N|NT|NIGHT|NN|NGT|ن|ليل|ليلي|نايت)$/.test(s))return'N';if(/^(AL|A\/L|A L|EL|ANNUAL|LV|LEAVE|VAC|VACATION|ا?جازة|إجازة|اجازه|إجازه|اج)$/.test(s))return'AL';return''}
-const isCode=v=>{const s=String(v==null?'':v).trim().toUpperCase().replace(/\s+/g,' ');return !!normCell(v)||/^(OFF|O|X|-|—|DO|OL|R|راحة|راحه|ر|S|SL|PH|OFF DAY)$/.test(s)};
+function normCell(v){let s=String(v==null?'':v).trim().toUpperCase().replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);const tm=s.match(/^\(?\s*(\d{1,2})(?::\d\d)?\s*[-–—to ]+\s*(\d{1,2})(?::\d\d)?\s*\)?$/i);if(tm){const a=+tm[1],b=+tm[2];return(a>=15||b<=a)?'N':'D'}if(/^O\.\s?C\.?$/.test(s))return'N';if(/^OC$/.test(s))return'D';s=s.replace(/[\s·\-\/(),+]*\bOC\b/g,'').replace(/ON ?CALL/g,'').replace(/\s+/g,' ').trim();
+if(/^(E|EV|EVE|EVEN|EVENING|EVG|م|مساء|مسائي|مسائى|مسا)$/.test(s))return'E';if(/^(D|DAY|DD|DY|ص|صباح|صباحي|صباحى|نهار|نهاري|داي|M|MO|MOR|MORN|MORNING|M)$/.test(s))return'D';if(/^(N|NT|NIGHT|NN|NGT|ن|ليل|ليلي|نايت)$/.test(s))return'N';if(/^(AL|A\/L|A L|EL|SL|HC|TB|CL|ML|ABS|ANNUAL|SICK|LV|LEAVE|VAC|VACATION|ا?جازة|إجازة|اجازه|إجازه|اج|مرضي|غياب)$/.test(s))return'AL';return''}
+const isCode=v=>{if(/^\(?\s*\d{1,2}\s*[-–—]\s*\d{1,2}\s*\)?$/.test(String(v==null?'':v).trim()))return true;const s=String(v==null?'':v).trim().toUpperCase().replace(/\s+/g,' ');return !!normCell(v)||/^(OFF|O|X|-|—|DO|OL|R|راحة|راحه|ر|S|SL|PH|OFF DAY)$/.test(s)};
 const SUMROW=/^(day|night|total|req|oc|required|count|sum|sun|mon|tue|wed|thu|fri|sat|اجمالي|الاجمالي|داي|نايت|المطلوب|d|n)\b/i;
 const dnum=v=>{let s=String(v==null?'':v).trim().replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);if(!s)return 0;let m=s.match(/^(\d{1,2})$/)||s.match(/^(\d{1,2})(?:st|nd|rd|th)?(?:[\s\n\-\/.,:]+[A-Za-z؀-ۿ].*)?$/i)||s.match(/^[A-Za-z؀-ۿ]+[\s\n\-\/.,:]+(\d{1,2})$/)||s.match(/^\d{4}-\d{2}-(\d{2})/);const n=m?+m[1]:0;return n>=1&&n<=31?n:0};
 function parseGrid(rows,minLen){rows=rows.map(r=>Array.isArray(r)?r:[]);let best=null;
@@ -335,14 +336,18 @@ if(!best){/* header-less: find block of shift-code cells */
 const sp=[];rows.forEach((r,ri)=>{let f=-1,l=-1,n=0;r.forEach((v,c)=>{if(isCode(v)&&String(v).trim()!==''){if(f<0)f=c;l=c;n++}});if(n>=15&&l-f+1<=34)sp.push({ri,f,l,n})});
 if(sp.length<3)return null;const cnt={};sp.forEach(x=>cnt[x.f]=(cnt[x.f]||0)+1);c0=+Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];
 const ls=sp.filter(x=>x.f==c0).map(x=>x.l-x.f+1).sort((a,b)=>a-b);len=Math.min(31,ls[ls.length>>1]);if(len<20)return null;first=Math.max(0,sp[0].ri-0)}
-const names=[],cells=[];
-for(let ri=first;ri<rows.length;ri++){const r=rows[ri];let name='',id='';
-const scan=(from,to)=>{for(let c=from;c<to;c++){const v=String(r[c]==null?'':r[c]).trim();if(!v)continue;if(/[A-Za-z؀-ۿ]{2}/.test(v)&&!name&&!isCode(v))name=v;else if(/^\d{3,}$/.test(v)&&!id)id=v}};
+const names=[],cells=[];const TITLE=/^(HN|CN|SN|ACN|RN|PN|NA|TL|ICN|ICU|SN-?[A-Z0-9]*|ACN-?[A-Z0-9]*|WORKER|URC|D\.E|STAFF|NURSE|PLANED|PLANNED)$/i,STOP=/(balance|workers?\b|prepared|approved|legend|signature|manager|director)/i;
+const cc={};let nr=0;for(let ri=first;ri<rows.length;ri++){const r=rows[ri];if(!r||!r.length)continue;nr++;const seen=new Set();for(let c=0;c<c0;c++){const v=String(r[c]==null?'':r[c]).trim().toLowerCase();if(v&&!seen.has(v)){seen.add(v);cc[v]=(cc[v]||0)+1}}}
+const constV=v=>nr>=5&&(cc[String(v).trim().toLowerCase()]||0)>=nr*0.6;
+for(let ri=first;ri<rows.length;ri++){const r=rows[ri];if(!r)continue;let name='',id='',role='';
+if(dnum(r[c0])===1&&dnum(r[c0+1])===2&&ri>first)break;
+const scan=(from,to)=>{const tx=[];for(let c=from;c<to;c++){const v=String(r[c]==null?'':r[c]).trim();if(!v)continue;if(/^\d{3,}$/.test(v)){if(!id)id=v}else if(/[A-Za-z؀-ۿ]{2}/.test(v)&&!isCode(v)&&!constV(v)){if(TITLE.test(v)){if(!role&&!/^(planed|planned|staff|nurse)$/i.test(v))role=v}else tx.push(v)}}if(tx.length&&!name)name=tx.sort((a,b)=>b.length-a.length)[0]};
 scan(0,c0);if(!name)scan(c0+len,r.length);
-if(!name||SUMROW.test(name))continue;
+if(name&&STOP.test(name)&&names.length)break;
+if(!name||SUMROW.test(name)||/^(staff name|name|date|الاسم)$/i.test(name))continue;
 const row=[];for(let k=0;k<len;k++)row.push(normCell(r[c0+k]));
 if(!best&&!r.slice(c0,c0+len).some(v=>isCode(v)&&String(v).trim()!==''))continue;
-names.push({name,id});cells.push(row)}
+names.push({name,id,role});cells.push(row)}
 return names.length?{names,cells,days:len}:null}
 async function readPdf(buf){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const pdf=await pdfjsLib.getDocument({data:buf}).promise;const rows=[];let hdr=null;
@@ -362,14 +367,35 @@ const out=[];let hl=null;rows.forEach(r=>{if(r[0]=='__H'){hl=r.slice(1);out.push
 return parseGrid(out.map(r=>r.map(x=>x)),20)}
 function applyLoaded(res,fname){if(!res){$('rstat').textContent=t('load_fail');return}
 BASEMAP={};res.names.forEach((n,i)=>{BASEMAP[n.name.toLowerCase()]=res.cells[i]});
-$('names').value=res.names.map(n=>n.name+','+(n.id||'')+',').join('\n');nurses=parseN();['cnt','al'].forEach(draw);
+$('names').value=res.names.map(n=>n.name+','+(n.id||'')+','+(/^(HN|CN|SN|ACN)/i.test(n.role||'')?n.role:'')).join('\n');nurses=parseN();['cnt','al'].forEach(draw);
 [Y,M]=$('month').value.split('-').map(Number);const dm=new Date(Y,M,0).getDate();
 $('rstat').textContent='✅ '+fname+' — '+t('load_ok',res.names.length,res.days)+(res.days!=dm?' ⚠️ '+t('load_days',res.days,dm):'');saveState()}
 function parseCSV(txt,fs){const rows=[];let r=[],c='',q=false;for(let i=0;i<txt.length;i++){const ch=txt[i];if(q){if(ch=='"'){if(txt[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==fs){r.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&txt[i+1]=='\n')i++;r.push(c);c='';rows.push(r);r=[]}else c+=ch}if(c!==''||r.length){r.push(c);rows.push(r)}return rows}
 const AR_=()=>(typeof LANG!=='undefined'&&LANG=='en')?0:1;
+/* ---------- AI reading of images / scanned PDFs (needs the user's proxy URL) ---------- */
+const AIURL=()=>{try{return(localStorage.getItem('nsl_ai')||'').trim()}catch(e){return''}};
+function setAI(){const v=($('aiurl').value||'').trim();try{localStorage.setItem('nsl_ai',v)}catch(e){}$('aist').textContent=v?'✅':''}
+function loadAI(){try{const v=AIURL();if($('aiurl')){$('aiurl').value=v;$('aist').textContent=v?'✅':''}}catch(e){}}
+const imgToJpeg=(src,max)=>new Promise((ok,no)=>{const im=new Image();im.onload=()=>{let w=im.naturalWidth,h=im.naturalHeight;const k=Math.min(1,max/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);ok(c.toDataURL('image/jpeg',0.88).split(',')[1])};im.onerror=()=>no(new Error('img'));im.src=src});
+async function pdfPagesJpeg(buf){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';const pdf=await pdfjsLib.getDocument({data:buf}).promise;const out=[];
+for(let p=1;p<=Math.min(pdf.numPages,6);p++){const pg=await pdf.getPage(p);const vp0=pg.getViewport({scale:1});const sc=Math.min(3,2400/Math.max(vp0.width,vp0.height));const vp=pg.getViewport({scale:sc});const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await pg.render({canvasContext:x,viewport:vp}).promise;out.push(c.toDataURL('image/jpeg',0.88).split(',')[1])}return out}
+function aiToRes(pages){const names=[],cells=[];let days=0;pages.forEach(j=>{days=Math.max(days,+j.days||0,...(j.rows||[]).map(r=>(r.cells||[]).length))});if(!days)days=30;
+pages.forEach(j=>(j.rows||[]).forEach(r=>{const name=String(r.name||'').trim();if(!name||SUMROW.test(name)||/(balance|workers?\b|prepared|approved|legend)/i.test(name))return;const c=(r.cells||[]).map(normCell);while(c.length<days)c.push('');if(names.some(n=>n.name.toLowerCase()==name.toLowerCase()))return;names.push({name,id:String(r.id||'').replace(/\D/g,''),role:String(r.title||'')});cells.push(c.slice(0,days))}));
+return names.length?{names,cells,days}:null}
+async function aiRoster(jpegs,onp){const url=AIURL();if(!url)throw new Error('noai');const pages=[];
+for(let i=0;i<jpegs.length;i++){if(onp)onp(i+1,jpegs.length);const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task:'roster',image:jpegs[i],type:'image/jpeg'})});
+if(r.status==429)throw new Error('limit');if(!r.ok)throw new Error('ai '+r.status);pages.push(await r.json())}
+return aiToRes(pages)}
+const AIMSG=k=>({noai:AR_()?'عشان التطبيق يقرا الصور والـ PDF الممسوح لازم تفعّل الذكاء الاصطناعي: حط رابط الخدمة في الخانة اللي تحت (الخطوات اللي اتفقنا عليها)، أو ابعت الصورة لـ Claude في الشات.':'To read photos / scanned PDFs, enter your AI service URL below (or send the image to Claude in the chat).',
+limit:AR_()?'وصلت للحد اليومي للذكاء الاصطناعي — جرب بكرة أو ارفع Excel/CSV.':'Daily AI limit reached — try tomorrow or upload Excel/CSV.',
+fail:AR_()?'الذكاء الاصطناعي ما قدرش يقرا الصورة أو الخدمة مش شغالة — اتأكد من الرابط أو من النت.':'AI could not read the image, or the service is unreachable — check the URL / connection.',
+none:AR_()?'الذكاء الاصطناعي ما لقاش جدول ممرضين في الصورة — صوّر الجدول أوضح وبدون ظل.':'AI found no nurse table in the image — retake a clearer photo.'}[k]);
+async function readByAI(jpegs){$('rstat').textContent=AR_()?'⏳ الذكاء الاصطناعي بيقرا الروستر...':'⏳ AI is reading…';
+try{const res=await aiRoster(jpegs,(i,n)=>{$('rstat').textContent=(AR_()?'⏳ بيقرا صفحة ':'⏳ reading page ')+i+'/'+n});return{res,why:res?'':AIMSG('none')}}
+catch(e){return{res:null,why:e.message=='noai'?AIMSG('noai'):e.message=='limit'?AIMSG('limit'):AIMSG('fail')}}}
 $('rfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;let why='';try{let res=null;const buf=await f.arrayBuffer();
-if(/\.pdf$/i.test(f.name)||new Uint8Array(buf.slice(0,4)).join()=='37,80,68,70'){try{res=await readPdf(buf)}catch(x){why=AR_()?'مشكلة في قراءة PDF (ممكن يكون صورة ممسوحة بدون نص)':'could not read the PDF (maybe a scanned image)'}}
-else if(/\.(png|jpe?g|webp|gif|bmp|heic)$/i.test(f.name)){why=AR_()?'ده ملف صورة والتطبيق ما يقدرش يقرا النص من الصور — صدّر الروستر Excel/PDF/CSV أو ابعت الصورة لـ Claude في الشات':'this is an image; the app cannot read text from images — export it as Excel/PDF/CSV'}
+if(/\.pdf$/i.test(f.name)||new Uint8Array(buf.slice(0,4)).join()=='37,80,68,70'){try{res=await readPdf(buf);if(!res){if(AIURL()){const o=await readByAI(await pdfPagesJpeg(buf));res=o.res;why=o.why}else why=AIMSG('noai')}if(false)why=AR_()?'الـ PDF ده صورة ممسوحة (زي CamScanner) مفيهوش نص، فالتطبيق ما يقدرش يقراه لوحده. ابعته لي في الشات وأحوّله لك لملف جاهز للرفع (أو صدّر الروستر Excel/CSV)':'this PDF is a scanned image with no text, so the app cannot read it. Send it to Claude in the chat to convert, or export Excel/CSV'}catch(x){why=AR_()?'مشكلة في قراءة PDF (ممكن يكون صورة ممسوحة بدون نص)':'could not read the PDF (maybe a scanned image)'}}
+else if(/\.(png|jpe?g|webp|gif|bmp|heic)$/i.test(f.name)||/^image\//.test(f.type)){if(!AIURL())why=AIMSG('noai');else{try{const u=URL.createObjectURL(f);const jp=await imgToJpeg(u,2400);URL.revokeObjectURL(u);const o=await readByAI([jp]);res=o.res;why=o.why}catch(x){why=AIMSG('fail')}}}
 else{const tryWb=wb=>{for(const sn of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false});res=parseGrid(rows);if(res)return true}return false};
 let ok=false;if(/\.(csv|tsv|txt)$/i.test(f.name)){let txt=new TextDecoder('utf-8').decode(buf).replace(/^\uFEFF/,'');if(/\uFFFD/.test(txt)){try{txt=new TextDecoder('windows-1256').decode(buf)}catch(x){}}
 const cnt=(ch)=>(txt.slice(0,3000).match(new RegExp(ch,'g'))||[]).length;const fs=[[',',cnt(',')],[';',cnt(';')],['\t',cnt('\t')]].sort((a,b)=>b[1]-a[1])[0][0];
@@ -942,6 +968,6 @@ h+=sec('N',list(i=>R[i][d]=='N'),'#9fb2ee')+sec('AL',list(i=>R[i][d]=='AL'),'#a8
 el.style.display='';el.innerHTML=h}
 function showTab(k){try{document.querySelectorAll('[data-tab]').forEach(e=>e.classList.toggle('tabhide',e.dataset.tab!==k));document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===k));window.scrollTo(0,0);try{localStorage.setItem('nsl_tab',k)}catch(e){}}catch(e){}}
 const _gen0=gen;gen=function(){const r=_gen0.apply(this,arguments);showTab('g');return r};
-nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}showTab(had?'g':'n');
+nurses=parseN();const had=loadState();applyLang();loadAI();if(had){assignOC&&0;showMsgs();render()}showTab(had?'g':'n');
 try{if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
 </script></body></html>
