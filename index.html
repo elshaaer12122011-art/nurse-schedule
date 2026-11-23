@@ -369,7 +369,13 @@ function applyLoaded(res,fname){if(!res){$('rstat').textContent=t('load_fail');r
 BASEMAP={};res.names.forEach((n,i)=>{BASEMAP[n.name.toLowerCase()]=res.cells[i]});
 $('names').value=res.names.map(n=>n.name+','+(n.id||'')+','+(/^(HN|CN|SN|ACN)/i.test(n.role||'')?n.role:'')).join('\n');nurses=parseN();['cnt','al'].forEach(draw);
 [Y,M]=$('month').value.split('-').map(Number);const dm=new Date(Y,M,0).getDate();
-$('rstat').textContent='✅ '+fname+' — '+t('load_ok',res.names.length,res.days)+(res.days!=dm?' ⚠️ '+t('load_days',res.days,dm):'');saveState()}
+$('rstat').textContent='✅ '+fname+' — '+t('load_ok',res.names.length,res.days)+(res.days!=dm?' ⚠️ '+t('load_days',res.days,dm):'');
+try{days=dm;const N=nurses.length;R=nurses.map(n=>{const r=BASEMAP[n.name.toLowerCase()]||[];return Array.from({length:days},(_,d)=>{const x=r[d]||'';return x=='E'?'D':(x=='D'||x=='N'||x=='AL'?x:'')})});
+EV=nurses.map(n=>{const r=BASEMAP[n.name.toLowerCase()]||[];return Array.from({length:days},(_,d)=>r[d]=='E')});OC=nurses.map(()=>Array(days).fill(false));
+EON=EV.some(a=>a.some(Boolean));const cnt=(f)=>Array.from({length:days},(_,d)=>nurses.filter((_,i)=>f(i,d)).length);
+eRA=cnt((i,d)=>EV[i][d]);mRA=cnt((i,d)=>R[i][d]=='D'&&!EV[i][d]);dRA=cnt((i,d)=>R[i][d]=='D');nRA=cnt((i,d)=>R[i][d]=='N');docA=Array(days).fill(0);nocA=Array(days).fill(0);
+CNI=nurses.map(n=>/(^|[^a-z])(cn|charge)([^a-z]|$)/i.test(n.title));ROLES=nurses.map(n=>n.title);
+MSG={bad:[],warn:[],ovr:[],wsum:null,rsum:[],unk:[],ran:false};showMsgs();render();showTab('g')}catch(e){}saveState()}
 function parseCSV(txt,fs){const rows=[];let r=[],c='',q=false;for(let i=0;i<txt.length;i++){const ch=txt[i];if(q){if(ch=='"'){if(txt[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"')q=true;else if(ch==fs){r.push(c);c=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&txt[i+1]=='\n')i++;r.push(c);c='';rows.push(r);r=[]}else c+=ch}if(c!==''||r.length){r.push(c);rows.push(r)}return rows}
 const AR_=()=>(typeof LANG!=='undefined'&&LANG=='en')?0:1;
 /* ---------- AI reading of images / scanned PDFs (needs the user's proxy URL) ---------- */
