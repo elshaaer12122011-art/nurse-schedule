@@ -62,7 +62,7 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 .tabs button{flex:1 0 auto;min-width:64px;background:transparent;border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 10px 6px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:1px;font-weight:600}
 .tabs button span{font-size:20px;filter:grayscale(1);opacity:.7}.tabs button b{font-size:12px;font-weight:600}
 .tabs button.on{color:var(--pri);border-bottom-color:var(--pri)}.tabs button.on span{filter:none;opacity:1}
-.tabhide{display:none!important}
+.tabhide{display:none!important}.dsec{margin-bottom:10px}.dh{padding:6px 10px;border-radius:8px 8px 0 0;font-weight:700;display:flex;justify-content:space-between;color:#000}.dl{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--bg);border-radius:0 0 8px 8px}.chip{padding:4px 9px;border-radius:14px;font-size:13px;font-weight:600;color:#000}.chip i{color:#c0392b;font-style:normal;font-weight:800}
 #ptitle{display:none}
 @media print{.wrap.tabhide{display:block!important}#ptitle.tabhide{display:block!important}.stk{display:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
 </style></head><body>
@@ -92,8 +92,9 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 <div class="hint" data-i="h_rec_hint"></div>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
 <div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="gen()" data-i="b_gen"></button></div></div>
-<div class="card noprint" data-tab="g"><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
+<div class="card noprint" data-tab="g"><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option><option value="d" data-i="v_day"></option></select><select id="vday" onchange="render()" style="flex:2;display:none"></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
+<div id="dayv" class="card noprint" data-tab="g" style="display:none"></div>
 <div id="ptitle" data-tab="g"></div>
 <div class="wrap" data-tab="g"><table id="tb"></table></div>
 <script>
@@ -155,7 +156,7 @@ Rania Bassuony,13988,`;
 const TX={
 ar:{
 ttl:'🩺 Staff Nurse Schedule — منشئ روستر التمريض',
-l_ereq:'المطلوب في E (مسائي) — 0 = بدون E',v_month:'📅 عرض الشهر كله',v_week:'🗓 عرض أسبوع (من السبت)',v_wk:'أسبوع',w_short_e:'يوم {0}: ناقص {1} في E',t_names:'الأسماء',t_set:'الإعدادات',t_wish:'الرغبات',t_rec:'التوصيات',t_roster:'الروستر',h_names:'👥 أسماء تمريض القسم',
+l_ereq:'المطلوب في E (مسائي) — 0 = بدون E',v_day:'📆 عرض يوم',v_dy:'يوم',v_off:'راحة',v_month:'📅 عرض الشهر كله',v_week:'🗓 عرض أسبوع (من السبت)',v_wk:'أسبوع',w_short_e:'يوم {0}: ناقص {1} في E',t_names:'الأسماء',t_set:'الإعدادات',t_wish:'الرغبات',t_rec:'التوصيات',t_roster:'الروستر',h_names:'👥 أسماء تمريض القسم',
 show_id:'إظهار الـ ID',b_del:'🗑 حذف الروستر وابدأ من الأول',confirm_del:'حذف الروستر والرغبات والتوصيات المحفوظة؟ (الأسماء والإعدادات تفضل)',h_load:'📂 رفع روستر',b_clear:'إلغاء الروستر المرفوع',h_load_hint:'ارفع الروستر الجاهز، وبعدها اكتب التعديلات في خانة الرغبات أو الهيد نرس واضغط إنشاء — البرنامج يعدّل على الروستر بأقل تغيير ممكن ويحافظ على عدد شفتات كل ممرض (±1). لو الـPDF ما اتقرأش صح، حوّله Excel أو ابعته لي في الشات.',load_ok:'تم تحميل الروستر: {0} ممرض و{1} يوم. اكتب التعديلات واضغط إنشاء.',load_fail:'تعذر قراءة الروستر من الملف (لازم يكون فيه صف أرقام الأيام 1..28+ وأسماء الممرضين)',load_days:'تنبيه: الروستر فيه {0} يوم والشهر المختار {1} يوم',load_mis:'تنبيه: أسماء الممرضين اتغيرت عن الروستر المرفوع — اتجاهل الروستر وتم إنشاء جديد',load_none:'لا يوجد روستر مرفوع',w_tot:'{0}: عدد الشفتات {1} بدل {2}',base_used:'الروستر المرفوع اتستخدم كأساس',
 h_names_hint:'سطر لكل ممرض: الاسم, ID, اللقب (ID واللقب اختياري). الرفع هنا: Excel/CSV (أعمدة: الاسم، ID، اللقب). لقراءة صورة أو PDF ابعتها لي في الشات وأنا أطلّع الأسماء والبيانات.',
 h_set:'⚙️ الإعدادات',l_month:'الشهر',l_base:'شيفتات كل ممرض (افتراضي)',l_dreq:'المطلوب في الداي',l_nreq:'المطلوب في النايت',l_doc:'OC مطلوب داي',l_noc:'OC مطلوب نايت',
@@ -193,7 +194,7 @@ n_off:'أوف',n_n:'نايت',n_d:'داي'
 },
 en:{
 ttl:'🩺 Staff Nurse Schedule',
-l_ereq:'Evening (E) required — 0 = none',v_month:'📅 Whole month',v_week:'🗓 One week (from Saturday)',v_wk:'Week',w_short_e:'Day {0}: short {1} in E',t_names:'Names',t_set:'Settings',t_wish:'Wishes',t_rec:'Head nurse',t_roster:'Roster',h_names:'👥 Department Nurses',
+l_ereq:'Evening (E) required — 0 = none',v_day:'📆 One day',v_dy:'Day',v_off:'Off',v_month:'📅 Whole month',v_week:'🗓 One week (from Saturday)',v_wk:'Week',w_short_e:'Day {0}: short {1} in E',t_names:'Names',t_set:'Settings',t_wish:'Wishes',t_rec:'Head nurse',t_roster:'Roster',h_names:'👥 Department Nurses',
 show_id:'Show ID',b_del:'🗑 Delete roster & start over',confirm_del:'Delete the saved roster, wishes and recommendations? (names and settings stay)',h_load:'📂 Upload Roster',b_clear:'Remove uploaded roster',h_load_hint:'Upload the finished roster, then type your changes in the wishes or head-nurse box and press Generate — the program edits it with minimal changes and keeps each nurse within ±1 of her shift count. If a PDF is not read correctly, convert it to Excel or send it to me in chat.',load_ok:'Roster loaded: {0} nurses, {1} days. Type your changes and press Generate.',load_fail:'Could not read a roster from the file (needs a row of day numbers 1..28+ and nurse names)',load_days:'Note: roster has {0} days but the selected month has {1}',load_mis:'Note: nurse names differ from the uploaded roster — it was ignored and a new one generated',load_none:'No roster uploaded',w_tot:'{0}: {1} shifts instead of {2}',base_used:'Uploaded roster used as the base',
 h_names_hint:'One nurse per line: Name, ID, Title (ID and Title optional). Upload Excel/CSV here (columns: name, ID, title). To read a photo or PDF, send it to me in chat and I will extract the data.',
 h_set:'⚙️ Settings',l_month:'Month',l_base:'Shifts per nurse (default)',l_dreq:'Required on Day',l_nreq:'Required on Night',l_doc:'Required OC (Day)',l_noc:'Required OC (Night)',
@@ -814,12 +815,13 @@ const KCOL={D:['FFF3B0','000000'],E:['D9C8FF','000000'],N:['26397A','FFFFFF'],AL
 function cnts(i){let D=0,E=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D'){if(isE(i,d))E++;else D++}else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i]&&OC[i][d]&&(s=='D'||s=='N'))O++});return{D,E,N,AL,O,T:D+E+N}}
 function dayStats(d){const e=R.filter((r,i)=>r[d]=='D'&&isE(i,d)).length;return{D:R.filter(r=>r[d]=='D').length-e,E:e,N:R.filter(r=>r[d]=='N').length,OD:OC.filter((r,i)=>r[d]&&R[i][d]=='D'&&!isE(i,d)).length,OE:OC.filter((r,i)=>r[d]&&R[i][d]=='D'&&isE(i,d)).length,ON:OC.filter((r,i)=>r[d]&&R[i][d]=='N').length}}
 function weeks(){const o=[];let a=0;for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();if(w==5||d==days-1){o.push([a,d]);a=d+1}}return o}
-function fillWeeks(){const sel=$('vweek');if(!sel||!days)return;const wk=weeks(),cur=sel.value;if(sel.options.length!=wk.length||sel.dataset.m!=Y+'-'+M){sel.innerHTML=wk.map((w,k)=>`<option value="${k}">${t('v_wk')} ${k+1} (${w[0]+1}–${w[1]+1})</option>`).join('');sel.dataset.m=Y+'-'+M;if(cur&&+cur<wk.length)sel.value=cur}sel.style.display=$('vmode').value=='w'?'':'none'}
-function withView(fn,...a){if(!R.length||!$('vmode')||$('vmode').value!='w')return fn(...a);const wk=weeks(),k=Math.min(+$('vweek').value||0,wk.length-1),[s,e]=wk[k];
+function fillWeeks(){const sel=$('vweek');if(!sel||!days)return;const wk=weeks(),cur=sel.value;if(sel.options.length!=wk.length||sel.dataset.m!=Y+'-'+M){sel.innerHTML=wk.map((w,k)=>`<option value="${k}">${t('v_wk')} ${k+1} (${w[0]+1}–${w[1]+1})</option>`).join('');sel.dataset.m=Y+'-'+M;if(cur&&+cur<wk.length)sel.value=cur}sel.style.display=$('vmode').value=='w'?'':'none';const sd=$('vday');if(sd.options.length!=days||sd.dataset.m!=Y+'-'+M){const c2=sd.value;sd.innerHTML=Array.from({length:days},(_,d)=>`<option value="${d+1}">${t('v_dy')} ${d+1} — ${DOW[new Date(Y,M-1,d+1).getDay()]}</option>`).join('');sd.dataset.m=Y+'-'+M;if(c2&&+c2<=days)sd.value=c2}sd.style.display=$('vmode').value=='d'?'':'none'}
+const VLAB=()=>VSUF?(VSUF[1]=='W'?'Week ':'Day ')+VSUF.slice(2):'';
+function withView(fn,...a){const vm=$('vmode')&&$('vmode').value;if(!R.length||(vm!='w'&&vm!='d'))return fn(...a);let s,e,sfx;if(vm=='d'){s=e=Math.min(Math.max(0,(+$('vday').value||1)-1),days-1);sfx='_D'+(s+1)}else{const wk=weeks(),k=Math.min(+$('vweek').value||0,wk.length-1);[s,e]=wk[k];sfx='_W'+(k+1)}
 const sv={R,OC,EV,dRA,mRA,eRA,nRA,docA,nocA,days,DOFF,VSUF};const sl=x=>x.slice(s,e+1);
-try{R=R.map(sl);OC=OC.map(sl);EV=EV.map(sl);dRA=sl(dRA);mRA=sl(mRA);eRA=sl(eRA);nRA=sl(nRA);docA=sl(docA);nocA=sl(nocA);days=e-s+1;DOFF=s;VSUF='_W'+(k+1);return fn(...a)}finally{({R,OC,EV,dRA,mRA,eRA,nRA,docA,nocA,days,DOFF,VSUF}=sv)}}
-function render(){fillWeeks();withView(render0)}
-function render0(){if(!R.length||!nurses.length)return;const sid=$('showid').checked;$('ptitle').textContent='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0')+(VSUF?' · Week '+VSUF.slice(2):'')+'   |   '+LEG();
+try{R=R.map(sl);OC=OC.map(sl);EV=EV.map(sl);dRA=sl(dRA);mRA=sl(mRA);eRA=sl(eRA);nRA=sl(nRA);docA=sl(docA);nocA=sl(nocA);days=e-s+1;DOFF=s;VSUF=sfx;return fn(...a)}finally{({R,OC,EV,dRA,mRA,eRA,nRA,docA,nocA,days,DOFF,VSUF}=sv)}}
+function render(){fillWeeks();withView(render0);dayView()}
+function render0(){if(!R.length||!nurses.length)return;const sid=$('showid').checked;$('ptitle').textContent='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0')+(VSUF?' · '+VLAB():'')+'   |   '+LEG();
 let h='<tr><th rowspan=2>'+t('c_staff')+'</th><th rowspan=2>'+t('c_role')+'</th>';if(sid)h+='<th rowspan=2>ID</th>';
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+DOFF+1).getDay();h+=`<th class="${w==5?'we':''}">${d+DOFF+1}</th>`}
 h+=TCOLS().map(([k,l])=>`<th class="tot" rowspan=2>${l}</th>`).join('')+'</tr><tr>';
@@ -853,7 +855,7 @@ const cell=(x,y,w,h,txt,o={})=>{doc.setFillColor(...rgb(o.f||'FFFFFF'));doc.rect
 doc.setFont('helvetica',o.b?'bold':'normal');let fs=o.fs||Math.min(9,h*2.3);doc.setFontSize(fs);const maxW=w-1.6;while(doc.getTextWidth(String(txt))>maxW&&fs>4){fs-=0.5;doc.setFontSize(fs)}
 doc.setTextColor(...rgb(o.c||'000000'));
 if(o.left)doc.text(String(txt),x+1.2,y+h/2,{baseline:'middle'});else doc.text(String(txt),x+w/2,y+h/2,{align:'center',baseline:'middle'})};
-doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(15,63,111);doc.text('Staff Nurse Schedule  -  '+Y+'/'+String(M).padStart(2,'0')+(VSUF?'  (Week '+VSUF.slice(2)+')':''),W/2,m+7,{align:'center'});
+doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(15,63,111);doc.text('Staff Nurse Schedule  -  '+Y+'/'+String(M).padStart(2,'0')+(VSUF?'  ('+VLAB()+')':''),W/2,m+7,{align:'center'});
 doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(60,60,60);doc.text(LEG().replace(/ · /g,'   '),W/2,m+12,{align:'center'});
 cell(x0,top,nameW,hh*2,'Staff',{f:'E9EDF2',b:1});cell(x0+nameW,top,roleW,hh*2,'Role',{f:'E9EDF2',b:1});
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+DOFF+1).getDay(),f=w==5?'F6C6C6':'E9EDF2';cell(dx0+d*dw,top,dw,hh,String(d+DOFF+1),{f,b:1});cell(dx0+d*dw,top+hh,dw,hh,DOW[w],{f,fs:6.5})}
@@ -891,7 +893,7 @@ const nc0=sid?3:2,dc0=nc0+1,tc0=dc0+days,lastC=tc0+TCOLS().length-1;
 const bd={style:'thin',color:{argb:'FF888888'}},B={top:bd,left:bd,bottom:bd,right:bd};
 const fill=c=>({type:'pattern',pattern:'solid',fgColor:{argb:'FF'+c}});
 const st=(cell,o)=>{cell.border=B;cell.alignment={horizontal:'center',vertical:'middle'};if(o.f)cell.fill=fill(o.f);cell.font={name:'Calibri',size:o.sz||10,bold:!!o.b,color:{argb:'FF'+(o.c||'000000')}}};
-ws.mergeCells(1,1,1,lastC);const tt=ws.getCell(1,1);tt.value='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0')+(VSUF?' (Week '+VSUF.slice(2)+')':'');tt.font={size:16,bold:true,color:{argb:'FF0F3F6F'}};tt.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=26;
+ws.mergeCells(1,1,1,lastC);const tt=ws.getCell(1,1);tt.value='Staff Nurse Schedule — '+Y+'/'+String(M).padStart(2,'0')+(VSUF?' ('+VLAB()+')':'');tt.font={size:16,bold:true,color:{argb:'FF0F3F6F'}};tt.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=26;
 const hd=(r,c,v,f,col)=>{const x=ws.getCell(r,c);x.value=v;st(x,{f:f||'E9EDF2',b:true,c:col})};
 hd(2,1,t('c_staff'));ws.mergeCells(2,1,3,1);hd(2,2,t('c_role'));ws.mergeCells(2,2,3,2);if(sid){hd(2,3,'ID');ws.mergeCells(2,3,3,3)}
 for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+DOFF+1).getDay(),f=w==5?'F6C6C6':'E9EDF2';hd(2,dc0+d,d+DOFF+1,f);hd(3,dc0+d,DOW[w],f)}
@@ -910,6 +912,18 @@ const buf=await wb.xlsx.writeBuffer();const url=URL.createObjectURL(new Blob([bu
 const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}${VS}.xlsx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlHtml()}}
 function cp(){if(!R.length)return alert(t('alert_gen'));const x=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(x).then(()=>alert(t('alert_copied')))}catch(e){prompt('Copy:',x)}}
 
+
+function dayView(){const el=$('dayv');if(!el)return;if(!R.length||$('vmode').value!='d'){el.innerHTML='';el.style.display='none';return}
+const d=Math.min(Math.max(0,(+$('vday').value||1)-1),days-1);const chip=(i)=>`<span class="chip" style="background:hsl(${(i*137.5)%360},70%,82%)">${nurses[i].name}${CNI[i]?' <b>CN</b>':''}${OC[i]&&OC[i][d]?' <i>OC</i>':''}</span>`;
+const list=(f)=>nurses.map((_,i)=>i).filter(f);
+const sec=(title,ids,col)=>`<div class="dsec"><div class="dh" style="background:${col}">${title} <b>${ids.length}</b></div><div class="dl">${ids.map(chip).join('')||'—'}</div></div>`;
+let h=`<h2>${t('v_dy')} ${d+1} — ${DOW[new Date(Y,M-1,d+1).getDay()]}</h2>`;
+if(EON){h+=sec('M',list(i=>R[i][d]=='D'&&!isE(i,d)),'#fff3b0')+sec('E',list(i=>R[i][d]=='D'&&isE(i,d)),'#d9c8ff')}else h+=sec('D',list(i=>R[i][d]=='D'),'#fff3b0');
+const oc=(i)=>OC[i]&&OC[i][d]&&(R[i][d]=='D'||R[i][d]=='N');
+const ocS=(title,f)=>{const ids=list(i=>oc(i)&&f(i));return `<div class="dl" style="border-radius:0;padding:6px 8px"><b style="min-width:52px">${title}</b>${ids.map(chip).join('')||'—'}</div>`};
+h+=`<div class="dsec"><div class="dh" style="background:#ffc9c9">On-Call (OC) <b>${list(oc).length}</b></div>`+(EON?ocS('M',i=>R[i][d]=='D'&&!isE(i,d))+ocS('E',i=>R[i][d]=='D'&&isE(i,d)):ocS('D',i=>R[i][d]=='D'))+ocS('N',i=>R[i][d]=='N')+`</div>`;
+h+=sec('N',list(i=>R[i][d]=='N'),'#9fb2ee')+sec('AL',list(i=>R[i][d]=='AL'),'#a8e6b4')+sec(t('v_off'),list(i=>R[i][d]!='D'&&R[i][d]!='N'&&R[i][d]!='AL'),'#e4e6eb');
+el.style.display='';el.innerHTML=h}
 function showTab(k){try{document.querySelectorAll('[data-tab]').forEach(e=>e.classList.toggle('tabhide',e.dataset.tab!==k));document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===k));window.scrollTo(0,0);try{localStorage.setItem('nsl_tab',k)}catch(e){}}catch(e){}}
 const _gen0=gen;gen=function(){const r=_gen0.apply(this,arguments);showTab('g');return r};
 nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}showTab(had?'g':'n');
