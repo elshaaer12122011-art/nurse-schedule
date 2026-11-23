@@ -62,6 +62,7 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 .tabs button{flex:1 0 auto;min-width:64px;background:transparent;border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 10px 6px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:1px;font-weight:600}
 .tabs button span{font-size:20px;filter:grayscale(1);opacity:.7}.tabs button b{font-size:12px;font-weight:600}
 .tabs button.on{color:var(--pri);border-bottom-color:var(--pri)}.tabs button.on span{filter:none;opacity:1}
+.blkbtn{display:flex;gap:10px;align-items:center;padding:11px 12px;border:1.5px solid var(--bd);border-radius:12px;margin:8px 0;cursor:pointer;font-size:14px;line-height:1.5}.blkbtn input{width:20px;height:20px;flex:none}.blkbtn:has(input:checked){background:#d8f5de;border-color:#2e9d4e;font-weight:700;color:#0b4d1f}
 .tabhide{display:none!important}.dsec{margin-bottom:10px}.dh{padding:6px 10px;border-radius:8px 8px 0 0;font-weight:700;display:flex;justify-content:space-between;color:#000}.dl{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--bg);border-radius:0 0 8px 8px}.chip{padding:4px 9px;border-radius:14px;font-size:13px;font-weight:600;color:#000}.chip i{color:#c0392b;font-style:normal;font-weight:800}
 #ptitle{display:none}
 @media print{.wrap.tabhide{display:block!important}#ptitle.tabhide{display:block!important}.stk{display:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
@@ -91,6 +92,7 @@ td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
 <div class="card noprint" data-tab="r"><h2 data-i="h_rec"></h2>
 <textarea id="rec" style="min-height:120px" data-p="ph_rec"></textarea>
 <div class="hint" data-i="h_rec_hint"></div>
+<label class="blkbtn"><input type="checkbox" id="blkon" onchange="saveState()"><span data-i="b_blk"></span></label>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
 <div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="genAI()" data-i="b_gen"></button></div><div id="ainlu" class="hint" style="margin-top:8px"></div></div>
 <div class="card noprint" data-tab="g"><div class="row" style="margin-bottom:10px"><select id="vmode" onchange="render()" style="flex:1"><option value="m" data-i="v_month"></option><option value="w" data-i="v_week"></option><option value="d" data-i="v_day"></option></select><select id="vday" onchange="render()" style="flex:2;display:none"></select><select id="vweek" onchange="render()" style="flex:2;display:none"></select></div><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
@@ -172,7 +174,7 @@ ph_rec:'مثال:\nلا يزيد اي ممرض عن ٣ ايام عمل متتا�
 h_rec_hint:'اكتب بحرية — عربي / مصري / English. البرنامج بيفهم الجمل الحرة: حدود الشغل والراحة المتتالية، نوع الشفت (نايت/داي/نسب)، عدد الشفتات، الأيام والجمعة والويك اند، المطلوب في كل شيفت، الأون كول، الراحة بعد النايت… ولو جملة مش مفهومة هتظهر لك تحت.',
 ex_title:'📖 أمثلة على اللي البرنامج بيفهمه',
 ex:['نص الاستاف داي ورا بعض ثم نايت ورا بعض والنص التاني العكس (عشان النوم يتظبط)','لا يزيد اي ممرض عن 3 ايام عمل متتالية ولا عن 3 ايام راحة متتالية','النايت المتتالي ما يزيدش عن 3 ليالي','Ahmed ثلاث ارباع الشفتات نايت والباقي داي','Sara نايت بس  /  Omar داي بس  /  Mona مفيش نايت','كل الاستاف نص داي ونص نايت  /  كل الـ CN 60% داي','Ahmed 8 نايت والباقي داي','Sara 15 شفت  /  Omar زود شفتين  /  Mona ناقص شفت','الجمعة راحة للكل ما عدا Sara','Ahmed راحة يوم 5 و 10-12  /  Sara نايت يوم 20','الويك اند راحة لكل الـ SN-S1','Ahmed لازم يشتغل كل جمعة','المطلوب في الداي 15 يوم 10 و 11','النايت 12 كل جمعة','اونكول داي 2 ونايت 1','راحة يومين بعد النايت','اقل راحة يوم في الاسبوع  /  حد اقصى 5 شفتات في الاسبوع','اقل شغل يومين ورا بعض (مفيش يوم شغل لوحده)','توزيع النايت بالتساوي على الكل'],
-b_gen:'⚙️ إنشاء الروستر',b_print:'🖨 PDF / طباعة',b_copy:'📋 نسخ للـ Excel',
+b_gen:'⚙️ إنشاء الروستر',b_blk:'🔀 بلوكات: نص شفتات كل ممرض داي ورا بعض ونصها نايت ورا بعض (أو العكس)',b_print:'🖨 PDF / طباعة',b_copy:'📋 نسخ للـ Excel',
 h_tap:'اضغط على أي خانة في الروستر لتغييرها (D ← N ← فاضي). للـ PDF اختر "Save as PDF" من نافذة الطباعة.',
 alert_gen:'أنشئ الروستر الأول',alert_copied:'تم النسخ — الصقه في Excel',alert_file:'تعذر قراءة الملف',
 c_staff:'الاسم',c_role:'الوظيفة',r_cn_mark:'أول {0} أسماء = CN (Charge Nurse)',r_cn_min:'كل شيفت لازم فيه على الأقل {0} CN',r_cn_none:'مفيش شرط CN في الشيفتات',r_cn_who:'اتحددوا CN (Charge Nurse)',r_sn_who:'اتحددوا SN (Staff Nurse)',r_hn_who:'اتحددوا HN (Head Nurse)',r_cn_minD:'كل شيفت داي لازم فيه على الأقل {0} CN',r_cn_minN:'كل شيفت نايت لازم فيه على الأقل {0} CN',r_wkoff:'كل ممرض ياخد على الأقل {0} ويك اند (جمعة+سبت) راحة',r_minoffm:'على الأقل {0} أيام راحة في الشهر (الجدول بيدي {1})',w_minoffm:'طلب {0} أيام راحة بس الجدول بيدي {1} فقط',r_nodn:'مفيش داي بعد نايت علطول (متطبق تلقائيًا)',w_cn:'مفيش CN كفاية في {0} — الأيام: {1}',c_total:'الإجمالي',c_day:'Day',c_night:'Night',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'المطلوب',
@@ -210,7 +212,7 @@ ph_rec:'Examples:\nNo nurse may work more than 3 consecutive days or rest more t
 h_rec_hint:'Write freely — Arabic / Egyptian / English. The program understands free sentences: max consecutive work/rest, shift type (night/day/ratios), shift counts, days/Fridays/weekends, staffing per shift, on-call, rest after nights… Sentences it cannot understand are listed below.',
 ex_title:'📖 Examples of what it understands',
 ex:['Half the staff days in a row then nights in a row; the other half the reverse','No nurse may work more than 3 consecutive days nor rest more than 3 consecutive days','Max 3 consecutive nights','Ahmed three quarters nights and the rest days','Sara night only  /  Omar day only  /  Mona no nights','All staff half day half night  /  All CN 60% day','Ahmed 8 nights and the rest days','Sara 15 shifts  /  Omar 2 extra shifts  /  Mona 1 less shift','Friday off for everyone except Sara','Ahmed off on day 5 and 10-12  /  Sara night on day 20','Weekends off for all SN-S1','Ahmed must work every Friday','Day shift needs 15 on days 10 and 11','Night needs 12 every Friday','On call day 2 and night 1','2 days off after nights','At least 1 day off per week  /  max 5 shifts per week','Minimum 2 consecutive working days (no isolated work day)','Distribute nights evenly for everyone'],
-b_gen:'⚙️ Generate roster',b_print:'🖨 PDF / Print',b_copy:'📋 Copy for Excel',
+b_gen:'⚙️ Generate roster',b_blk:'🔀 Half days in a row + half nights in a row (or reverse)',b_print:'🖨 PDF / Print',b_copy:'📋 Copy for Excel',
 h_tap:'Tap any cell in the roster to change it (D → N → empty). For PDF choose "Save as PDF" in the print dialog.',
 alert_gen:'Generate the roster first',alert_copied:'Copied — paste into Excel',alert_file:'Could not read the file',
 c_staff:'Staff',c_role:'Role',r_cn_mark:'First {0} names = CN (Charge Nurse)',r_cn_min:'Every shift needs at least {0} CN',r_cn_none:'No CN requirement per shift',r_cn_who:'set as CN (Charge Nurse)',r_sn_who:'set as SN (Staff Nurse)',r_hn_who:'set as HN (Head Nurse)',r_cn_minD:'Every day shift needs at least {0} CN',r_cn_minN:'Every night shift needs at least {0} CN',r_wkoff:'Everyone gets at least {0} weekend(s) off (Fri+Sat)',r_minoffm:'At least {0} days off per month (roster gives {1})',w_minoffm:'Asked for {0} days off but the roster gives only {1}',r_nodn:'No day shift right after a night (applied automatically)',w_cn:'Not enough CN on {0} shifts — days: {1}',c_total:'Total',c_day:'D',c_night:'N',r_day:'Day',r_night:'Night',r_dayoc:'Day OC',r_nightoc:'Night OC',req:'req',
@@ -452,12 +454,12 @@ function clearBase(){BASEMAP=null;BASEX=null;WK=[];$('rstat').textContent=t('loa
 /* ---------- persistence ---------- */
 const SKEY='nsl_state_v2',FIELDS=['names','month','base','dreq','nreq','doc','noc','ereq','wishtxt','rec'];
 function saveState(){try{const f={};FIELDS.forEach(k=>f[k]=$(k).value);
-localStorage.setItem(SKEY,JSON.stringify({EON,eRA,mRA,EV,ROLES,CNI,MINCN,MCD,MCN,f,sid:$('showid').checked,L,R,OC,Y,M,days,dRA,nRA,docA,nocA,BASEMAP,BASEX,WK,LEGX,LT,PT,MSG,rst:$('rstat').textContent}))}catch(e){}}
+localStorage.setItem(SKEY,JSON.stringify({EON,eRA,mRA,EV,ROLES,CNI,MINCN,MCD,MCN,f,sid:$('showid').checked,L,R,OC,Y,M,days,dRA,nRA,docA,nocA,BASEMAP,BASEX,WK,LEGX,LT,PT,MSG,bk:!!($('blkon')&&$('blkon').checked),rst:$('rstat').textContent}))}catch(e){}}
 function loadState(){try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(!s)return false;
 FIELDS.forEach(k=>{if(s.f[k]!=null&&$(k))$(k).value=s.f[k]});$('showid').checked=!!s.sid;
 if(s.L){L.cnt=s.L.cnt||[];L.al=s.L.al||[]}
 nurses=parseN();['cnt','al'].forEach(draw);
-BASEMAP=s.BASEMAP||null;BASEX=s.BASEX||null;WK=s.WK||[];LEGX=s.LEGX||{};LT=s.LT||[];PT=s.PT||[];if(s.rst)$('rstat').textContent=s.rst;
+if($('blkon'))$('blkon').checked=!!s.bk;BASEMAP=s.BASEMAP||null;BASEX=s.BASEX||null;WK=s.WK||[];LEGX=s.LEGX||{};LT=s.LT||[];PT=s.PT||[];if(s.rst)$('rstat').textContent=s.rst;
 if(s.R&&s.R.length==nurses.length){EON=!!s.EON;eRA=s.eRA||[];mRA=s.mRA||s.dRA||[];EV=s.EV||[];ROLES=s.ROLES||[];CNI=s.CNI||[];MINCN=s.MINCN||0;MCD=s.MCD||0;MCN=s.MCN||0;R=s.R;OC=s.OC;Y=s.Y;M=s.M;days=s.days;dRA=s.dRA;nRA=s.nRA;docA=s.docA;nocA=s.nocA;if(s.MSG)MSG=s.MSG;return true}}catch(e){}return false}
 let _sv=null;const later=()=>{clearTimeout(_sv);_sv=setTimeout(saveState,400)};
 document.addEventListener('input',later);document.addEventListener('change',later);
@@ -575,20 +577,25 @@ const exc=[];c.exc.forEach(x=>exp(x).forEach(i=>exc.push(i)));
 exc.forEach(i=>idx.delete(i));
 return{all:all&&!exc.length,list:[...idx],exc,amb,isAll:all}}
 
-function detectBlocks(text){BLK=[];
-const nm=x=>String(x).toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه');
-const sents=String(text).split(/[\n.;!?]+/).map(x=>x.trim()).filter(Boolean);
-const CUE=/(ورا بعض|ورى بعض|وراء بعض|ورا بعضها|ورا بعضهم|بالتتابع|بالتوالي|in a row|back.?to.?back|one after (?:the )?other|consecutive(?:ly)?|straight)/;
-const DW=/(داي|نهار|صباح|days?\b|day shifts?)/,NW=/(نايت|ليل|night)/;
-const hit=[],keep=[];
-sents.forEach(s=>{const n=nm(s);if(CUE.test(n)&&DW.test(n)&&NW.test(n)&&/(نص|نصف|half|50|2|اتنين|شطر)/.test(n))hit.push(n);else keep.push(s)});
-if(!hit.length)return text;
-const first=n=>{const a=n.search(DW),b=n.search(NW);return a<b?'D':'N'};
-const o1=first(hit[0]),o2=hit.length>1?first(hit[1]):(o1=='D'?'N':'D');
+function applyBlk(o1,o2){
 const ord=o=>o=='D'?'DN':'ND';
 const byT={};nurses.forEach((n,i)=>{(byT[n.title.toLowerCase()||'_']=byT[n.title.toLowerCase()||'_']||[]).push(i)});
 Object.values(byT).forEach(l=>l.forEach((i,k)=>{const g=(k%4==0||k%4==3)?0:1;BLK[i]=g==0?ord(o1):ord(o2);if(P[i])P[i].fracN=0.5}));
 MSG.rsum.push({who:t('all'),k:'r_blk_'+ord(o1).toLowerCase()+'_'+ord(o2).toLowerCase(),a:[]});
+}
+function detectBlocks(text){BLK=[];
+const nm=x=>String(x).toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه');
+const sents=String(text).split(/[\n.;!?]+/).map(x=>x.trim()).filter(Boolean);
+const CUE=/(من غير ما يقطع|من غير قطع|من غير ما تقطع|بدون قطع|بدون ما يقطع|مره واحده|مرة واحدة|متواصل|بلوك|block|without (?:a )?break|in one go|no break|uninterrupted|ورا بعض|ورى بعض|وراء بعض|ورا بعضها|ورا بعضهم|بالتتابع|بالتوالي|in a row|back.?to.?back|one after (?:the )?other|consecutive(?:ly)?|straight)/;
+const DW=/(داي|نهار|صباح|days?\b|day shifts?)/,NW=/(نايت|ليل|night)/;
+const hit=[],keep=[];
+sents.forEach(s=>{const n=nm(s);if(CUE.test(n)&&DW.test(n)&&NW.test(n)&&/(نص|نصف|half|50|2|اتنين|شطر)/.test(n))hit.push(n);else keep.push(s)});
+const SW=/(قلب|يقلب|تقلب|بنايه|بناية|من داي ل|من نايت ل|مره واحده|مرة واحدة|once a month|once per month|switch(?:es)? once|بالعكس|العكس)/;
+if(!hit.length)return text;
+for(let q=keep.length-1;q>=0;q--){const n=nm(keep[q]);if(SW.test(n)&&(DW.test(n)||NW.test(n))&&!/(CN|HN)/i.test(keep[q]))keep.splice(q,1)}
+const first=n=>{const a=n.search(DW),b=n.search(NW);return a<b?'D':'N'};
+const o1=first(hit[0]),o2=hit.length>1?first(hit[1]):(o1=='D'?'N':'D');
+applyBlk(o1,o2);
 return keep.join('\n')}
 
 const NW_={'واحد':1,'واحده':1,'اتنين':2,'اثنين':2,'ثنين':2,'ثلاث':3,'تلات':3,'ثلاثه':3,'تلاته':3,'اربع':4,'اربعه':4,'خمس':5,'خمسه':5,'ست':6,'سته':6,'سبع':7,'سبعه':7,'ثمان':8,'تمان':8,'ثمانيه':8,'تمانيه':8,'تسع':9,'تسعه':9,'عشر':10,'عشره':10,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -655,6 +662,7 @@ function parseRec(text,req){
 MSG.rsum=[];MSG.unk=[];
 text=String(text)+(RECX.length?'\n'+RECX.join('\n'):'');
 text=detectBlocks(text);
+if($('blkon')&&$('blkon').checked&&!BLK.some(Boolean))applyBlk('D','N');
 text=detectCN(text);
 text=detectExtra(text,req);
 const titles=[...new Set(nurses.flatMap(n=>[n.title.toLowerCase(),...(n.tg||[])]).filter(Boolean))];
