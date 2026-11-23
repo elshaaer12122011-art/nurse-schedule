@@ -31,37 +31,70 @@ th,td{border:1px solid #bbb;padding:2px 4px;text-align:center;min-width:26px;whi
 th{background:#e9edf2}td.nm{text-align:left;font-weight:600;position:sticky;left:0;min-width:150px;z-index:1}
 td.rl{font-size:11px;font-weight:600;min-width:30px}td.cnr{background:#ffd9a8;font-weight:800}td.c{cursor:pointer}.D{background:#fff3b0}.N{background:#26397a;color:#fff}.AL{background:#9be0a8}.OFF{background:#fff}
 .tot{background:#eef;font-weight:700}.we{background:#f6d6d6}.bad{background:#f5a5a5;font-weight:700}.ocr{background:#fde9c9;font-weight:700}
+
+:root{--bg:#f0f2f5;--card:#fff;--tx:#050505;--mut:#65676b;--bd:#ced0d4;--pri:#1877f2;--pri2:#166fe5;--g:#e4e6eb;--sh:0 1px 2px rgba(0,0,0,.2)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18191a;--card:#242526;--tx:#e4e6eb;--mut:#b0b3b8;--bd:#3e4042;--pri:#2d88ff;--pri2:#4599ff;--g:#3a3b3c;--sh:0 1px 2px rgba(0,0,0,.5)}}
+body{padding:0 0 24px;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px}
+.top{position:sticky;top:0;z-index:50;margin:0 0 8px;padding:10px 12px;background:var(--card);color:var(--pri);border-radius:0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.top h1{font-size:21px;font-weight:800;color:var(--pri);letter-spacing:-.3px}
+.top button{background:var(--g);color:var(--tx);border:none;border-radius:50%;width:40px;height:40px;padding:0;font-weight:700;font-size:13px}
+.card{border:none;border-radius:8px;padding:14px;margin:0 8px 8px;box-shadow:var(--sh)}
+h2{font-size:17px;margin:0 0 10px;color:var(--tx);font-weight:700}
+label{font-size:13px;font-weight:600;color:var(--mut);margin-bottom:3px}
+input,select,textarea{background:var(--bg);border:none;border-radius:8px;padding:10px 12px;font-size:15px;color:var(--tx)}
+textarea{border-radius:12px;line-height:1.7}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);background:var(--card)}
+input[type=file]{padding:8px}
+button{border:none;border-radius:6px;padding:9px 14px;font-weight:600;background:var(--g);color:var(--tx)}
+button:active{filter:brightness(.92)}
+button.p{background:var(--pri);color:#fff;font-size:16px;padding:10px 20px}
+button.p:hover{background:var(--pri2)}
+.hint{color:var(--mut)}
+details{background:var(--bg);border-radius:8px;padding:8px 12px}summary{font-weight:600;color:var(--pri)}
+.wrap{border-radius:8px;box-shadow:var(--sh);border:none;margin:0 8px}
+th{background:#e7f3ff;color:#1c1e21;font-weight:700}td.nm{background:#fff}
+.D{background:#ffefb0}.N{background:#1c3a7a;color:#fff}.AL{background:#a8e6b4}
+td.cnr{background:#ffd7a0}.tot{background:#e7f3ff}.we{background:#fbe3e4}
+#warn{background:var(--bg);border-radius:8px;padding:8px 12px;margin-top:10px}
+.stk{position:sticky;top:0;z-index:50;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.2);margin-bottom:8px}
+.stk .top{position:static;box-shadow:none;margin:0}
+.tabs{display:flex;overflow-x:auto;border-top:1px solid var(--bd);scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;min-width:64px;background:transparent;border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 10px 6px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:1px;font-weight:600}
+.tabs button span{font-size:20px;filter:grayscale(1);opacity:.7}.tabs button b{font-size:12px;font-weight:600}
+.tabs button.on{color:var(--pri);border-bottom-color:var(--pri)}.tabs button.on span{filter:none;opacity:1}
+.tabhide{display:none!important}
 #ptitle{display:none}
-@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
+@media print{.wrap.tabhide{display:block!important}#ptitle.tabhide{display:block!important}.stk{display:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
 </style></head><body>
-<div class="top noprint"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><button id="langbtn" onclick="toggleLang()">EN</button></div>
-<div class="card noprint"><h2 data-i="h_names"></h2>
+<div class="stk noprint"><div class="top"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><button id="langbtn" onclick="toggleLang()">EN</button></div>
+<div class="tabs" id="tabs"><button data-t="n" onclick="showTab('n')"><span>👥</span><b data-i="t_names"></b></button><button data-t="s" onclick="showTab('s')"><span>⚙️</span><b data-i="t_set"></b></button><button data-t="w" onclick="showTab('w')"><span>📝</span><b data-i="t_wish"></b></button><button data-t="r" onclick="showTab('r')"><span>📋</span><b data-i="t_rec"></b></button><button data-t="g" onclick="showTab('g')"><span>📅</span><b data-i="t_roster"></b></button></div></div>
+<div class="card noprint" data-tab="n"><h2 data-i="h_names"></h2>
 <textarea id="names" style="min-height:140px;direction:ltr"></textarea>
 <div class="row" style="margin-top:6px"><input type="file" id="file" accept=".csv,.txt,.xlsx,.xls"><label style="flex:0 0 auto;align-self:center"><input type="checkbox" id="showid" style="width:auto" onchange="render()"> <span data-i="show_id"></span></label></div>
 <div class="hint" data-i="h_names_hint"></div></div>
-<div class="card noprint"><h2 data-i="h_load"></h2>
+<div class="card noprint" data-tab="n"><h2 data-i="h_load"></h2>
 <input type="file" id="rfile" accept=".xlsx,.xls,.csv,.pdf">
 <div class="row" style="margin-top:6px"><button onclick="clearBase()" data-i="b_clear"></button></div>
 <div class="hint" id="rstat"></div><div class="hint" data-i="h_load_hint"></div></div>
-<div class="card noprint"><h2 data-i="h_set"></h2><div class="g">
+<div class="card noprint" data-tab="s"><h2 data-i="h_set"></h2><div class="g">
 <div><label data-i="l_month"></label><input type="month" id="month" value="2026-12"></div>
 <div><label data-i="l_base"></label><input type="number" id="base" value="19"></div>
 <div><label data-i="l_dreq"></label><input type="number" id="dreq" value="14"></div>
 <div><label data-i="l_nreq"></label><input type="number" id="nreq" value="14"></div>
 <div><label data-i="l_doc"></label><input type="number" id="doc" value="1"></div>
 <div><label data-i="l_noc"></label><input type="number" id="noc" value="1"></div></div></div>
-<div class="card noprint"><h2 data-i="h_cnt"></h2><div id="cnt"></div><button onclick="add('cnt')" data-i="add"></button></div>
-<div class="card noprint"><h2 data-i="h_al"></h2><div id="al"></div><button onclick="add('al')" data-i="add"></button><div class="hint" data-i="h_al_hint"></div></div>
-<div class="card noprint"><h2 data-i="h_wish"></h2><textarea id="wishtxt" style="min-height:130px" data-p="ph_wish"></textarea><div class="hint" data-i="h_wish_hint"></div></div>
-<div class="card noprint"><h2 data-i="h_rec"></h2>
+<div class="card noprint" data-tab="s"><h2 data-i="h_cnt"></h2><div id="cnt"></div><button onclick="add('cnt')" data-i="add"></button></div>
+<div class="card noprint" data-tab="s"><h2 data-i="h_al"></h2><div id="al"></div><button onclick="add('al')" data-i="add"></button><div class="hint" data-i="h_al_hint"></div></div>
+<div class="card noprint" data-tab="w"><h2 data-i="h_wish"></h2><textarea id="wishtxt" style="min-height:130px" data-p="ph_wish"></textarea><div class="hint" data-i="h_wish_hint"></div></div>
+<div class="card noprint" data-tab="r"><h2 data-i="h_rec"></h2>
 <textarea id="rec" style="min-height:120px" data-p="ph_rec"></textarea>
 <div class="hint" data-i="h_rec_hint"></div>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
-<div id="rsum" class="sm"></div></div>
-<div class="card noprint"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
+<div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="gen()" data-i="b_gen"></button></div></div>
+<div class="card noprint" data-tab="g"><button class="p" onclick="gen()" data-i="b_gen"></button> <button onclick="delAll()" data-i="b_del"></button> <button onclick="xl()">⬇ Excel</button> <button onclick="pdf()">⬇ PDF</button> <button onclick="window.print()" data-i="b_print"></button> <button onclick="cp()" data-i="b_copy"></button>
 <div id="warn"></div><div id="wsum" class="sm"></div><div class="hint" data-i="h_tap"></div></div>
-<div id="ptitle"></div>
-<div class="wrap"><table id="tb"></table></div>
+<div id="ptitle" data-tab="g"></div>
+<div class="wrap" data-tab="g"><table id="tb"></table></div>
 <script>
 const $=id=>document.getElementById(id);
 $('names').value=`Gehan Mohamed,7204,CN
@@ -121,18 +154,18 @@ Rania Bassuony,13988,`;
 const TX={
 ar:{
 ttl:'🩺 Staff Nurse Schedule — منشئ روستر التمريض',
-h_names:'1) التمريض (سطر لكل ممرض: الاسم, ID, اللقب — ID واللقب اختياري)',
-show_id:'إظهار الـ ID',b_del:'🗑 حذف الروستر وابدأ من الأول',confirm_del:'حذف الروستر والرغبات والتوصيات المحفوظة؟ (الأسماء والإعدادات تفضل)',h_load:'📂 رفع روستر موجود (Excel / PDF)',b_clear:'إلغاء الروستر المرفوع',h_load_hint:'ارفع الروستر الجاهز، وبعدها اكتب التعديلات في خانة الرغبات أو الهيد نرس واضغط إنشاء — البرنامج يعدّل على الروستر بأقل تغيير ممكن ويحافظ على عدد شفتات كل ممرض (±1). لو الـPDF ما اتقرأش صح، حوّله Excel أو ابعته لي في الشات.',load_ok:'تم تحميل الروستر: {0} ممرض و{1} يوم. اكتب التعديلات واضغط إنشاء.',load_fail:'تعذر قراءة الروستر من الملف (لازم يكون فيه صف أرقام الأيام 1..28+ وأسماء الممرضين)',load_days:'تنبيه: الروستر فيه {0} يوم والشهر المختار {1} يوم',load_mis:'تنبيه: أسماء الممرضين اتغيرت عن الروستر المرفوع — اتجاهل الروستر وتم إنشاء جديد',load_none:'لا يوجد روستر مرفوع',w_tot:'{0}: عدد الشفتات {1} بدل {2}',base_used:'الروستر المرفوع اتستخدم كأساس',
-h_names_hint:'الرفع هنا: Excel/CSV (أعمدة: الاسم، ID، اللقب). لقراءة صورة أو PDF ابعتها لي في الشات وأنا أطلّع الأسماء والبيانات.',
-h_set:'2) الإعدادات',l_month:'الشهر',l_base:'شيفتات كل ممرض (افتراضي)',l_dreq:'المطلوب في الداي',l_nreq:'المطلوب في النايت',l_doc:'OC مطلوب داي',l_noc:'OC مطلوب نايت',
-h_cnt:'3) تعديل عدد شفتات ممرضين معيّنين',h_al:'4) الأجازات السنوية (AL)',h_al_hint:'من يوم / إلى يوم (رقم اليوم في الشهر)',add:'+ إضافة',
+t_names:'الأسماء',t_set:'الإعدادات',t_wish:'الرغبات',t_rec:'التوصيات',t_roster:'الروستر',h_names:'👥 أسماء تمريض القسم',
+show_id:'إظهار الـ ID',b_del:'🗑 حذف الروستر وابدأ من الأول',confirm_del:'حذف الروستر والرغبات والتوصيات المحفوظة؟ (الأسماء والإعدادات تفضل)',h_load:'📂 رفع روستر',b_clear:'إلغاء الروستر المرفوع',h_load_hint:'ارفع الروستر الجاهز، وبعدها اكتب التعديلات في خانة الرغبات أو الهيد نرس واضغط إنشاء — البرنامج يعدّل على الروستر بأقل تغيير ممكن ويحافظ على عدد شفتات كل ممرض (±1). لو الـPDF ما اتقرأش صح، حوّله Excel أو ابعته لي في الشات.',load_ok:'تم تحميل الروستر: {0} ممرض و{1} يوم. اكتب التعديلات واضغط إنشاء.',load_fail:'تعذر قراءة الروستر من الملف (لازم يكون فيه صف أرقام الأيام 1..28+ وأسماء الممرضين)',load_days:'تنبيه: الروستر فيه {0} يوم والشهر المختار {1} يوم',load_mis:'تنبيه: أسماء الممرضين اتغيرت عن الروستر المرفوع — اتجاهل الروستر وتم إنشاء جديد',load_none:'لا يوجد روستر مرفوع',w_tot:'{0}: عدد الشفتات {1} بدل {2}',base_used:'الروستر المرفوع اتستخدم كأساس',
+h_names_hint:'سطر لكل ممرض: الاسم, ID, اللقب (ID واللقب اختياري). الرفع هنا: Excel/CSV (أعمدة: الاسم، ID، اللقب). لقراءة صورة أو PDF ابعتها لي في الشات وأنا أطلّع الأسماء والبيانات.',
+h_set:'⚙️ الإعدادات',l_month:'الشهر',l_base:'شيفتات كل ممرض (افتراضي)',l_dreq:'المطلوب في الداي',l_nreq:'المطلوب في النايت',l_doc:'OC مطلوب داي',l_noc:'OC مطلوب نايت',
+h_cnt:'🔢 تعديل الشفتات',h_al:'🌴 الأجازات السنوية',h_al_hint:'من يوم / إلى يوم (رقم اليوم في الشهر)',add:'+ إضافة',
 from_day:'من يوم',to_day:'إلى يوم',shifts_n:'عدد الشفتات',
-h_wish:'5) رغبات التمريض (تُنفَّذ بالظبط)',
+h_wish:'📝 رغبات التمريض',
 ph_wish:'اكتب سطر لكل ممرض، مثال:\nAhmed Omar اجازة 5-7, نايت 10-12, داي 20\nSarah off 3, 15-16\nMohamed Ahmed night 1-4',
-h_wish_hint:'اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. الأرقام اللي من غير كلمة قدامها بتتعامل على إنها أيام أوف. أوف بمدى (5-9) = اليوم الأول والأخير بس. نايت/داي بمدى = نوع الشفت فقط. توصيات الهيد نرس بتتقدم على الرغبات.',
-h_rec:'6) توصيات الهيد نرس (اكتب بحرية — عربي / مصري / English)',
+h_wish_hint:'الرغبات بتتنفذ بالظبط. اسم الممرض + (اجازة/off) أو (نايت/night) أو (داي/day) + الأيام (رقم أو من-إلى)، وافصل بين الطلبات بفاصلة. الأرقام اللي من غير كلمة قدامها بتتعامل على إنها أيام أوف. أوف بمدى (5-9) = اليوم الأول والأخير بس. نايت/داي بمدى = نوع الشفت فقط. توصيات الهيد نرس بتتقدم على الرغبات.',
+h_rec:'📋 توصيات الهيد نرس',
 ph_rec:'مثال:\nلا يزيد اي ممرض عن ٣ ايام عمل متتالية ولا عن ٣ ايام راحة متتالية\nAhmed ثلاث ارباع الشفتات نايت والباقي داي\nSarah night only\nكل الـ CN مفيش نايت\nاونكول داي 2 ونايت 1',
-h_rec_hint:'البرنامج بيفهم الجمل الحرة: حدود الشغل والراحة المتتالية، نوع الشفت (نايت/داي/نسب)، عدد الشفتات، الأيام والجمعة والويك اند، المطلوب في كل شيفت، الأون كول، الراحة بعد النايت… ولو جملة مش مفهومة هتظهر لك تحت.',
+h_rec_hint:'اكتب بحرية — عربي / مصري / English. البرنامج بيفهم الجمل الحرة: حدود الشغل والراحة المتتالية، نوع الشفت (نايت/داي/نسب)، عدد الشفتات، الأيام والجمعة والويك اند، المطلوب في كل شيفت، الأون كول، الراحة بعد النايت… ولو جملة مش مفهومة هتظهر لك تحت.',
 ex_title:'📖 أمثلة على اللي البرنامج بيفهمه',
 ex:['نص الاستاف داي ورا بعض ثم نايت ورا بعض والنص التاني العكس (عشان النوم يتظبط)','لا يزيد اي ممرض عن 3 ايام عمل متتالية ولا عن 3 ايام راحة متتالية','النايت المتتالي ما يزيدش عن 3 ليالي','Ahmed ثلاث ارباع الشفتات نايت والباقي داي','Sara نايت بس  /  Omar داي بس  /  Mona مفيش نايت','كل الاستاف نص داي ونص نايت  /  كل الـ CN 60% داي','Ahmed 8 نايت والباقي داي','Sara 15 شفت  /  Omar زود شفتين  /  Mona ناقص شفت','الجمعة راحة للكل ما عدا Sara','Ahmed راحة يوم 5 و 10-12  /  Sara نايت يوم 20','الويك اند راحة لكل الـ SN-S1','Ahmed لازم يشتغل كل جمعة','المطلوب في الداي 15 يوم 10 و 11','النايت 12 كل جمعة','اونكول داي 2 ونايت 1','راحة يومين بعد النايت','اقل راحة يوم في الاسبوع  /  حد اقصى 5 شفتات في الاسبوع','اقل شغل يومين ورا بعض (مفيش يوم شغل لوحده)','توزيع النايت بالتساوي على الكل'],
 b_gen:'⚙️ إنشاء الروستر',b_print:'🖨 PDF / طباعة',b_copy:'📋 نسخ للـ Excel',
@@ -159,18 +192,18 @@ n_off:'أوف',n_n:'نايت',n_d:'داي'
 },
 en:{
 ttl:'🩺 Staff Nurse Schedule',
-h_names:'1) Nurses (one per line: Name, ID, Title — ID and Title optional)',
-show_id:'Show ID',b_del:'🗑 Delete roster & start over',confirm_del:'Delete the saved roster, wishes and recommendations? (names and settings stay)',h_load:'📂 Upload an existing roster (Excel / PDF)',b_clear:'Remove uploaded roster',h_load_hint:'Upload the finished roster, then type your changes in the wishes or head-nurse box and press Generate — the program edits it with minimal changes and keeps each nurse within ±1 of her shift count. If a PDF is not read correctly, convert it to Excel or send it to me in chat.',load_ok:'Roster loaded: {0} nurses, {1} days. Type your changes and press Generate.',load_fail:'Could not read a roster from the file (needs a row of day numbers 1..28+ and nurse names)',load_days:'Note: roster has {0} days but the selected month has {1}',load_mis:'Note: nurse names differ from the uploaded roster — it was ignored and a new one generated',load_none:'No roster uploaded',w_tot:'{0}: {1} shifts instead of {2}',base_used:'Uploaded roster used as the base',
-h_names_hint:'Upload Excel/CSV here (columns: name, ID, title). To read a photo or PDF, send it to me in chat and I will extract the data.',
-h_set:'2) Settings',l_month:'Month',l_base:'Shifts per nurse (default)',l_dreq:'Required on Day',l_nreq:'Required on Night',l_doc:'Required OC (Day)',l_noc:'Required OC (Night)',
-h_cnt:'3) Change shift count for specific nurses',h_al:'4) Annual leave (AL)',h_al_hint:'From day / To day (day of month)',add:'+ Add',
+t_names:'Names',t_set:'Settings',t_wish:'Wishes',t_rec:'Head nurse',t_roster:'Roster',h_names:'👥 Department Nurses',
+show_id:'Show ID',b_del:'🗑 Delete roster & start over',confirm_del:'Delete the saved roster, wishes and recommendations? (names and settings stay)',h_load:'📂 Upload Roster',b_clear:'Remove uploaded roster',h_load_hint:'Upload the finished roster, then type your changes in the wishes or head-nurse box and press Generate — the program edits it with minimal changes and keeps each nurse within ±1 of her shift count. If a PDF is not read correctly, convert it to Excel or send it to me in chat.',load_ok:'Roster loaded: {0} nurses, {1} days. Type your changes and press Generate.',load_fail:'Could not read a roster from the file (needs a row of day numbers 1..28+ and nurse names)',load_days:'Note: roster has {0} days but the selected month has {1}',load_mis:'Note: nurse names differ from the uploaded roster — it was ignored and a new one generated',load_none:'No roster uploaded',w_tot:'{0}: {1} shifts instead of {2}',base_used:'Uploaded roster used as the base',
+h_names_hint:'One nurse per line: Name, ID, Title (ID and Title optional). Upload Excel/CSV here (columns: name, ID, title). To read a photo or PDF, send it to me in chat and I will extract the data.',
+h_set:'⚙️ Settings',l_month:'Month',l_base:'Shifts per nurse (default)',l_dreq:'Required on Day',l_nreq:'Required on Night',l_doc:'Required OC (Day)',l_noc:'Required OC (Night)',
+h_cnt:'🔢 Adjust Shifts',h_al:'🌴 Annual Leave',h_al_hint:'From day / To day (day of month)',add:'+ Add',
 from_day:'From day',to_day:'To day',shifts_n:'Shifts',
-h_wish:'5) Staff requests (applied exactly)',
+h_wish:'📝 Staff Requests',
 ph_wish:'One line per nurse, e.g.:\nAhmed Omar off 5-7, night 10-12, day 20\nSarah off 3, 15-16\nMohamed Ahmed night 1-4',
-h_wish_hint:'Nurse name + (off) or (night) or (day) + dates (number or from-to), separate requests with commas. Bare numbers mean OFF days. An off range (5-9) means the first and last day only. Night/day ranges set the shift type only. Head nurse recommendations take priority over requests.',
-h_rec:'6) Head nurse recommendations (free text — Arabic / Egyptian / English)',
+h_wish_hint:'Requests are applied exactly. Nurse name + (off) or (night) or (day) + dates (number or from-to), separate requests with commas. Bare numbers mean OFF days. An off range (5-9) means the first and last day only. Night/day ranges set the shift type only. Head nurse recommendations take priority over requests.',
+h_rec:'📋 Head Nurse Notes',
 ph_rec:'Examples:\nNo nurse may work more than 3 consecutive days or rest more than 3 consecutive days\nAhmed three quarters nights, the rest days\nSarah night only\nAll CN no nights\nOn call day 2 and night 1',
-h_rec_hint:'The program understands free sentences: max consecutive work/rest, shift type (night/day/ratios), shift counts, days/Fridays/weekends, staffing per shift, on-call, rest after nights… Sentences it cannot understand are listed below.',
+h_rec_hint:'Write freely — Arabic / Egyptian / English. The program understands free sentences: max consecutive work/rest, shift type (night/day/ratios), shift counts, days/Fridays/weekends, staffing per shift, on-call, rest after nights… Sentences it cannot understand are listed below.',
 ex_title:'📖 Examples of what it understands',
 ex:['Half the staff days in a row then nights in a row; the other half the reverse','No nurse may work more than 3 consecutive days nor rest more than 3 consecutive days','Max 3 consecutive nights','Ahmed three quarters nights and the rest days','Sara night only  /  Omar day only  /  Mona no nights','All staff half day half night  /  All CN 60% day','Ahmed 8 nights and the rest days','Sara 15 shifts  /  Omar 2 extra shifts  /  Mona 1 less shift','Friday off for everyone except Sara','Ahmed off on day 5 and 10-12  /  Sara night on day 20','Weekends off for all SN-S1','Ahmed must work every Friday','Day shift needs 15 on days 10 and 11','Night needs 12 every Friday','On call day 2 and night 1','2 days off after nights','At least 1 day off per week  /  max 5 shifts per week','Minimum 2 consecutive working days (no isolated work day)','Distribute nights evenly for everyone'],
 b_gen:'⚙️ Generate roster',b_print:'🖨 PDF / Print',b_copy:'📋 Copy for Excel',
@@ -830,6 +863,9 @@ ws.getColumn(1).width=26;ws.getColumn(2).width=7;if(sid)ws.getColumn(3).width=9;
 const buf=await wb.xlsx.writeBuffer();const url=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
 const a=document.createElement('a');a.href=url;a.download=`Roster_${Y}-${String(M).padStart(2,'0')}.xlsx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000)}catch(e){xlHtml()}}
 function cp(){if(!R.length)return alert(t('alert_gen'));const x=aoa().map(r=>r.join('\t')).join('\n');try{navigator.clipboard.writeText(x).then(()=>alert(t('alert_copied')))}catch(e){prompt('Copy:',x)}}
-nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}
+
+function showTab(k){try{document.querySelectorAll('[data-tab]').forEach(e=>e.classList.toggle('tabhide',e.dataset.tab!==k));document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===k));window.scrollTo(0,0);try{localStorage.setItem('nsl_tab',k)}catch(e){}}catch(e){}}
+const _gen0=gen;gen=function(){const r=_gen0.apply(this,arguments);showTab('g');return r};
+nurses=parseN();const had=loadState();applyLang();if(had){assignOC&&0;showMsgs();render()}showTab(had?'g':'n');
 try{if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
 </script></body></html>
