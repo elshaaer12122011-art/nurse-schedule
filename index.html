@@ -131,6 +131,20 @@ textarea:focus,input[type=text]:focus,input[type=number]:focus,input[type=month]
 .row>input[type=number],.row>select{border-width:2px!important}
 .blkbtn input,input[type=checkbox]{border:0!important}
 .sp{display:inline-block;width:15px;height:15px;border:3px solid currentColor;border-inline-end-color:transparent;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-inline-end:8px}@keyframes spin{to{transform:rotate(360deg)}}
+/* ===== SHARE ===== */
+#shbtn{font-size:26px;font-weight:700;line-height:1}.hb{display:flex;flex-direction:column;align-items:center;gap:2px}.stk .top h1{font-size:17px;line-height:1.35}.hb small{font-size:10px;font-weight:700;color:#fff;opacity:.95;white-space:nowrap}
+#shmodal{position:fixed;inset:0;background:rgba(5,15,35,.55);backdrop-filter:blur(3px);z-index:200;display:none;align-items:flex-end;justify-content:center}
+#shmodal.on{display:flex}
+.shsheet{background:var(--card);width:100%;max-width:520px;border-radius:26px 26px 0 0;padding:16px 16px 26px;animation:up .25s ease both;box-shadow:0 -10px 40px rgba(0,0,0,.35)}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.shh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:18px}.shh button{width:38px;height:38px;border-radius:50%;padding:0}
+.shurl{direction:ltr;text-align:center;font-size:12.5px;color:var(--mut);background:var(--tile);border-radius:12px;padding:9px;margin-bottom:14px;word-break:break-all}
+.shgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.shgrid button{background:var(--tile);border:1px solid var(--bd);border-radius:18px;padding:14px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tx)}
+.shgrid i{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:26px;color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.shok{text-align:center;margin-top:12px;color:#15803d;font-weight:800;min-height:20px}
+.shfoot{background:rgba(15,111,191,.12)!important;color:var(--pri);border:1px solid rgba(15,111,191,.3)!important;border-radius:20px;padding:8px 16px;font-size:13px;margin-bottom:6px}
+@media print{#shmodal{display:none!important}}
 /* ===== MSG + NEXT ===== */
 #warn{background:transparent!important;padding:0!important;color:inherit;margin-top:12px}#wsum{margin-top:10px}
 .wbox{border-radius:14px;padding:12px 14px;margin:0 0 10px;font-size:13.5px;line-height:1.7}
@@ -161,7 +175,7 @@ html{background:#cfe3f7}
 .hz{display:inline-flex;vertical-align:middle;margin-inline-end:6px}.hz svg{width:30px;height:30px}
 @media print{.wrap.tabhide{display:block!important}#ptitle.tabhide{display:block!important}.stk{display:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
 </style></head><body>
-<div class="stk noprint"><div class="top"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><button id="langbtn" onclick="toggleLang()">EN</button></div>
+<div class="stk noprint"><div class="top"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><div style="display:flex;gap:8px;position:relative"><div class="hb"><button id="shbtn" onclick="openShare()" aria-label="share">⤴</button><small data-i="sh_title"></small></div><button id="langbtn" onclick="toggleLang()">EN</button></div></div>
 <div class="tabs" id="tabs"><button data-t="n" onclick="showTab('n')"><span>👥</span><b data-i="t_names"></b></button><button data-t="s" onclick="showTab('s')"><span>⚙️</span><b data-i="t_set"></b></button><button data-t="w" onclick="showTab('w')"><span>📝</span><b data-i="t_wish"></b></button><button data-t="r" onclick="showTab('r')"><span>📋</span><b data-i="t_rec"></b></button><button data-t="g" onclick="showTab('g')"><span>📅</span><b data-i="t_roster"></b></button></div></div>
 <div class="card noprint" data-tab="n"><h2 data-i="h_names"></h2>
 <textarea id="names" style="min-height:140px;direction:ltr"></textarea>
@@ -198,9 +212,22 @@ html{background:#cfe3f7}
 <div id="legx" class="hint" data-tab="g" style="margin-top:6px"></div>
 <script>(function(){var s=document.getElementById('vseg'),v=document.getElementById('vmode');if(!s||!v)return;function sync(){s.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v.value)})}
 s.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;v.value=b.dataset.v;v.dispatchEvent(new Event('change'));sync()});v.addEventListener('change',sync);setInterval(sync,700);sync()})();</script>
-<div class='brand noprint'><svg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#0a2a6e'/><stop offset='.55' stop-color='#0f6fbf'/><stop offset='1' stop-color='#12a0b0'/></linearGradient></defs><g><rect x='4' y='4' width='56' height='56' rx='16' fill='url(#g)'/><path d='M20 46V18M44 46V18' stroke='#fff' stroke-width='6' stroke-linecap='round'/><path d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='#fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></g></svg><b>HORAS</b><small>Staff Nurse Schedule</small></div>
+<div class='brand noprint'><button class='shfoot' onclick='openShare()' data-i='sh_btn'></button><svg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#0a2a6e'/><stop offset='.55' stop-color='#0f6fbf'/><stop offset='1' stop-color='#12a0b0'/></linearGradient></defs><g><rect x='4' y='4' width='56' height='56' rx='16' fill='url(#g)'/><path d='M20 46V18M44 46V18' stroke='#fff' stroke-width='6' stroke-linecap='round'/><path d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='#fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></g></svg><b>HORAS</b><small>Staff Nurse Schedule</small></div>
+<div id="shmodal" class="noprint" onclick="if(event.target===this)closeShare()"><div class="shsheet"><div class="shh"><b data-i="sh_title"></b><button onclick="closeShare()" aria-label="close">✕</button></div>
+<div class="shurl" id="shurl"></div>
+<div class="shgrid"><button onclick="shGo('wa')"><i style="background:#25D366">💬</i><span data-i="sh_wa"></span></button><button onclick="shGo('fb')"><i style="background:#1877f2;font:900 30px Georgia,serif">f</i><span data-i="sh_fb"></span></button><button onclick="shGo('ms')"><i style="background:linear-gradient(135deg,#00b2ff,#a334fa 60%,#ff5c87)">⚡</i><span data-i="sh_ms"></span></button><button onclick="shGo('tg')"><i style="background:#229ED9">✈️</i><span data-i="sh_tg"></span></button><button onclick="shGo('cp')"><i style="background:#64748b">🔗</i><span data-i="sh_cp"></span></button><button onclick="shGo('more')"><i style="background:linear-gradient(135deg,#0f6fbf,#12a0b0)">⤴</i><span data-i="sh_more"></span></button></div><div id="shok" class="shok"></div></div></div>
 <script>
 const $=id=>document.getElementById(id);
+const APPURL='https://elshaaer12122011-art.github.io/nurse-schedule/';
+function openShare(){$('shurl').textContent=APPURL;$('shok').textContent='';$('shmodal').classList.add('on')}
+function closeShare(){$('shmodal').classList.remove('on')}
+function shCopy(){const done=()=>{$('shok').textContent=t('sh_ok')};try{navigator.clipboard.writeText(APPURL).then(done,()=>{throw 0})}catch(x){const a=document.createElement('textarea');a.value=APPURL;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(y){}a.remove();done()}}
+function shGo(k){const u=encodeURIComponent(APPURL),msg=t('sh_msg'),m=encodeURIComponent(msg+' '+APPURL);
+if(k=='cp')return shCopy();
+if(k=='more'){if(navigator.share){navigator.share({title:'HORAS',text:msg,url:APPURL}).catch(()=>{})}else shCopy();return}
+if(k=='ms'){location.href='fb-messenger://share?link='+u;setTimeout(()=>{if(!document.hidden)window.open('https://www.facebook.com/sharer/sharer.php?u='+u,'_blank')},1600);return}
+const L={wa:'https://wa.me/?text='+m,fb:'https://www.facebook.com/sharer/sharer.php?u='+u,tg:'https://t.me/share/url?url='+u+'&text='+encodeURIComponent(msg)};window.open(L[k],'_blank')}
+
 $('names').value=`Gehan Mohamed,7204,CN
 Ayah Khalid,10508,CN
 Ginu George,11197,CN
@@ -279,7 +306,7 @@ c_staff:'الاسم',c_role:'الوظيفة',r_cn_mark:'أول {0} أسماء = 
 w_short_d:'يوم {0}: نقص {1} في الداي',w_short_n:'يوم {0}: نقص {1} في النايت',oc_short_d:'يوم {0}: نقص أون كول {1} في الداي',oc_short_n:'يوم {0}: نقص أون كول {1} في النايت',
 w_work:'{0}: {1} شفتات متتالية (بسبب الأجازات/الطلبات)',w_off:'{0}: {1} أيام راحة متتالية (بسبب الأجازات/الطلبات)',
 w_bad:'رغبة غير مفهومة: {0}',w_amb:'اسم غير واضح ({0}) اكتب الاسم كامل أو الـ ID',w_nodays:'{0}: ما فهمتش الأيام',
-w_tail:'💡 زوّد عدد الشفتات أو التمريض لتغطية النقص.',w_title:'ملاحظات على التغطية',b_next:'التالي ←',ws_star:'* نوع الشفت فقط، مع راحة بين الشغل حسب القاعدة',w_ok:'✅ التغطية كاملة.',
+w_tail:'💡 زوّد عدد الشفتات أو التمريض لتغطية النقص.',w_title:'ملاحظات على التغطية',b_next:'التالي ←',sh_title:'مشاركة التطبيق',sh_msg:'جرّب تطبيق HORAS لعمل روستر التمريض بسهولة وبالذكاء الاصطناعي 🩺',sh_wa:'واتساب',sh_fb:'فيسبوك',sh_ms:'ماسنجر',sh_tg:'تيليجرام',sh_cp:'نسخ الرابط',sh_more:'المزيد',sh_ok:'✅ تم نسخ الرابط',sh_btn:'⤴ شارك التطبيق',sh_close:'إغلاق',ws_star:'* نوع الشفت فقط، مع راحة بين الشغل حسب القاعدة',w_ok:'✅ التغطية كاملة.',
 i_ovr:'ℹ️ ضوابط الهيد نرس قدّمت على الطلبات دي (اتلغت أيامها): {0}',
 ws_title:'اللي اتفهم من الطلبات (راجعها):',ws_soft:'(نوع الشفت فقط، مع يوم راحة بين الشغل حسب القاعدة)',ws_guess:'⚠️ خمّنت الاسم: {0} (راجعه)',
 rs_title:'اللي اتفهم من ضوابط الهيد نرس:',us_title:'⚠️ جمل مش مفهومة (اكتبها بشكل تاني):',
@@ -317,7 +344,7 @@ c_staff:'Staff',c_role:'Role',r_cn_mark:'First {0} names = CN (Charge Nurse)',r_
 w_short_d:'Day {0}: short by {1} on Day shift',w_short_n:'Day {0}: short by {1} on Night shift',oc_short_d:'Day {0}: OC short by {1} on Day shift',oc_short_n:'Day {0}: OC short by {1} on Night shift',
 w_work:'{0}: {1} consecutive shifts (due to leave/requests)',w_off:'{0}: {1} consecutive rest days (due to leave/requests)',
 w_bad:'Request not understood: {0}',w_amb:'Ambiguous name ({0}) write the full name or ID',w_nodays:'{0}: could not understand the days',
-w_tail:'💡 Increase shifts or staff to cover the gaps.',w_title:'Coverage notes',b_next:'Next →',ws_star:'* shift type only, with rest between work per the rule',w_ok:'✅ Coverage is complete.',
+w_tail:'💡 Increase shifts or staff to cover the gaps.',w_title:'Coverage notes',b_next:'Next →',sh_title:'Share the app',sh_msg:'Try HORAS — build nursing rosters easily with AI 🩺',sh_wa:'WhatsApp',sh_fb:'Facebook',sh_ms:'Messenger',sh_tg:'Telegram',sh_cp:'Copy link',sh_more:'More',sh_ok:'✅ Link copied',sh_btn:'⤴ Share the app',sh_close:'Close',ws_star:'* shift type only, with rest between work per the rule',w_ok:'✅ Coverage is complete.',
 i_ovr:'ℹ️ Head nurse rules took priority over these requests (days removed): {0}',
 ws_title:'Understood from staff requests (please review):',ws_soft:'(shift type only, with rest days between work per the rule)',ws_guess:'⚠️ Guessed the name: {0} (please check)',
 rs_title:'Understood from head nurse recommendations:',us_title:'⚠️ Sentences not understood (rephrase them):',
