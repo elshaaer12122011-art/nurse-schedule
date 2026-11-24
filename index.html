@@ -609,13 +609,32 @@ catch(e){return{res:null,why:e.message=='noai'?AIMSG('noai'):e.message=='limit'?
 $('rfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;let why='';if(e.target.id==='rfile')$('rstat').innerHTML='<span class="sp"></span>'+(AR_()?'جاري التحميل وقراءة الروستر… ممكن ياخد حوالي نص دقيقة':'Loading and reading the roster… ~30 seconds');try{let res=null;const buf=await f.arrayBuffer();
 if(/\.pdf$/i.test(f.name)||new Uint8Array(buf.slice(0,4)).join()=='37,80,68,70'){try{res=await readPdf(buf);if(!res){if(AIURL()){const o=await readByAI(await pdfPagesJpeg(buf));res=o.res;why=o.why}else why=AIMSG('noai')}if(false)why=AR_()?'الـ PDF ده صورة ممسوحة (زي CamScanner) مفيهوش نص، فالتطبيق ما يقدرش يقراه لوحده. ابعته لي في الشات وأحوّله لك لملف جاهز للرفع (أو صدّر الروستر Excel/CSV)':'this PDF is a scanned image with no text, so the app cannot read it. Send it to Claude in the chat to convert, or export Excel/CSV'}catch(x){why=(AR_()?'مشكلة في قراءة PDF: ':'could not read the PDF: ')+(x&&x.message||x)}}
 else if(/\.(png|jpe?g|webp|gif|bmp|heic)$/i.test(f.name)||/^image\//.test(f.type)){if(!AIURL())why=AIMSG('noai');else{try{const u=URL.createObjectURL(f);const jp=await imgToJpeg(u,2400);URL.revokeObjectURL(u);const o=await readByAI([jp]);res=o.res;why=o.why}catch(x){why=AIMSG('fail')}}}
-else{const tryWb=wb=>{for(const sn of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false});res=parseGrid(rows);if(res)return true}return false};
+else{let WB=null;const tryWb=wb=>{WB=wb;for(const sn of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false});res=parseGrid(rows)||parseGrid(fixDateHdr(rows,XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:true})));if(res)return true}return false};
 let ok=false;if(/\.(csv|tsv|txt)$/i.test(f.name)){let txt=new TextDecoder('utf-8').decode(buf).replace(/^\uFEFF/,'');if(/\uFFFD/.test(txt)){try{txt=new TextDecoder('windows-1256').decode(buf)}catch(x){}}
 const cnt=(ch)=>(txt.slice(0,3000).match(new RegExp(ch,'g'))||[]).length;const fs=[[',',cnt(',')],[';',cnt(';')],['\t',cnt('\t')]].sort((a,b)=>b[1]-a[1])[0][0];
 res=parseGrid(parseCSV(txt,fs));ok=!!res}
-if(!ok)try{ok=tryWb(XLSX.read(buf))}catch(x){}}
+if(!ok)try{ok=tryWb(XLSX.read(buf))}catch(x){}
+if(!res&&WB&&AIURL()){try{const jp=sheetsToJpeg(WB);if(jp.length){const o=await readByAI(jp);res=o.res;if(!res)why=o.why}}catch(x){}}}
 if(!res&&!why)why=AR_()?'ما لقيتش جدول فيه أسماء الممرضين وأيام الشهر (1، 2، 3 ...) أو خانات الشيفتات D/N/M/E. اتأكد إن الملف فيه صف الأيام وأسماء الممرضين على اليمين أو الشمال.':'no table found with nurse names and day columns (1,2,3…) or shift codes D/N/M/E.';
 if(res)applyLoaded(res,f.name);else $('rstat').textContent=t('load_fail')+' — '+why}catch(x){$('rstat').textContent=t('load_fail')+' — '+(x&&x.message||'')}e.target.value=''};
+/* Excel: day headers written as real dates (serials or 12/1/2026) → day numbers */
+function fixDateHdr(rows,raw){const out=rows.map(r=>r.slice());
+const dayOf=(v,rv,mode)=>{if(typeof rv=='number'&&rv>30000&&rv<80000){const d=new Date(Math.round((rv-25569)*864e5));return d.getUTCDate()}
+const s=String(v||'').trim();let m=s.match(/^(\d{1,4})[\/.\-](\d{1,2})[\/.\-](\d{1,4})/);if(m){const a=+m[1],b=+m[2],c=+m[3];if(m[1].length==4)return c;return mode?a:b}
+m=s.match(/(\d{1,2})(?:st|nd|rd|th)?\b/);if(m&&/[A-Za-z؀-ۿ]/.test(s))return+m[1];return 0};
+for(let i=0;i<out.length;i++){const r=out[i],rr=raw[i]||[];if(!r)continue;let best=null;
+for(const mode of[0,1]){const d=r.map((v,c)=>dayOf(v,rr[c],mode));for(let c=0;c<d.length;c++){if(d[c]!==1)continue;let k=1;while(k<31&&d[c+k]===k+1)k++;if(k>=20&&(!best||k>best.k))best={c,k,d}}}
+if(best){for(let k=0;k<best.k;k++)out[i][best.c+k]=String(k+1)}}return out}
+/* Excel → picture of the sheet, so the AI can read layouts the parser does not understand */
+function sheetsToJpeg(wb){const outs=[];for(const sn of wb.SheetNames.slice(0,3)){let rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false}).map(r=>r.map(v=>String(v==null?'':v).replace(/\s+/g,' ').trim()));
+while(rows.length&&!rows[rows.length-1].some(Boolean))rows.pop();if(rows.length<3)continue;rows=rows.slice(0,90);
+let nc=0;rows.forEach(r=>{for(let c=r.length-1;c>=0;c--)if(r[c]){nc=Math.max(nc,c+1);break}});nc=Math.min(nc,48);if(nc<3)continue;
+const cv=document.createElement('canvas'),x=cv.getContext('2d');const F=15;x.font=F+'px Arial';
+const w=[];for(let c=0;c<nc;c++){let m=22;rows.forEach(r=>{const t=r[c]||'';m=Math.max(m,Math.min(260,x.measureText(t).width+10))});w.push(m)}
+const H=F+9,W=w.reduce((a,b)=>a+b,0);cv.width=Math.min(4000,W+2);cv.height=rows.length*H+2;x.fillStyle='#fff';x.fillRect(0,0,cv.width,cv.height);x.font=F+'px Arial';x.textBaseline='middle';x.strokeStyle='#999';x.fillStyle='#000';
+rows.forEach((r,i)=>{let X=0;for(let c=0;c<nc;c++){x.strokeRect(X+.5,i*H+.5,w[c],H);const t=r[c]||'';if(t){x.save();x.beginPath();x.rect(X,i*H,w[c],H);x.clip();x.fillText(t,X+4,i*H+H/2);x.restore()}X+=w[c]}});
+const k=Math.min(1,2400/Math.max(cv.width,cv.height));let src=cv;if(k<1){const c2=document.createElement('canvas');c2.width=Math.round(cv.width*k);c2.height=Math.round(cv.height*k);c2.getContext('2d').drawImage(cv,0,0,c2.width,c2.height);src=c2}
+outs.push(src.toDataURL('image/jpeg',0.9).split(',')[1]);break}return outs}
 function clearBase(){BASEMAP=null;BASEX=null;WK=[];$('rstat').textContent=t('load_none');saveState()}
 /* ---------- persistence ---------- */
 const SKEY='nsl_state_v2',FIELDS=['names','month','base','dreq','nreq','doc','noc','ereq','wishtxt','rec'];
