@@ -420,7 +420,21 @@ e.value=r[f.k];e.onchange=e.oninput=()=>{r[f.k]=e.value};d.append(e)});const b=d
 $('names').onchange=()=>{nurses=parseN();['cnt','al'].forEach(draw)};
 $('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;
 if(/\.(pdf|png|jpe?g|webp|gif|bmp|heic)$/i.test(f.name)||/^(image\/|application\/pdf)/.test(f.type)){const ns=$('nstat'),say=(m,c)=>{ns.style.display='block';ns.className='wbox '+(c&&c!=='ld'?c:'infc');if(c==='ld')ns.innerHTML='<span class="sp"></span>'+m;else ns.textContent=m};say(AR_()?'جاري التحميل وقراءة الأسماء من الملف… ممكن ياخد حوالي نص دقيقة':'Loading and reading names… this can take ~30 seconds','ld');$('rstat').textContent='';try{const before=$('names').value;await $('rfile').onchange({target:{files:[f],value:''}});BASEMAP=null;BASEX=null;WK=[];const n=parseN().length;if(n&&$('names').value!==before){say(AR_()?'✅ تم استخراج '+n+' اسم من الملف — راجع القائمة':'✅ Extracted '+n+' names from the file — please review','okc');$('rstat').textContent=''}else say((AR_()?'⚠️ ما قدرتش أطلّع أسماء من الملف. ':'⚠️ Could not extract names. ')+($('rstat').textContent||''),'warnc');saveState()}catch(x){say((AR_()?'تعذر قراءة الملف: ':'Could not read the file: ')+(x&&x.message||''),'warnc')}e.target.value='';return}
-try{const wb=XLSX.read(await f.arrayBuffer());const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});$('names').value=rows.filter(r=>r[0]&&isNaN(r[0])&&/^[A-Za-z\u0600-\u06ff][^\uFFFD\u0000-\u001f]{1,60}$/.test(String(r[0]).trim())).map(r=>[r[0],r[1]||'',r[2]||''].join(',')).join('\n');if(!$('names').value.trim()){alert(t('alert_file'));return}$('names').onchange()}catch(x){alert(t('alert_file'))}};
+try{const buf=await f.arrayBuffer();let list=null;
+if(/\.(csv|txt|tsv)$/i.test(f.name)){const txt=new TextDecoder().decode(buf);const fs=(txt.match(/\t/g)||[]).length>(txt.match(/,/g)||[]).length?'\t':(txt.match(/;/g)||[]).length>(txt.match(/,/g)||[]).length?';':',';const g=parseGrid(parseCSV(txt,fs));if(g&&g.names.length)list=g.names;if(!list)list=namesFromRows(parseCSV(txt,fs))}
+else{const wb=XLSX.read(buf);for(const sn of wb.SheetNames){const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:false,defval:''});const g=parseGrid(rows);if(g&&g.names.length>=2){list=g.names;break}}
+if(!list)for(const sn of wb.SheetNames){const l=namesFromRows(XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:false,defval:''}));if(l.length>=2){list=l;break}}}
+if(!list||!list.length){alert(t('alert_file'));return}
+$('names').value=list.map(n=>n.name+','+(n.id||'')+','+(/^(HN|CN|SN|ACN|HD)/i.test(n.role||'')?n.role:'')).join('\n');$('names').onchange();saveState();
+const ns=$('nstat');if(ns){ns.style.display='block';ns.className='wbox okc';ns.textContent=AR_()?'✅ تم استخراج '+list.length+' اسم من الملف — راجع القائمة':'✅ Extracted '+list.length+' names — please review'}}
+catch(x){alert(t('alert_file'))}finally{e.target.value=''}};
+function namesFromRows(rows){rows=rows.map(r=>Array.isArray(r)?r.map(v=>String(v==null?'':v).trim()):[]);
+const BAD=/(balance|legend|total|workers?\b|prepared|approved|signature|manager|director|shift|morning|evening|night|required|staff name|^name$|^date$|الاسم|المجموع|الاجمالي|الإجمالي)/i;
+const isName=v=>/^[A-Za-z؀-ۿ][A-Za-z؀-ۿ .'\-]{2,60}$/.test(v)&&/\s/.test(v)&&!BAD.test(v)&&!/^(HN|CN|SN|ACN|RN)(\b|-)/i.test(v);
+const cols={};rows.forEach(r=>r.forEach((v,c)=>{if(isName(v))cols[c]=(cols[c]||0)+1}));
+const nc=+Object.keys(cols).sort((a,b)=>cols[b]-cols[a])[0];if(isNaN(nc))return[];
+const out=[],seen=new Set();rows.forEach(r=>{const name=r[nc];if(!isName(name)||seen.has(name.toLowerCase()))return;seen.add(name.toLowerCase());
+let id='',role='';r.forEach((v,c)=>{if(c===nc)return;if(!id&&/^\d{3,7}$/.test(v))id=v;else if(!role&&/^(HN|HD|CN|SN|ACN|RN)(-?[A-Z0-9]*)?$/i.test(v))role=v});out.push({name,id,role})});return out}
 function rng(r){const a=+r.a;if(!a)return[];const b=+r.b||a;const o=[];for(let d=a;d<=Math.min(b,days);d++)o.push(d-1);return o}
 /* ---------- text helpers ---------- */
 function ar2en(s){return s.replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776)}
