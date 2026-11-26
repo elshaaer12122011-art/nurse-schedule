@@ -160,6 +160,23 @@ textarea:focus,input[type=text]:focus,input[type=number]:focus,input[type=month]
 .utb{display:flex;flex-direction:column;gap:8px}.ur{background:var(--tile);border:1px solid var(--bd);border-radius:14px;padding:10px 12px}.un b{display:block;font-size:14px}.un span{direction:ltr;display:block;text-align:start;font-size:12.5px;color:var(--pri);word-break:break-all}
 .um{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px;font-size:11.5px;color:var(--mut)}
 @media print{#lgmodal{display:none!important}}
+/* ===== HOME + RULEBOX ===== */
+#home{position:fixed;inset:0;z-index:150;display:none;overflow:auto;background:radial-gradient(700px 500px at 100% 0%,rgba(18,194,216,.35),transparent 60%),radial-gradient(600px 500px at 0% 100%,rgba(43,108,255,.35),transparent 60%),linear-gradient(160deg,#06122b,#0a2a6e 60%,#0b4f7a)}
+#home.on{display:block}body.homeon{overflow:hidden}
+.hin{max-width:480px;margin:0 auto;padding:60px 22px 40px;text-align:center;color:#fff}
+.hlogo svg{width:96px;height:96px;filter:drop-shadow(0 10px 24px rgba(18,194,216,.5))}
+.htit{font:800 34px Arial,sans-serif;letter-spacing:10px;margin-top:10px;padding-inline-start:10px;direction:ltr}
+.hsub{font-size:20px;font-weight:800;margin-top:14px}.hsub2{opacity:.8;margin:4px 0 26px}
+.hbig{display:flex;flex-direction:column;gap:4px;width:100%;margin:0 0 14px;padding:22px 18px;border-radius:22px!important;background:rgba(255,255,255,.12)!important;border:1.5px solid rgba(255,255,255,.3)!important;color:#fff!important;text-align:start}
+.hbig b{font-size:20px}.hbig small{opacity:.8;font-size:13px}
+.hbig:first-of-type{background:linear-gradient(135deg,#ffd166,#ff9f43)!important;color:#0a1f4a!important;border:0!important}
+#hold{grid-template-columns:1fr 1fr;gap:10px}#hold .hsm{padding:16px 8px;border-radius:18px;background:#fff!important;color:#0a2a6e!important;font-weight:800;font-size:14px}
+#homebtn{font-size:24px;font-weight:700;line-height:1}
+.rulebox{background:var(--tile);border:1.5px solid var(--bd);border-radius:18px;padding:12px 14px;margin:10px 0}
+.rbh{font-weight:800;margin-bottom:8px}
+.rrow{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--bd);font-size:14px}.rrow:first-of-type{border-top:0}
+.rrow span{font-size:13.5px;font-weight:600}.rrow select{width:96px!important;min-width:0;padding:6px 10px!important;font-weight:700}
+@media print{#home{display:none!important}}
 /* ===== MSG + NEXT ===== */
 #warn{background:transparent!important;padding:0!important;color:inherit;margin-top:12px}#wsum{margin-top:10px}
 .wbox{border-radius:14px;padding:12px 14px;margin:0 0 10px;font-size:13.5px;line-height:1.7}
@@ -190,7 +207,7 @@ html{background:#cfe3f7}
 .hz{display:inline-flex;vertical-align:middle;margin-inline-end:6px}.hz svg{width:30px;height:30px}
 @media print{.wrap.tabhide{display:block!important}#ptitle.tabhide{display:block!important}.stk{display:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{padding:0;background:#fff}.card,.noprint{display:none!important}#ptitle{display:block;text-align:center;font-weight:700;font-size:13px;margin:0 0 3px;color:#111}.wrap{border:0;overflow:visible;border-radius:0}table{width:100%;font-size:7.5px;border:1px solid #666}th,td{padding:1px 2px;min-width:0;border:1px solid #888;line-height:1.15}td.nm{position:static;min-width:0;text-align:left;font-weight:700}@page{size:A4 landscape;margin:6mm}}
 </style></head><body>
-<div class="stk noprint"><div class="top"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><div style="display:flex;gap:8px;position:relative"><div class="hb"><button id="shbtn" onclick="openShare()" aria-label="share">⤴</button><small data-i="sh_title"></small></div><button id="langbtn" onclick="toggleLang()">EN</button></div></div>
+<div class="stk noprint"><div class="top"><h1 id="ttl">🩺 Staff Nurse Schedule</h1><div style="display:flex;gap:8px;position:relative"><div class="hb"><button id="homebtn" onclick="goHome()" aria-label="home">⌂</button><small data-i="home_btn"></small></div><div class="hb"><button id="shbtn" onclick="openShare()" aria-label="share">⤴</button><small data-i="sh_title"></small></div><button id="langbtn" onclick="toggleLang()">EN</button></div></div>
 <div class="tabs" id="tabs"><button data-t="n" onclick="showTab('n')"><span>👥</span><b data-i="t_names"></b></button><button data-t="s" onclick="showTab('s')"><span>⚙️</span><b data-i="t_set"></b></button><button data-t="w" onclick="showTab('w')"><span>📝</span><b data-i="t_wish"></b></button><button data-t="r" onclick="showTab('r')"><span>📋</span><b data-i="t_rec"></b></button><button data-t="g" onclick="showTab('g')"><span>📅</span><b data-i="t_roster"></b></button><button data-t="a" onclick="showTab('a');renderArc()"><span>📦</span><b data-i="t_arc"></b></button><button data-t="u" id="tabU" style="display:none" onclick="showTab('u');loadUsers()"><span>👑</span><b data-i="t_users"></b></button></div></div>
 <div class="card noprint" data-tab="n"><h2 data-i="h_names"></h2>
 <textarea id="names" style="min-height:140px;direction:ltr"></textarea>
@@ -201,21 +218,21 @@ html{background:#cfe3f7}
 <div class="row" style="margin-top:6px"><button onclick="clearBase()" data-i="b_clear"></button></div>
 <div class="row" style="margin-top:6px"><input id="aiurl" placeholder="🤖 رابط الذكاء الاصطناعي / AI service URL (اختياري)" onchange="setAI()" style="flex:1;direction:ltr"><span id="aist"></span></div>
 <div class="hint" id="rstat"></div><div class="hint" data-i="h_load_hint"></div></div><div class="nextbar noprint" data-tab="n"><button class="nx" onclick="showTab('s')" data-i="b_next"></button></div>
-<div class="card noprint" data-tab="s"><h2 data-i="h_set"></h2><div class="g">
+<div class="card noprint" data-tab="s"><h2 data-i="h_set"></h2><div class="g"><div><label data-i="l_shsys"></label><select id="shsys" dir="ltr" onchange="shsysChg()"><option value="DN">D &amp; N</option><option value="MEN">M &amp; E &amp; N</option></select></div><div><label data-i="l_hrs"></label><input type="number" id="hrs" value="0" min="0" oninput="hrsHint()"></div><div><label data-i="l_hrsu"></label><select id="hrsu" onchange="hrsHint()"><option value="m" data-i="o_month"></option><option value="w" data-i="o_week"></option></select></div>
 <div><label data-i="l_month"></label><input type="month" id="month" value="2026-12"></div>
 <div><label data-i="l_base"></label><input type="number" id="base" value="19"></div>
 <div><label data-i="l_dreq"></label><input type="number" id="dreq" value="14"></div>
 <div><label data-i="l_nreq"></label><input type="number" id="nreq" value="14"></div>
 <div><label data-i="l_doc"></label><input type="number" id="doc" value="1"></div>
 <div><label data-i="l_noc"></label><input type="number" id="noc" value="1"></div>
-<div><label data-i="l_ereq"></label><input type="number" id="ereq" value="0"></div></div></div>
+<div id="ereqbox"><label data-i="l_ereq"></label><input type="number" id="ereq" value="0"></div></div><div id="hrshint" class="wbox infc" style="display:none;margin-top:10px"></div></div>
 <div class="card noprint" data-tab="s"><h2 data-i="h_cnt"></h2><div id="cnt"></div><button onclick="add('cnt')" data-i="add"></button></div>
 <div class="card noprint" data-tab="s"><h2 data-i="h_al"></h2><div id="al"></div><button onclick="add('al')" data-i="add"></button><div class="hint" data-i="h_al_hint"></div></div><div class="nextbar noprint" data-tab="s"><button class="nx" onclick="showTab('w')" data-i="b_next"></button></div>
 <div class="card noprint" data-tab="w"><h2 data-i="h_wish"></h2><textarea id="wishtxt" style="min-height:130px" data-p="ph_wish"></textarea><div class="hint" data-i="h_wish_hint"></div></div><div class="nextbar noprint" data-tab="w"><button class="nx" onclick="showTab('r')" data-i="b_next"></button></div>
 <div class="card noprint" data-tab="r"><h2 data-i="h_rec"></h2>
 <textarea id="rec" style="min-height:120px" data-p="ph_rec"></textarea>
 <div class="hint" data-i="h_rec_hint"></div>
-<label class="blkbtn"><input type="checkbox" id="blkon" onchange="saveState()"><span data-i="b_blk"></span></label>
+<div class="rulebox"><div class="rbh" data-i="h_rbox"></div><div class="rrow"><span data-i="rb_mxw"></span><select id="rmxw" onchange="saveState()"></select><span data-i="rb_days"></span></div><div class="rrow"><span data-i="rb_mxo"></span><select id="rmxo" onchange="saveState()"></select><span data-i="rb_days"></span></div><div class="rrow"><span data-i="rb_shmax"></span><select id="shmax" onchange="saveState()"></select><span data-i="rb_shifts"></span></div><div class="rrow"><span data-i="rb_shmin"></span><select id="shmin" onchange="saveState()"></select><span data-i="rb_shifts"></span></div></div><label class="blkbtn"><input type="checkbox" id="blkon" onchange="saveState()"><span data-i="b_blk"></span></label>
 <label class="blkbtn"><input type="checkbox" id="cnnoc" onchange="saveState()"><span data-i="b_cnnoc"></span></label><label class="blkbtn"><input type="checkbox" id="hnm" onchange="saveState()"><span data-i="b_hnm"></span></label>
 <details><summary data-i="ex_title"></summary><ul id="exlist"></ul></details>
 <div id="rsum" class="sm"></div><div class="row" style="margin-top:10px"><button class="p" onclick="genAI()" data-i="b_gen"></button></div><div id="ainlu" class="hint" style="margin-top:8px"></div></div><div class="nextbar noprint" data-tab="r"><button class="nx" onclick="showTab('g')" data-i="b_next"></button></div>
@@ -236,6 +253,11 @@ s.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)re
 <div id="lgmodal" class="noprint" onclick="if(event.target===this)closeLogin()"><div class="shsheet"><div class="shh"><b data-i="lg_title"></b><button onclick="closeLogin()" aria-label="close">✕</button></div>
 <div class="hint" data-i="lg_why" style="font-size:14px;line-height:1.7"></div><div id="gbtn" style="display:flex;justify-content:center;margin:20px 0 10px;min-height:46px"></div><div id="lgmsg" class="hint" style="text-align:center;min-height:20px"></div>
 <a href="privacy.html" target="_blank" rel="noopener" class="lgpriv" data-i="lg_priv"></a></div></div>
+<div id="home" class="noprint"><div class="hin"><div class="hlogo"><svg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='hg' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#0a2a6e'/><stop offset='.55' stop-color='#0f6fbf'/><stop offset='1' stop-color='#12a0b0'/></linearGradient></defs><rect x='3' y='3' width='58' height='58' rx='17' fill='url(#hg)' stroke='#fff' stroke-width='2'/><path d='M20 46V18M44 46V18' stroke='#fff' stroke-width='6' stroke-linecap='round'/><path d='M20 33h8l3-8 5 15 3-7h5' fill='none' stroke='#fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/></svg></div>
+<div class="htit">HORAS</div><div class="hsub" data-i="home_t"></div><div class="hsub2" data-i="home_s"></div>
+<button class="hbig" onclick="homeNew()"><b data-i="home_new"></b><small data-i="home_new_s"></small></button>
+<button class="hbig" onclick="homeOld()"><b data-i="home_old"></b><small data-i="home_old_s"></small></button>
+<div id="hold" style="display:none"><button class="hsm" onclick="homeArc()" data-i="home_arc"></button><button class="hsm" onclick="homeDev()" data-i="home_dev"></button></div></div></div>
 <div id="shmodal" class="noprint" onclick="if(event.target===this)closeShare()"><div class="shsheet"><div class="shh"><b data-i="sh_title"></b><button onclick="closeShare()" aria-label="close">✕</button></div>
 <div class="shurl" id="shurl"></div>
 <div class="shgrid"><button onclick="shGo('wa')"><i style="background:#25D366">💬</i><span data-i="sh_wa"></span></button><button onclick="shGo('fb')"><i style="background:#1877f2;font:900 30px Georgia,serif">f</i><span data-i="sh_fb"></span></button><button onclick="shGo('ms')"><i style="background:linear-gradient(135deg,#00b2ff,#a334fa 60%,#ff5c87)">⚡</i><span data-i="sh_ms"></span></button><button onclick="shGo('tg')"><i style="background:#229ED9">✈️</i><span data-i="sh_tg"></span></button><button onclick="shGo('cp')"><i style="background:#64748b">🔗</i><span data-i="sh_cp"></span></button><button onclick="shGo('more')"><i style="background:linear-gradient(135deg,#0f6fbf,#12a0b0)">⤴</i><span data-i="sh_more"></span></button></div><div id="shok" class="shok"></div></div></div>
@@ -329,7 +351,7 @@ c_staff:'الاسم',c_role:'الوظيفة',r_cn_mark:'أول {0} أسماء = 
 w_short_d:'يوم {0}: نقص {1} في الداي',w_short_n:'يوم {0}: نقص {1} في النايت',oc_short_d:'يوم {0}: نقص أون كول {1} في الداي',oc_short_n:'يوم {0}: نقص أون كول {1} في النايت',
 w_work:'{0}: {1} شفتات متتالية (بسبب الأجازات/الطلبات)',w_off:'{0}: {1} أيام راحة متتالية (بسبب الأجازات/الطلبات)',
 w_bad:'رغبة غير مفهومة: {0}',w_amb:'اسم غير واضح ({0}) اكتب الاسم كامل أو الـ ID',w_nodays:'{0}: ما فهمتش الأيام',
-w_tail:'💡 زوّد عدد الشفتات أو التمريض لتغطية النقص.',w_title:'ملاحظات على التغطية',b_next:'التالي ←',t_users:'المستخدمين',h_users:'👑 مستخدمي التطبيق',lg_title:'تسجيل الدخول',lg_why:'سجّل دخول بحساب جوجل عشان تستخدم التطبيق. بنستخدم اسمك وإيميلك بس لإدارة حسابك ومعرفة عدد مستخدمي التطبيق، ومش بنبيعهم ولا بنشاركهم مع حد. تقدر تحذف حسابك في أي وقت.',lg_wait:'جاري تسجيل الدخول…',lg_fail:'تعذر تسجيل الدخول — جرّب تاني',lg_neterr:'تعذر تحميل زر جوجل — اتأكد من النت',lg_priv:'🔒 سياسة الخصوصية',u_out:'تسجيل خروج',u_del:'حذف حسابي',u_delc:'حذف حسابك وإيميلك من سجل المستخدمين نهائيًا؟ (الروسترات المحفوظة على جهازك مش هتتمسح)',u_deld:'✅ تم حذف حسابك',u_signin:'تسجيل الدخول بجوجل',u_total:'إجمالي المستخدمين',u_today:'استخدموه النهارده',u_week:'آخر 7 أيام',u_refresh:'🔄 تحديث',u_export:'⬇ تصدير Excel',u_name:'الاسم',u_email:'الإيميل',u_first:'أول دخول',u_last:'آخر استخدام',u_count:'مرات الاستخدام',u_err:'تعذر تحميل المستخدمين',u_none:'لسه مفيش مستخدمين.',u_load:'جاري التحميل…',u_nokv:'لازم تربط KV بالـ worker الأول (الخطوات اللي بعتهالك).',t_arc:'المحفوظة',h_arc:'📦 الروسترات المحفوظة',h_arc_hint:'احفظ أي روستر هنا وارجعله في أي وقت بضغطة — من غير ما ترفعه أو تقراه تاني. المحفوظات موجودة على الجهاز ده بس.',b_arcsave:'💾 حفظ الروستر الحالي',b_arcnew:'📦 نقل الروستر للمحفوظة والبدء من جديد',arc_open:'📂 فتح',arc_empty:'لسه مفيش روسترات محفوظة.',arc_none:'مفيش روستر حالي عشان يتحفظ.',arc_saved:'✅ اتحفظ في المحفوظة',arc_cnew:'هيتحفظ الروستر الحالي في «المحفوظة» وبعدها يتمسح عشان تبدأ روستر جديد. تكمل؟',arc_copen:'فتح الروستر ده؟ الروستر الحالي هيتحفظ تلقائيًا في المحفوظة الأول.',arc_cdel:'حذف الروستر ده من المحفوظة نهائيًا؟',arc_ren:'اسم الروستر:',arc_full:'مساحة الحفظ على الجهاز امتلأت — احذف روسترات قديمة من المحفوظة.',arc_n:'ممرض',arc_dup:'الروستر ده محفوظ قبل كده.',sh_title:'مشاركة التطبيق',sh_msg:'جرّب تطبيق HORAS لعمل روستر التمريض بسهولة وبالذكاء الاصطناعي 🩺',sh_wa:'واتساب',sh_fb:'فيسبوك',sh_ms:'ماسنجر',sh_tg:'تيليجرام',sh_cp:'نسخ الرابط',sh_more:'المزيد',sh_ok:'✅ تم نسخ الرابط',sh_btn:'⤴ شارك التطبيق',sh_close:'إغلاق',ws_star:'* نوع الشفت فقط، مع راحة بين الشغل حسب القاعدة',w_ok:'✅ التغطية كاملة.',
+w_tail:'💡 زوّد عدد الشفتات أو التمريض لتغطية النقص.',w_title:'ملاحظات على التغطية',b_next:'التالي ←',l_shsys:'نظام الشفتات',l_hrs:'عدد الساعات المطلوب (0 = بالشفتات)',l_hrsu:'الساعات في',o_month:'الشهر',o_week:'الأسبوع',c_hrs:'ساعات',hrs_hint:'≈ {0} شفت لكل ممرض في الشهر ({1} ساعة)',w_hrs:'{0}: {1} ساعة بدل {2}',w_shmax:'{0}: {1} شفت (الحد الأقصى {2})',w_shmin:'{0}: {1} شفت (الحد الأدنى {2})',h_rbox:'⚙️ ضوابط سريعة (البرنامج يلتزم بيها بالظبط)',rb_mxw:'أيام العمل المتواصلة لا تزيد عن',rb_mxo:'أيام الراحة المتواصلة لا تزيد عن',rb_shmax:'عدد شفتات كل ممرض لا يزيد عن',rb_shmin:'عدد شفتات كل ممرض لا يقل عن',rb_days:'أيام',rb_shifts:'شفت',rb_none:'— بدون —',r_shmin:'أقل {0} شفت في الشهر',home_t:'أهلاً بيك في HORAS',home_s:'اختار هتبدأ إزاي',home_new:'➕ إنشاء روستر جديد',home_new_s:'ابدأ بكتابة أسماء الاستاف',home_old:'📂 رفع روستر قديم',home_old_s:'PDF · صورة · Excel · CSV',home_arc:'📦 من الروسترات المحفوظة',home_dev:'📱 تحميل من التليفون',home_btn:'الرئيسية',t_users:'المستخدمين',h_users:'👑 مستخدمي التطبيق',lg_title:'تسجيل الدخول',lg_why:'سجّل دخول بحساب جوجل عشان تستخدم التطبيق. بنستخدم اسمك وإيميلك بس لإدارة حسابك ومعرفة عدد مستخدمي التطبيق، ومش بنبيعهم ولا بنشاركهم مع حد. تقدر تحذف حسابك في أي وقت.',lg_wait:'جاري تسجيل الدخول…',lg_fail:'تعذر تسجيل الدخول — جرّب تاني',lg_neterr:'تعذر تحميل زر جوجل — اتأكد من النت',lg_priv:'🔒 سياسة الخصوصية',u_out:'تسجيل خروج',u_del:'حذف حسابي',u_delc:'حذف حسابك وإيميلك من سجل المستخدمين نهائيًا؟ (الروسترات المحفوظة على جهازك مش هتتمسح)',u_deld:'✅ تم حذف حسابك',u_signin:'تسجيل الدخول بجوجل',u_total:'إجمالي المستخدمين',u_today:'استخدموه النهارده',u_week:'آخر 7 أيام',u_refresh:'🔄 تحديث',u_export:'⬇ تصدير Excel',u_name:'الاسم',u_email:'الإيميل',u_first:'أول دخول',u_last:'آخر استخدام',u_count:'مرات الاستخدام',u_err:'تعذر تحميل المستخدمين',u_none:'لسه مفيش مستخدمين.',u_load:'جاري التحميل…',u_nokv:'لازم تربط KV بالـ worker الأول (الخطوات اللي بعتهالك).',t_arc:'المحفوظة',h_arc:'📦 الروسترات المحفوظة',h_arc_hint:'احفظ أي روستر هنا وارجعله في أي وقت بضغطة — من غير ما ترفعه أو تقراه تاني. المحفوظات موجودة على الجهاز ده بس.',b_arcsave:'💾 حفظ الروستر الحالي',b_arcnew:'📦 نقل الروستر للمحفوظة والبدء من جديد',arc_open:'📂 فتح',arc_empty:'لسه مفيش روسترات محفوظة.',arc_none:'مفيش روستر حالي عشان يتحفظ.',arc_saved:'✅ اتحفظ في المحفوظة',arc_cnew:'هيتحفظ الروستر الحالي في «المحفوظة» وبعدها يتمسح عشان تبدأ روستر جديد. تكمل؟',arc_copen:'فتح الروستر ده؟ الروستر الحالي هيتحفظ تلقائيًا في المحفوظة الأول.',arc_cdel:'حذف الروستر ده من المحفوظة نهائيًا؟',arc_ren:'اسم الروستر:',arc_full:'مساحة الحفظ على الجهاز امتلأت — احذف روسترات قديمة من المحفوظة.',arc_n:'ممرض',arc_dup:'الروستر ده محفوظ قبل كده.',sh_title:'مشاركة التطبيق',sh_msg:'جرّب تطبيق HORAS لعمل روستر التمريض بسهولة وبالذكاء الاصطناعي 🩺',sh_wa:'واتساب',sh_fb:'فيسبوك',sh_ms:'ماسنجر',sh_tg:'تيليجرام',sh_cp:'نسخ الرابط',sh_more:'المزيد',sh_ok:'✅ تم نسخ الرابط',sh_btn:'⤴ شارك التطبيق',sh_close:'إغلاق',ws_star:'* نوع الشفت فقط، مع راحة بين الشغل حسب القاعدة',w_ok:'✅ التغطية كاملة.',
 i_ovr:'ℹ️ ضوابط الهيد نرس قدّمت على الطلبات دي (اتلغت أيامها): {0}',
 ws_title:'اللي اتفهم من الطلبات (راجعها):',ws_soft:'(نوع الشفت فقط، مع يوم راحة بين الشغل حسب القاعدة)',ws_guess:'⚠️ خمّنت الاسم: {0} (راجعه)',
 rs_title:'اللي اتفهم من ضوابط الهيد نرس:',us_title:'⚠️ جمل مش مفهومة (اكتبها بشكل تاني):',
@@ -367,7 +389,7 @@ c_staff:'Staff',c_role:'Role',r_cn_mark:'First {0} names = CN (Charge Nurse)',r_
 w_short_d:'Day {0}: short by {1} on Day shift',w_short_n:'Day {0}: short by {1} on Night shift',oc_short_d:'Day {0}: OC short by {1} on Day shift',oc_short_n:'Day {0}: OC short by {1} on Night shift',
 w_work:'{0}: {1} consecutive shifts (due to leave/requests)',w_off:'{0}: {1} consecutive rest days (due to leave/requests)',
 w_bad:'Request not understood: {0}',w_amb:'Ambiguous name ({0}) write the full name or ID',w_nodays:'{0}: could not understand the days',
-w_tail:'💡 Increase shifts or staff to cover the gaps.',w_title:'Coverage notes',b_next:'Next →',t_users:'Users',h_users:'👑 App Users',lg_title:'Sign in',lg_why:'Sign in with Google to use the app. We use only your name and email to manage your account and count the app users — we never sell or share them. You can delete your account at any time.',lg_wait:'Signing in…',lg_fail:'Sign-in failed — try again',lg_neterr:'Could not load the Google button — check your connection',lg_priv:'🔒 Privacy policy',u_out:'Sign out',u_del:'Delete my account',u_delc:'Permanently delete your account and email from the users list? (Rosters saved on this device are kept)',u_deld:'✅ Your account was deleted',u_signin:'Sign in with Google',u_total:'Total users',u_today:'Active today',u_week:'Last 7 days',u_refresh:'🔄 Refresh',u_export:'⬇ Export Excel',u_name:'Name',u_email:'Email',u_first:'First sign-in',u_last:'Last use',u_count:'Uses',u_err:'Could not load users',u_none:'No users yet.',u_load:'Loading…',u_nokv:'Bind KV to the worker first (see the steps).',t_arc:'Saved',h_arc:'📦 Saved Rosters',h_arc_hint:'Save any roster here and reopen it any time with one tap — no re-uploading or re-reading. Saved rosters live on this device only.',b_arcsave:'💾 Save current roster',b_arcnew:'📦 Move roster to Saved and start over',arc_open:'📂 Open',arc_empty:'No saved rosters yet.',arc_none:'There is no current roster to save.',arc_saved:'✅ Saved',arc_cnew:'The current roster will be saved to «Saved» and then cleared so you can start a new one. Continue?',arc_copen:'Open this roster? The current one will be saved to «Saved» first.',arc_cdel:'Delete this roster from Saved permanently?',arc_ren:'Roster name:',arc_full:'Device storage is full — delete old rosters from Saved.',arc_n:'nurses',arc_dup:'This roster is already saved.',sh_title:'Share the app',sh_msg:'Try HORAS — build nursing rosters easily with AI 🩺',sh_wa:'WhatsApp',sh_fb:'Facebook',sh_ms:'Messenger',sh_tg:'Telegram',sh_cp:'Copy link',sh_more:'More',sh_ok:'✅ Link copied',sh_btn:'⤴ Share the app',sh_close:'Close',ws_star:'* shift type only, with rest between work per the rule',w_ok:'✅ Coverage is complete.',
+w_tail:'💡 Increase shifts or staff to cover the gaps.',w_title:'Coverage notes',b_next:'Next →',l_shsys:'Shift system',l_hrs:'Required hours (0 = use shifts)',l_hrsu:'Hours per',o_month:'Month',o_week:'Week',c_hrs:'Hours',hrs_hint:'≈ {0} shifts per nurse per month ({1} h)',w_hrs:'{0}: {1} h instead of {2}',w_shmax:'{0}: {1} shifts (max {2})',w_shmin:'{0}: {1} shifts (min {2})',h_rbox:'⚙️ Quick rules (applied exactly)',rb_mxw:'Consecutive work days at most',rb_mxo:'Consecutive rest days at most',rb_shmax:'Shifts per nurse at most',rb_shmin:'Shifts per nurse at least',rb_days:'days',rb_shifts:'shifts',rb_none:'— none —',r_shmin:'Min {0} shifts per month',home_t:'Welcome to HORAS',home_s:'How do you want to start?',home_new:'➕ Create a new roster',home_new_s:'Start by entering staff names',home_old:'📂 Upload an old roster',home_old_s:'PDF · photo · Excel · CSV',home_arc:'📦 From saved rosters',home_dev:'📱 From this phone',home_btn:'Home',t_users:'Users',h_users:'👑 App Users',lg_title:'Sign in',lg_why:'Sign in with Google to use the app. We use only your name and email to manage your account and count the app users — we never sell or share them. You can delete your account at any time.',lg_wait:'Signing in…',lg_fail:'Sign-in failed — try again',lg_neterr:'Could not load the Google button — check your connection',lg_priv:'🔒 Privacy policy',u_out:'Sign out',u_del:'Delete my account',u_delc:'Permanently delete your account and email from the users list? (Rosters saved on this device are kept)',u_deld:'✅ Your account was deleted',u_signin:'Sign in with Google',u_total:'Total users',u_today:'Active today',u_week:'Last 7 days',u_refresh:'🔄 Refresh',u_export:'⬇ Export Excel',u_name:'Name',u_email:'Email',u_first:'First sign-in',u_last:'Last use',u_count:'Uses',u_err:'Could not load users',u_none:'No users yet.',u_load:'Loading…',u_nokv:'Bind KV to the worker first (see the steps).',t_arc:'Saved',h_arc:'📦 Saved Rosters',h_arc_hint:'Save any roster here and reopen it any time with one tap — no re-uploading or re-reading. Saved rosters live on this device only.',b_arcsave:'💾 Save current roster',b_arcnew:'📦 Move roster to Saved and start over',arc_open:'📂 Open',arc_empty:'No saved rosters yet.',arc_none:'There is no current roster to save.',arc_saved:'✅ Saved',arc_cnew:'The current roster will be saved to «Saved» and then cleared so you can start a new one. Continue?',arc_copen:'Open this roster? The current one will be saved to «Saved» first.',arc_cdel:'Delete this roster from Saved permanently?',arc_ren:'Roster name:',arc_full:'Device storage is full — delete old rosters from Saved.',arc_n:'nurses',arc_dup:'This roster is already saved.',sh_title:'Share the app',sh_msg:'Try HORAS — build nursing rosters easily with AI 🩺',sh_wa:'WhatsApp',sh_fb:'Facebook',sh_ms:'Messenger',sh_tg:'Telegram',sh_cp:'Copy link',sh_more:'More',sh_ok:'✅ Link copied',sh_btn:'⤴ Share the app',sh_close:'Close',ws_star:'* shift type only, with rest between work per the rule',w_ok:'✅ Coverage is complete.',
 i_ovr:'ℹ️ Head nurse rules took priority over these requests (days removed): {0}',
 ws_title:'Understood from staff requests (please review):',ws_soft:'(shift type only, with rest days between work per the rule)',ws_guess:'⚠️ Guessed the name: {0} (please check)',
 rs_title:'Understood from head nurse recommendations:',us_title:'⚠️ Sentences not understood (rephrase them):',
@@ -395,7 +417,7 @@ $('exlist').innerHTML=TX[LANG].ex.map(x=>'<li>'+x+'</li>').join('');
 ['cnt','al'].forEach(draw);showMsgs();render()}
 function toggleLang(){LANG=LANG=='ar'?'en':'ar';try{localStorage.setItem('nsl_lang',LANG)}catch(e){}applyLang()}
 function scopeName(sc){if(!sc||sc.all)return sc&&sc.exc&&sc.exc.length?t('sc_except',t('all'),sc.exc.map(i=>nurses[i].name).join(', ')):t('all');const n=sc.list.map(i=>nurses[i].name);return n.length>4?n.slice(0,4).join(', ')+' +'+(n.length-4):n.join(', ')}
-function showMsgs(){
+function showMsgs(){if($('hnm')&&$('hnm').checked&&Array.isArray(MSG.warn)){const hn=new Set(nurses.filter(n=>/^(hn|hd|head)/i.test(n.title||'')).map(n=>n.name));MSG.warn=MSG.warn.filter(w=>!(/^(w_work|w_off|w_tot)$/.test(w[0])&&hn.has(w[1])))}
 const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const rs=$('rsum');
 rs.innerHTML=(MSG.rsum.length?'<div class="sbox"><div class="sh">🧠 '+t('rs_title').replace(/:$/,'')+'</div>'+MSG.rsum.map(x=>'<div class="srow"><b>'+esc(x.who)+'</b><span>'+t(x.k,...x.a)+'</span></div>').join('')+'</div>':'')+(MSG.unk.length?'<div class="wbox warnc"><div class="wh">❓ '+t('us_title').replace(/^⚠️\s*/,'').replace(/:$/,'')+'</div><ul class="wl">'+MSG.unk.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>':'');
@@ -669,11 +691,11 @@ if(words.every(w=>w.length<=2))return;const k=name.toLowerCase();if(seen.has(k))
 out.push({name,id:String(n.id||'').replace(/\D/g,''),role:String(n.role||n.title||'').trim()})});return out}
 function clearBase(){BASEMAP=null;BASEX=null;WK=[];$('rstat').textContent=t('load_none');saveState()}
 /* ---------- persistence ---------- */
-const SKEY='nsl_state_v2',FIELDS=['names','month','base','dreq','nreq','doc','noc','ereq','wishtxt','rec'];
-function saveState(){try{const f={};FIELDS.forEach(k=>f[k]=$(k).value);
+const SKEY='nsl_state_v2',FIELDS=['names','month','base','dreq','nreq','doc','noc','ereq','wishtxt','rec','shsys','hrs','hrsu','rmxw','rmxo','shmax','shmin'];
+function saveState(){try{const f={};FIELDS.forEach(k=>f[k]=$(k)?$(k).value:'');
 localStorage.setItem(SKEY,JSON.stringify({EON,eRA,mRA,EV,ROLES,CNI,MINCN,MCD,MCN,f,sid:$('showid').checked,L,R,OC,Y,M,days,dRA,nRA,docA,nocA,BASEMAP,BASEX,WK,LEGX,LT,PT,MSG,bk:!!($('blkon')&&$('blkon').checked),hnm:!!($('hnm')&&$('hnm').checked),bk2:!!($('cnnoc')&&$('cnnoc').checked),MLN,rst:$('rstat').textContent}))}catch(e){}}
 function loadState(){try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(!s)return false;
-FIELDS.forEach(k=>{if(s.f[k]!=null&&$(k))$(k).value=s.f[k]});$('showid').checked=!!s.sid;
+FIELDS.forEach(k=>{if(s.f[k]!=null&&$(k))$(k).value=s.f[k]});try{shsysChg(true)}catch(e){}$('showid').checked=!!s.sid;
 if(s.L){L.cnt=s.L.cnt||[];L.al=s.L.al||[]}
 nurses=parseN();['cnt','al'].forEach(draw);
 if($('blkon'))$('blkon').checked=!!s.bk;if($('cnnoc'))$('cnnoc').checked=!!s.bk2;if($('hnm'))$('hnm').checked=!!s.hnm;MLN=s.MLN||[];BASEMAP=s.BASEMAP||null;BASEX=s.BASEX||null;WK=s.WK||[];LEGX=s.LEGX||{};LT=s.LT||[];PT=s.PT||[];if(s.rst)$('rstat').textContent=s.rst;
@@ -888,7 +910,7 @@ function parseRec(text,req){
 MSG.rsum=[];MSG.unk=[];
 text=String(text)+(RECX.length?'\n'+RECX.join('\n'):'');
 text=text.replace(/\bO\s?\.\s?C\b\.?/gi,'OC');
-if($('hnm')&&$('hnm').checked){text+='\nHN all shifts M';nurses.forEach(n=>{if(/^(hn|hd|head)/i.test(n.title||''))text+='\n'+n.name+' off every Friday'})}text=detectM(text);
+if($('hnm')&&$('hnm').checked&&nurses.some(n=>/^(hn|hd|head)/i.test(n.title||''))){text+='\nHN all shifts M';nurses.forEach(n=>{if(/^(hn|hd|head)/i.test(n.title||''))text+='\n'+n.name+' off every Friday'})}text=detectM(text);
 if($('cnnoc')&&!$('cnnoc').checked&&/(اساسي|أساسي|اساسى|main shift|regular shift|base shift)/i.test(text)&&/(ليس|مش |وليس|ولا|مو |not |rather than|instead of|without)\s*(OC|اونكول|أونكول|اون كول|on.?call)/i.test(text)&&/\b(CN|charge)\b/i.test(text)){$('cnnoc').checked=true;try{saveState()}catch(e){}}
 text=detectBlocks(text);
 if($('blkon')&&$('blkon').checked&&!BLK.some(Boolean))applyBlk('D','N');
@@ -905,11 +927,25 @@ const toks=tk.map(x=>/^[a-z']+$/.test(x)?{w:x}:/^[؀-ۿ]{3,}$/.test(x)&&arNameFo
 const ment=mentionsOf(toks);const out=[];let k=0,mi=0;
 for(let i=0;i<tk.length;i++){const m=ment.find(z=>z.s==i);if(m){ctx.ments.push(m);out.push('NM'+(ctx.ments.length-1));i=m.e}else out.push(tk[i])}
 tk=out;
-const cls=segment(tk,ctx.ments);let any=false,bad=false;
+const cls=fixClauses(segment(tk,ctx.ments));let any=false,bad=false;
 cls.forEach(c=>{const r=evalClause(c,ctx,req);if(r===null)bad=true;else any=true});
 if(!cls.length||bad)MSG.unk.push(sent)});
 MSG.unk=MSG.unk.filter(s=>String(s).replace(/[^A-Za-z\u0600-\u06ff]/g,'').length>2);
 }
+/* clause fixes: "لا يزيد عن 3 ايام عمل ولا عن 3 ايام راحة" → two limits; "اقل راحة يوم في الاسبوع" → minimum 1 */
+function fixClauses(cls){const num=x=>/^\d+$/.test(x);const out=[];
+cls.forEach(c=>{const tk=c.tk,i=tk.indexOf('NEG');
+if(i>0&&tk.slice(0,i).includes('LIM')&&tk.slice(0,i).some(num)&&tk.slice(i+1).some(num)){out.push({...c,tk:tk.slice(0,i)});out.push({...c,tk:['LIM',...tk.slice(i+1)]})}else out.push(c)});
+return out.map(c=>{let tk=c.tk.slice();{const w=tk.indexOf('WRK');if(w>0&&tk[w-1]==='NEG'&&!tk.some(x=>/^(WD\d|DAYS|UNIT)$/.test(x))){if(/^(احد|أحد)$/.test(tk[w+1]||''))tk[w+1]='WD0';else if(tk[w+1]==='2'&&!tk.slice(w+2).some(num))tk[w+1]='WD1'}}const m=tk.indexOf('MNS');
+if(m>=0&&m<=1&&(tk.includes('WEEK')||tk.includes('CONSEC')||tk.includes('MONTHT'))&&(tk.includes('OFFD')||tk.includes('WRK')))tk[m]='MIN';
+if(!tk.some(num)&&tk.includes('WRK')){const p=tk.findIndex(x=>x==='MNS'||x==='PLS');if(p>=0)tk.splice(p+1,0,'1')}const q=tk.findIndex(x=>x==='MIN'||x==='LIM');if(q>=0&&!tk.some(num)&&tk.includes('UNIT'))tk.splice(q+1,0,'1');
+return{...c,tk}})}
+/* final safety: never a Day right after a Night — hand that day to someone who is free */
+function fixND(){const W=v=>v=='D'||v=='N';for(let i=0;i<R.length;i++)for(let d=1;d<days;d++){if(R[i][d-1]!=='N'||R[i][d]!=='D'||(HF[i]&&HF[i][d]))continue;
+let best=-1,bs=1e9;for(let j=0;j<R.length;j++){if(j===i||R[j][d]!==''||R[j][d-1]==='N'||(typeof EXC=='function'&&EXC(j))||(PREF[j]&&PREF[j][d]==='OFF'))continue;
+let run=1;for(let k=d-1;k>=0&&W(R[j][k]);k--)run++;for(let k=d+1;k<days&&W(R[j][k]);k++)run++;const mx=(P[j]&&P[j].mxc)||99;if(run>mx)continue;
+const tj=R[j].filter(W).length;if(tj<bs){bs=tj;best=j}}
+if(best>=0){R[best][d]='D';R[i][d]=''}else R[i][d]=''}}
 function setOrder(req,i,d,ty){if(req[i][d-1]==='AL')return;if(ty==='MUST'){FW[i][d-1]=true;return}req[i][d-1]=ty;HF[i][d-1]=true}
 function evalClause(c,ctx,req){
 let tk=c.tk;
@@ -1088,7 +1124,7 @@ if(st)st.textContent=(AR_()?'🤖 الذكاء الاصطناعي فسّر ':'�
 catch(e){if(st)st.textContent='⚠️ '+(AR_()?'الذكاء الاصطناعي ما قدرش يفسّر الجمل ['+(e.message||e)+'] — الروستر اتعمل بالجمل اللي اتفهمت.':'AI could not interpret the sentences ['+(e.message||e)+'] — roster built from the understood ones.')}}
 function gen(){if(needLogin()){openLogin(()=>gen());return}pingUse();
 nurses=parseN();[Y,M]=$('month').value.split('-').map(Number);days=new Date(Y,M,0).getDate();
-const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=+$('base').value||0,eR=Math.max(0,+$('ereq').value||0);
+const N=nurses.length,dR=+$('dreq').value,nR=+$('nreq').value,dO=+$('doc').value,nO=+$('noc').value,base=baseEff(),eR=SHSYS()=='MEN'?Math.max(1,+$('ereq').value||+$('dreq').value||1):0;
 EON=eR>0;eRA=Array(days).fill(EON?eR:0);mRA=Array(days).fill(dR);dRA=mRA.map((v,d)=>v+eRA[d]);nRA=Array(days).fill(nR);docA=Array(days).fill(dO);nocA=Array(days).fill(nO);
 BCELL=null;let baseOn=false;if(BASEMAP){const ok2=nurses.every(n=>BASEMAP[n.name.toLowerCase()]);if(ok2){baseOn=true;BCELL=nurses.map(n=>{const r=BASEMAP[n.name.toLowerCase()];return Array.from({length:days},(_,d)=>{const x=r[d]||'';return x=='D'||x=='E'?'D':x=='N'?x:''})});BEV=nurses.map(n=>{const r=BASEMAP[n.name.toLowerCase()];return Array.from({length:days},(_,d)=>r[d]=='E')})}else MSG.bad.push(['load_mis'])}
 P=nurses.map((_,i)=>{const q=newP(base);if(baseOn){q.tot=BCELL[i].filter(Boolean).length;q.mxc=99}return q});L.cnt.forEach(r=>{if(r.a!==''&&P[+r.n])P[+r.n].tot=+r.a});
@@ -1096,14 +1132,14 @@ const req=nurses.map(()=>Array(days).fill(''));HF=nurses.map(()=>Array(days).fil
 if(baseOn)nurses.forEach((n,i)=>{const r=BASEMAP[n.name.toLowerCase()];for(let d=0;d<days;d++)if(r[d]=='AL')req[i][d]='AL'});
 L.al.forEach(r=>rng(r).forEach(d=>{if(req[+r.n])req[+r.n][d]='AL'}));
 parseWish2(req);
-parseRec($('rec').value,req);
+parseRec($('rec').value,req);applyRuleBox();
 mRA=dRA.map((v,d)=>Math.max(0,v-eRA[d]));
 CNI=nurses.map(n=>/(^|[^a-z])(cn|charge)([^a-z]|$)/i.test(n.title));ROLES=nurses.map(n=>n.title);if(MINCN==null){MCD=MCN=CNI.filter(Boolean).length>=2?1:0}MINCN=Math.max(MCD,MCN);const MCD0=MCD;if(EON)MCD=MCD*2;
 ovr=resolveReq(req);
 const demN=nR/(dR+eR+nR||1);
 const tot=[],nt=[],dt=[];
 nurses.forEach((n,i)=>{const p=P[i];let T=p.tot;if(p.totmul!=null)T=Math.round(T*p.totmul);T+=p.totadj||0;if(p.totcap!=null)T=Math.min(T,p.totcap);
-if(p.ncnt!=null&&p.dcnt!=null)T=p.ncnt+p.dcnt;T=Math.max(0,T);
+if(p.ncnt!=null&&p.dcnt!=null)T=p.ncnt+p.dcnt;T=Math.max(0,T);{const a=+$('shmax').value||0,b=+$('shmin').value||0;if(!EXC(i)){if(a)T=Math.min(T,a);if(b)T=Math.max(T,b)}}
 const fN=p.fracN!=null?p.fracN:demN;let a,b;
 if(p.only=='N'){a=T;b=0}else if(p.only=='D'){a=0;b=T}else if(p.ncnt!=null){a=Math.min(p.ncnt,T);b=T-a}else if(p.dcnt!=null){b=Math.min(p.dcnt,T);a=T-b}else{a=Math.round(T*fN);b=T-a}
 if(p.ncap!=null&&a>p.ncap){b+=a-p.ncap;a=p.ncap;if(p.only=='N'){b=0;T=a}}
@@ -1134,7 +1170,7 @@ c.push([sc,i])});
 c.sort((x,y)=>y[0]-x[0]);if(MINCN>0){const mm=s=='D'?MCD:MCN;let k=nurses.filter((_,q)=>a[q]==s&&CNI[q]).length;for(const[,i]of c){if(need<=0||k>=mm)break;if(CNI[i]&&a[i]===''){a[i]=s;need--;k++}}}for(const[,i]of c){if(need<=0)break;if(a[i]!=='')continue;a[i]=s;need--}}}
 nurses.forEach((_,i)=>{const s=a[i];R[i][d]=s;if(s=='D'){nD[i]++;st[i]++;ns[i]=0}else if(s=='N'){nN[i]++;st[i]++;ns[i]=prev[i]=='N'?ns[i]+1:1;lastN[i]=d}else{st[i]=0;ns[i]=0}of[i]=(s=='D'||s=='N')?0:of[i]+1;prev[i]=s})}
 }
-repairR(req,tot);if($('hnm')&&$('hnm').checked)nurses.forEach((n,i)=>{if(!/^(hn|hd|head)/i.test(n.title||''))return;MLN[i]=true;for(let d=0;d<days;d++){if(R[i][d]=='AL')continue;R[i][d]=new Date(Y,M-1,d+1).getDay()==5?'':'D'}});MCD=MCD0;EV=nurses.map(()=>Array(days).fill(false));if(EON)assignEvening();assignOC();
+repairR(req,tot);fixND();enforceBounds();fixND();polishRuns();if($('hnm')&&$('hnm').checked)nurses.forEach((n,i)=>{if(!/^(hn|hd|head)/i.test(n.title||''))return;MLN[i]=true;for(let d=0;d<days;d++){if(R[i][d]=='AL')continue;R[i][d]=new Date(Y,M-1,d+1).getDay()==5?'':'D'}});MCD=MCD0;EV=nurses.map(()=>Array(days).fill(false));if(EON)assignEvening();assignOC();
 const warn=[];
 for(let d=0;d<days;d++){const cd=R.filter((r,i)=>r[d]=='D'&&!EXC(i)&&!(EV[i]&&EV[i][d])).length,ce=R.filter((r,i)=>r[d]=='D'&&!EXC(i)&&EV[i]&&EV[i][d]).length,cn=R.filter((r,i)=>r[d]=='N'&&!EXC(i)).length;
 if(cd<mRA[d])warn.push(['w_short_d',d+1,mRA[d]-cd]);if(EON&&ce<eRA[d])warn.push(['w_short_e',d+1,eRA[d]-ce]);if(cn<nRA[d])warn.push(['w_short_n',d+1,nRA[d]-cn]);
@@ -1144,19 +1180,19 @@ nurses.forEach((n,i)=>{const p=P[i];let w=0,o=0,mw=0,mo=0;R[i].forEach(s=>{if(s=
 if(MINCN>0){(EON?['D','E','N']:['D','N']).forEach(sh=>{const ds=[];for(let d=0;d<days;d++){const req_=sh=='D'?mRA[d]:sh=='E'?eRA[d]:nRA[d];if(req_>0&&nurses.filter((_,q)=>R[q][d]==(sh=='N'?'N':'D')&&(sh=='N'||(sh=='E')==!!(EV[q]&&EV[q][d]))&&CNI[q]&&!(CNNOC()&&OC[q]&&OC[q][d])).length<(sh=='N'?MCN:MCD))ds.push(d+1)}if(ds.length)warn.push(['w_cn',sh=='D'&&EON?'M':sh,fmt(ds)])})}
 nurses.forEach((n,i)=>{const c=R[i].filter(s=>s=='D'||s=='N').length;if(Math.abs(c-tot[i])>1)warn.push(['w_tot',n.name,c,tot[i]])});
 if(baseOn)MSG.bad.push(['base_used']);
-MSG.warn=warn;MSG.ovr=ovr;MSG.ran=true;
+{const hm=hrsMonth();if(hm>0)nurses.forEach((n,i)=>{if(EXC(i))return;const h=cnts(i).H;if(Math.abs(h-hm)>6)warn.push(['w_hrs',n.name,h,Math.round(hm)])});const a=+$('shmax').value||0,b=+$('shmin').value||0;nurses.forEach((n,i)=>{if(EXC(i))return;const T=cnts(i).T;if(a&&T>a)warn.push(['w_shmax',n.name,T,a]);if(b&&T<b)warn.push(['w_shmin',n.name,T,b])})}if(hrsMonth()>0){for(let k=warn.length-1;k>=0;k--)if(warn[k][0]=='w_tot')warn.splice(k,1)}MSG.warn=warn;MSG.ovr=ovr;MSG.ran=true;
 applyBaseExtras();showMsgs();render();saveState()}
 /* ================= table / export ================= */
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const isE=(i,d)=>!!(EON&&EV[i]&&EV[i][d]);
 const lbl=(i,d)=>{const s=R[i][d];if(PT[i]&&PT[i][d]&&(s=='D'||s=='N'))return'('+PT[i][d]+')';if(s=='AL'&&LT[i]&&LT[i][d])return LT[i][d];return s=='D'?(EON?(isE(i,d)?'E':'M'):(MLN[i]?'M':'D')):s};
 const kind=(i,d)=>{const s=R[i][d];return s=='D'&&isE(i,d)?'E':s};
-const TCOLS=()=>EON?[['T',t('c_total')],['D','M'],['E','E'],['N','N'],['O','OC'],['AL','AL']]:[['T',t('c_total')],['D',t('c_day')],['N',t('c_night')],['O','OC'],['AL','AL']];
+const TCOLS=()=>EON?[['T',t('c_total')],['H',t('c_hrs')],['D','M'],['E','E'],['N','N'],['O','OC'],['AL','AL']]:[['T',t('c_total')],['H',t('c_hrs')],['D',t('c_day')],['N',t('c_night')],['O','OC'],['AL','AL']];
 const SROWS=()=>EON?[['D','M',mRA],['E','E',eRA],['N',t('r_night'),nRA],['OD','M OC',docA],['OE','E OC',docA],['ON',t('r_nightoc'),nocA]]:[['D',t('r_day'),dRA],['N',t('r_night'),nRA],['OD',t('r_dayoc'),docA],['ON',t('r_nightoc'),nocA]];
 const LEG0=()=>EON?'M = Morning · E = Evening · N = Night · OC = On-call · AL = Annual leave':'D = Day · N = Night · OC = On-call · AL = Annual leave';
 const LEG=()=>{const x=(typeof LEGEND_TXT=='function')?LEGEND_TXT():'';return LEG0()+(!EON&&MLN.some(Boolean)?' · M = 07:00-15:00':'')+(x?' · '+x.replace(/^OC = [^·]*· /,''):'')};
 const KCOL={D:['FFF3B0','000000'],E:['D9C8FF','000000'],N:['26397A','FFFFFF'],AL:['9BE0A8','000000']};
-function cnts(i){let D=0,E=0,N=0,AL=0,O=0;R[i].forEach((s,d)=>{if(s=='D'){if(isE(i,d))E++;else D++}else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i]&&OC[i][d]&&(s=='D'||s=='N'))O++});return{D,E,N,AL,O,T:D+E+N}}
+function cnts(i){let D=0,E=0,N=0,AL=0,O=0,H=0;R[i].forEach((s,d)=>{H+=HRS(i,d);if(s=='D'){if(isE(i,d))E++;else D++}else if(s=='N')N++;else if(s=='AL')AL++;if(OC[i]&&OC[i][d]&&(s=='D'||s=='N'))O++});return{D,E,N,AL,O,T:D+E+N,H}}
 function dayStats(d){const e=R.filter((r,i)=>r[d]=='D'&&isE(i,d)&&!EXC(i)).length;return{D:R.filter((r,i)=>r[d]=='D'&&!EXC(i)).length-e,E:e,N:R.filter((r,i)=>r[d]=='N'&&!EXC(i)).length,OD:OC.filter((r,i)=>r[d]&&R[i][d]=='D'&&!isE(i,d)).length,OE:OC.filter((r,i)=>r[d]&&R[i][d]=='D'&&isE(i,d)).length,ON:OC.filter((r,i)=>r[d]&&R[i][d]=='N').length}}
 function weeks(){const o=[];let a=0;for(let d=0;d<days;d++){const w=new Date(Y,M-1,d+1).getDay();if(w==5||d==days-1){o.push([a,d]);a=d+1}}return o}
 function fillWeeks(){const sel=$('vweek');if(!sel||!days)return;const wk=weeks(),cur=sel.value;if(sel.options.length!=wk.length||sel.dataset.m!=Y+'-'+M){sel.innerHTML=wk.map((w,k)=>`<option value="${k}">${t('v_wk')} ${k+1} (${w[0]+1}–${w[1]+1})</option>`).join('');sel.dataset.m=Y+'-'+M;if(cur&&+cur<wk.length)sel.value=cur}sel.style.display=$('vmode').value=='w'?'':'none';const sd=$('vday');if(sd.options.length!=days||sd.dataset.m!=Y+'-'+M){const c2=sd.value;sd.innerHTML=Array.from({length:days},(_,d)=>`<option value="${d+1}">${t('v_dy')} ${d+1} — ${DOW[new Date(Y,M-1,d+1).getDay()]}</option>`).join('');sd.dataset.m=Y+'-'+M;if(c2&&+c2<=days)sd.value=c2}sd.style.display=$('vmode').value=='d'?'':'none'}
@@ -1304,6 +1340,60 @@ $('ustats').innerHTML=[['u_total',USERS.length],['u_today',tod],['u_week',wk]].m
 $('ulist').innerHTML=USERS.length?'<div class="utb">'+USERS.map((u,i)=>'<div class="ur"><div class="un"><b>'+(i+1)+'. '+esc(u.n||'—')+'</b><span>'+esc(u.email)+'</span></div><div class="um"><span>🆕 '+fd(u.f)+'</span><span>🕒 '+ft(u.l)+'</span><span>🔁 '+(u.c||0)+'</span></div></div>').join('')+'</div>':'<div class="hint" style="text-align:center;padding:16px">'+t('u_none')+'</div>'}
 function exportUsers(){if(!USERS.length)return;const loc='en-GB',q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';const rows=[[t('u_name'),t('u_email'),t('u_first'),t('u_last'),t('u_count')]].concat(USERS.map(u=>[u.n||'',u.email,u.f?new Date(u.f).toLocaleString(loc):'',u.l?new Date(u.l).toLocaleString(loc):'',u.c||0]));
 const blob=new Blob(['﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='horas_users_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+
+/* ---------- shift system, hours, quick rules, home ---------- */
+const SHSYS=()=>($('shsys')&&$('shsys').value)||'DN';
+function shsysChg(silent){const men=SHSYS()=='MEN';const b=$('ereqbox');if(b)b.style.display=men?'':'none';
+if(men&&!(+$('ereq').value))$('ereq').value=$('dreq').value||1;if(!men)$('ereq').value=0;
+const ld=document.querySelector('[data-i="l_dreq"]');if(ld)ld.textContent=men?(LANG=='ar'?'المطلوب في M (صباحي)':'Required on M (morning)'):t('l_dreq');hrsHint();if(!silent)saveState()}
+function monthDays(){try{const[y,m]=$('month').value.split('-').map(Number);return new Date(y,m,0).getDate()}catch(e){return 30}}
+function hrsMonth(){const h=+($('hrs')&&$('hrs').value)||0;if(h<=0)return 0;return $('hrsu').value=='w'?h*monthDays()/7:h}
+function avgShiftH(){if(SHSYS()!='MEN')return 12;const d=+$('dreq').value||0,e=+$('ereq').value||d||1,n=+$('nreq').value||0;return(6*d+6*e+12*n)/((d+e+n)||1)}
+function baseEff(){const hm=hrsMonth();return hm>0?Math.max(1,Math.round(hm/avgShiftH())):(+$('base').value||0)}
+function hrsHint(){const el=$('hrshint');if(!el)return;const hm=hrsMonth();if(hm>0){el.style.display='block';el.textContent=t('hrs_hint',baseEff(),Math.round(hm));const bb=$('base');if(bb&&bb.closest)bb.closest('div').style.opacity=.45}else{el.style.display='none';const bb=$('base');if(bb&&bb.closest)bb.closest('div').style.opacity=1}}
+const HRS=(i,d)=>{const s=R[i]&&R[i][d];if(s!='D'&&s!='N')return 0;if(PT[i]&&PT[i][d]){const m=String(PT[i][d]).match(/(\d{1,2})\D+(\d{1,2})/);if(m){let h=+m[2]-+m[1];if(h<=0)h+=24;return h}}if(s=='N')return 12;return(EON||MLN[i])?6:12};
+function fillRuleBox(){const opt=(n0,n1)=>'<option value="">'+t('rb_none')+'</option>'+Array.from({length:n1-n0+1},(_,k)=>'<option value="'+(n0+k)+'">'+(n0+k)+'</option>').join('');
+[['rmxw',1,10],['rmxo',1,10],['shmax',1,31],['shmin',1,31]].forEach(([id,a,b])=>{const el=$(id);if(!el)return;const v=el.value;el.innerHTML=opt(a,b);el.value=v})}
+function applyRuleBox(){const w=+$('rmxw').value||0,o=+$('rmxo').value||0,a=+$('shmax').value||0,b=+$('shmin').value||0;
+P.forEach((p,i)=>{if(EXC(i))return;if(w)p.mxc=w;if(o)p.mxo=o});const all=t('all');
+if(w)MSG.rsum.push({who:all,k:'r_maxwork',a:[w]});if(o)MSG.rsum.push({who:all,k:'r_maxoff',a:[o]});
+if(a)MSG.rsum.push({who:all,k:'r_totcap',a:[a]});if(b)MSG.rsum.push({who:all,k:'r_shmin',a:[b]})}
+/* hard min/max shifts per nurse after generation */
+function enforceBounds(){const a=+$('shmax').value||0,b=+$('shmin').value||0;if(!a&&!b)return;const W=v=>v=='D'||v=='N';
+const cov=(d,s)=>R.filter((r,j)=>r[d]==s&&!EXC(j)).length,need=(d,s)=>s=='N'?nRA[d]:dRA[d];
+const runOK=(i,d)=>{let k=1;for(let x=d-1;x>=0&&W(R[i][x]);x--)k++;for(let x=d+1;x<days&&W(R[i][x]);x++)k++;return k<=((P[i]&&P[i].mxc)||99)};
+for(let i=0;i<R.length;i++){if(EXC(i))continue;let T=R[i].filter(W).length;
+while(a&&T>a){let bd=-1,bs=-1e9;const mo=(P[i]&&P[i].mxo)||99;for(let d=0;d<days;d++){const s=R[i][d];if(!W(s)||(HF[i]&&HF[i][d]))continue;let o=1;for(let x=d-1;x>=0&&R[i][x]==='';x--)o++;for(let x=d+1;x<days&&R[i][x]==='';x++)o++;let w=0,best=0;for(let x=0;x<days;x++){if(x!==d&&W(R[i][x])){w++;best=Math.max(best,w)}else w=0}const sc=(cov(d,s)-need(d,s))*10-(o>mo?1000:0)-o*3+(best<((P[i]&&P[i].mxc)||99)?0:0);if(sc>bs){bs=sc;bd=d}}if(bd<0)break;R[i][bd]='';T--}
+while(b&&T<b){let bd=-1,bs=1e9,bt='';for(let d=0;d<days;d++){if(R[i][d]!==''||(PREF[i]&&PREF[i][d]==='OFF'))continue;if(d>0&&R[i][d-1]=='N')continue;
+for(const s of['D','N']){if(s=='D'&&d+1<days&&false)continue;if(s=='N'&&d+1<days&&R[i][d+1]=='D')continue;R[i][d]=s;const ok=runOK(i,d);R[i][d]='';if(!ok)continue;const sur=cov(d,s)-need(d,s);if(sur<bs){bs=sur;bd=d;bt=s}}}if(bd<0)break;R[i][bd]=bt;T++}}}
+
+/* post pass: repair consecutive work/rest limits by moving shifts between nurses, then balance hours */
+function polishRuns(){const N=R.length,W=v=>v=='D'||v=='N';const lk=(i,d)=>(HF[i]&&HF[i][d])||(FW[i]&&FW[i][d])||R[i][d]=='AL';
+const vi=i=>{if(EXC(i))return 0;const p=P[i]||{},r=R[i],mc=p.mxc||99,mo=p.mxo||99;let v=0,w=0,o=0;for(let d=0;d<days;d++){const s=r[d];if(W(s)){w++;o=0;if(w>mc)v+=1}else if(s===''){o++;w=0;if(o>mo)v+=1}else{w=0;o=0}if(d&&r[d-1]=='N'&&s=='D')v+=5}const T=r.filter(W).length,mxS=+$('shmax').value||0,mnS=+$('shmin').value||0;if(mxS&&T>mxS)v+=3*(T-mxS);if(mnS&&T<mnS)v+=3*(mnS-T);return v};
+const can=(i,d,s)=>{const p=P[i]||{};if(EXC(i)||lk(i,d))return false;if(p.only&&p.only!==s)return false;if(PREF[i]&&PREF[i][d]&&PREF[i][d]!==s)return false;return true};
+const mv=(a,b,d)=>{const s=R[a][d];if(!W(s)||R[b][d]!==''||lk(a,d)||!can(b,d,s)||(PREF[a]&&PREF[a][d]===s))return false;if(PREF[b]&&PREF[b][d]==='OFF')return false;
+const before=vi(a)+vi(b);R[a][d]='';R[b][d]=s;const after=vi(a)+vi(b);if(after<before)return true;R[a][d]=s;R[b][d]='';return false};
+for(let it=0;it<6;it++){let ch=false;for(let i=0;i<N;i++){if(!vi(i))continue;
+for(let d=0;d<days&&vi(i);d++){if(W(R[i][d])){for(let j=0;j<N;j++)if(j!==i&&mv(i,j,d)){ch=true;break}}else if(R[i][d]===''){for(let j=0;j<N;j++)if(j!==i&&mv(j,i,d)){ch=true;break}}}}if(!ch)break}
+/* hours target: trim or add shifts so each nurse is close to the required hours */
+const hm=hrsMonth();if(hm<=0)return;const H=i=>cnts(i).H;
+const cov=(d,s)=>R.filter((r,j)=>r[d]==s&&!EXC(j)).length,need=(d,s)=>s=='N'?nRA[d]:dRA[d];
+for(let i=0;i<N;i++){if(EXC(i))continue;let g=0;
+while(H(i)-hm>=(EON?6:12)&&g++<20){let bd=-1,bs=-1e9;const v0=vi(i);for(let d=0;d<days;d++){const s=R[i][d];if(!W(s)||lk(i,d)||(PREF[i][d]===s))continue;if(EON&&s=='N'&&H(i)-hm<12)continue;const sur=cov(d,s)-need(d,s);if(sur<=0)continue;R[i][d]='';const dv=vi(i)-v0;R[i][d]=s;const sc=sur*10-dv*100;if(sc>bs){bs=sc;bd=d}}if(bd<0||bs<-50)break;R[i][bd]=''}
+g=0;while(hm-H(i)>=(EON?6:12)&&g++<20){let bd=-1,bs=-1e9,bt='';const v0=vi(i);for(let d=0;d<days;d++){if(R[i][d]!==''||lk(i,d)||(PREF[i][d]==='OFF'))continue;for(const s of(EON&&hm-H(i)<12?['D']:['D','N'])){if(!can(i,d,s))continue;if(s=='D'&&d>0&&R[i][d-1]=='N')continue;if(s=='N'&&d+1<days&&R[i][d+1]=='D')continue;R[i][d]=s;const dv=vi(i)-v0;R[i][d]='';if(dv>0)continue;const sc=-(cov(d,s)-need(d,s))*10;if(sc>bs){bs=sc;bd=d;bt=s}}}if(bd<0)break;R[i][bd]=bt}}
+/* hours balance (M/E = 6h, N = 12h): swap N<->D on same day between high and low hour nurses */
+if(!EON)return;
+for(let it=0;it<400;it++){const idx=[...Array(N).keys()].filter(i=>!EXC(i));if(idx.length<2)break;idx.sort((a,b)=>H(b)-H(a));let done=false;
+for(let x=0;x<idx.length&&!done;x++)for(let y=idx.length-1;y>x&&!done;y--){const a=idx[x],b=idx[y];if(H(a)-H(b)<12)break;
+for(let d=0;d<days&&!done;d++){if(R[a][d]!=='N'||R[b][d]!=='D'||lk(a,d)||lk(b,d)||!can(a,d,'D')||!can(b,d,'N'))continue;if(PREF[a][d]==='N'||PREF[b][d]==='D'||OC[a]&&OC[a][d]||OC[b]&&OC[b][d])continue;
+const v0=vi(a)+vi(b);R[a][d]='D';R[b][d]='N';if(vi(a)+vi(b)<=v0){done=true}else{R[a][d]='N';R[b][d]='D'}}}
+if(!done)break}}
+document.addEventListener('input',e=>{if(e.target&&['dreq','ereq','nreq','month','hrs','base'].includes(e.target.id))try{hrsHint()}catch(x){}});document.addEventListener('change',e=>{if(e.target&&e.target.id=='month')try{hrsHint()}catch(x){}});
+function goHome(){$('home').classList.add('on');document.body.classList.add('homeon');$('hold').style.display='none'}
+function homeNew(){$('home').classList.remove('on');document.body.classList.remove('homeon');showTab('n');setTimeout(()=>{try{$('names').focus()}catch(e){}},200)}
+function homeOld(){const h=$('hold');h.style.display=h.style.display=='none'?'grid':'none'}
+function homeArc(){$('home').classList.remove('on');document.body.classList.remove('homeon');showTab('a');try{renderArc()}catch(e){}}
+function homeDev(){$('home').classList.remove('on');document.body.classList.remove('homeon');showTab('n');const r=$('rfile');try{r.scrollIntoView({block:'center'})}catch(e){}r.click()}
 /* ---------- saved rosters archive ---------- */
 const ARKEY='nsl_archive_v1';
 function arcList(){try{return JSON.parse(localStorage.getItem(ARKEY)||'[]')}catch(e){return[]}}
@@ -1321,6 +1411,6 @@ function arcRen(id){const a=arcList(),x=a.find(q=>q.id===id);if(!x)return;const 
 function renderArc(){const el=$('arclist');if(!el)return;const a=arcList();const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 if(!a.length){el.innerHTML='<div class="hint" style="text-align:center;padding:18px">'+t('arc_empty')+'</div>';return}
 el.innerHTML=a.map(x=>{const d=new Date(x.ts);return '<div class="arci"><div class="arct"><b>'+esc(x.title)+'</b><small>🕒 '+d.toLocaleDateString(LANG=='ar'?'ar-EG':'en-GB')+' '+d.toLocaleTimeString(LANG=='ar'?'ar-EG':'en-GB',{hour:'2-digit',minute:'2-digit'})+'</small></div><div class="arca"><button class="p" onclick="arcOpen(\''+x.id+'\')">'+t('arc_open')+'</button><button onclick="arcRen(\''+x.id+'\')" aria-label="rename">✏️</button><button onclick="arcDel(\''+x.id+'\')" aria-label="delete">🗑</button></div></div>'}).join('')}
-nurses=parseN();const had=loadState();applyLang();loadAI();if(had){assignOC&&0;showMsgs();render()}renderUser();if(signedIn())pingUse();else if(needLogin())openLogin();showTab(had?'g':'n');renderArc();try{const go=sessionStorage.getItem('nsl_go');if(go){sessionStorage.removeItem('nsl_go');showTab(go)}}catch(e){}
+fillRuleBox();nurses=parseN();const had=loadState();applyLang();loadAI();if(had){assignOC&&0;showMsgs();render()}renderUser();if(signedIn())pingUse();else if(needLogin())openLogin();showTab(had?'g':'n');renderArc();try{hrsHint();goHome()}catch(e){}try{const go=sessionStorage.getItem('nsl_go');if(go){sessionStorage.removeItem('nsl_go');showTab(go)}}catch(e){}
 try{if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
 </script></body></html>
